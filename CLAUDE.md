@@ -67,7 +67,7 @@ Nach Änderungen an Home/Menüs: `tpad_menus.py` und `browser*.py`, die `.mitem`
 - Saudi-Arabien: 2. Liga ist näherungsweise; Namen für `sa` zu 50 % „arabisch“ (Gruppe `ar`).
 - Profikarriere: Vereinswechsel über Saisonende-Angebote **und** über „Verein wechseln“ im Laufbahn-Tab (max. 2 Wünsche pro Saison, Annahme abhängig von Niveau, Form, Kaderplatz).
 - `README.md` beschreibt alle Funktionen für Spieler (Deutsch); bei neuen Features dort einen Absatz ergänzen.
-- Das Spiel soll **kinderfreundlich und offline** bleiben: keine Tracker, keine Konten, keine externen Dienste (außer den optionalen Google Fonts).
+- Das Spiel soll **kinderfreundlich und offline** bleiben: keine Tracker, keine Konten, keine externen Dienste (außer den optionalen Google Fonts). Einzige Ausnahme: der kleine „♥ Spenden“-Link auf dem Hauptmenü (`UI.donateLink`, PayPal.me), der erst nach einem Eltern-Hinweis in einem neuen Tab öffnet.
 
 ## Git / GitHub
 

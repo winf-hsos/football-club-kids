@@ -611,3 +611,5 @@ details.adv.big .grid2 { margin-top: 6px; }
 @media (max-width: 520px) { .topbar { gap: 6px; } .topbar .btn { padding: 8px 12px; } .topbar .btn.xl { padding: 10px 14px; font-size: .95rem; } .topbar h2 { font-size: 1.05rem; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } }
 
 .build-tag { position: fixed; left: var(--gut-l, 10px); bottom: calc(var(--gut-b, 0px) + 4px); font-size: .62rem; opacity: .4; color: var(--text); pointer-events: none; z-index: 5; letter-spacing: .02em; }
+.donate-link { position: fixed; right: var(--gut-r, 10px); bottom: calc(var(--gut-b, 0px) + 2px); z-index: 5; background: none; border: 0; color: var(--text); opacity: .5; font-size: .72rem; padding: 6px 8px; cursor: pointer; }
+.donate-link:hover, .donate-link:focus-visible { opacity: 1; }

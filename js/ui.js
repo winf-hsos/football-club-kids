@@ -156,6 +156,18 @@
       return el;
     },
 
+    donateLink() {
+      const url = 'https://paypal.me/Meseth';
+      const b = h('button', { class: 'donate-link', type: 'button', text: '\u2665 ' + T('donate') });
+      b.addEventListener('click', () => {
+        this.sfx('click');
+        this.modal(T('donate.t'), h('div', null, h('p', { text: T('donate.txt') }), h('p', { class: 'fine', text: T('donate.parents') }),
+          h('div', { class: 'row' },
+            this.btn(T('donate.go'), () => { this.closeModal(); try { window.open(url, '_blank', 'noopener,noreferrer'); } catch (e) { /* blocked */ } }, 'primary'),
+            this.btn(T('cancel'), () => this.closeModal(), 'ghost'))));
+      });
+      return b;
+    },
     buildTag() { return h('div', { class: 'build-tag', text: FCK.BUILD ? 'v ' + FCK.BUILD : '' }); },
 
     logo(big) {
@@ -197,6 +209,7 @@
       fs.addEventListener('click', () => { this.sfx('click'); try { if (document.fullscreenElement) document.exitFullscreen(); else document.documentElement.requestFullscreen().catch(() => {}); } catch (e) { /* not available */ } });
       el.appendChild(fs);
       el.appendChild(this.buildTag());
+      el.appendChild(this.donateLink());
       mark('play');
       return el;
     },
