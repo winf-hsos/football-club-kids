@@ -29,7 +29,7 @@ const GC = '<script data-goatcounter="https://fck.goatcounter.com/count" async s
 const THREE_CDN = '<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>';
 
 // 1) standalone file
-const single = '<!doctype html>\n<html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no"><meta name="theme-color" content="#0a0e17"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><title>' + TITLE + '</title>' + fonts + '<style>' + css + '</style></head><body>' + markup + '<script>' + THREE_LIB + '</script><script>' + safeJs + '</script></body></html>';
+const single = '<!doctype html>\n<html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no"><meta name="theme-color" content="#0a0e17"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><title>' + TITLE + '</title>' + fonts + '<style>' + css + '</style></head><body>' + markup + '<script>' + THREE_LIB + '</script><script>' + safeJs + '</script>' + GC + '</body></html>';
 fs.writeFileSync(path.join(root, 'dist', 'FCK.html'), single);
 
 // 2) artifact fragment (the host wraps it into a document skeleton)
