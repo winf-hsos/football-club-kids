@@ -18,12 +18,19 @@
     depth += (tac.line - 0.5) * 0.22 * (p.role === 'DF' ? 1 : p.role === 'MF' ? 0.8 : 0.5);
     if (attacking) depth += 0.03 + tac.risk * 0.05 * (p.role === 'FW' ? 1.5 : 0.6);
     else depth -= 0.03 * (1 - tac.line);
-    const maxD = p.role === 'GK' ? 0.12 : p.role === 'DF' ? (attacking ? 0.64 : 0.54) : p.role === 'MF' ? 0.86 : 0.97;
+    // fluid roles: wide players on the ball side overlap in attack, fullbacks join the final third
+    const ballFy0 = team.dir > 0 ? by / W : 1 - by / W;
+    const wideSide = slot.fy - 0.5;
+    const sameFlank = Math.abs(wideSide) > 0.2 && (ballFy0 - 0.5) * wideSide > 0 && Math.abs(ballFy0 - 0.5) > 0.12;
+    let overlap = 0;
+    if (attacking && sameFlank && b > 0.38 && (p.role === 'DF' || p.role === 'MF')) overlap = (p.role === 'DF' ? 0.3 : 0.14) * U.clamp((b - 0.38) / 0.25, 0, 1) * (0.5 + tac.risk * 0.7);
+    depth += overlap;
+    const maxD = p.role === 'GK' ? 0.12 : p.role === 'DF' ? (attacking ? (overlap > 0 ? 0.8 : 0.64) : 0.54) : p.role === 'MF' ? 0.9 : 0.97;
     const minD = p.role === 'GK' ? 0.02 : p.role === 'DF' ? 0.1 : 0.2;
     depth = U.clamp(depth, minD, maxD);
     const ballFy = team.dir > 0 ? by / W : 1 - by / W;
     let fy = slot.fy + (ballFy - 0.5) * (0.3 + (1 - tac.width) * 0.3) * (p.role === 'GK' ? 0.4 : 1);
-    if (attacking) fy = 0.5 + (fy - 0.5) * (1 + 0.2 * tac.width);
+    if (attacking) fy = 0.5 + (fy - 0.5) * (1 + 0.2 * tac.width + (overlap > 0 ? 0.25 : 0));
     else fy = 0.5 + (fy - 0.5) * (1 - 0.12 * (1 - tac.width));
     fy = U.clamp(fy, 0.04, 0.96);
     return { x: team.toX(depth), y: team.toY(fy) };
@@ -72,7 +79,7 @@
     const owner = b.owner;
     const ds = opp.players.map((q) => team.depth(q.x)).sort((a, c) => c - a);
     pl.offLine = ds.length > 1 ? ds[1] : 0.5;
-    pl.pressers = []; pl.marks = {}; pl.chasers = [];
+    pl.pressers = []; pl.marks = {}; pl.chasers = []; pl.cover = null;
     const field = team.players.filter((p) => p.onPitch && !p.isGK && p.state !== 'down');
     if (owner && owner.ti !== team.idx) {
       const press = team.tactic.press + (team.pressCall > 0 ? 0.25 : 0);
@@ -88,6 +95,10 @@
         if (d > 32 && pl.pressers.length >= 1) continue;
         pl.pressers.push(p);
       }
+      // second man: the closest free DF/MF drops behind the presser and covers the way to goal
+      pl.cover = null;
+      const free = cand.filter((q) => pl.pressers.indexOf(q) < 0 && q.role !== 'FW');
+      if (pl.pressers.length && free.length && U.dist2(free[0].x, free[0].y, px, py) < 400) pl.cover = free[0];
       // marking
       const rest = field.filter((p) => pl.pressers.indexOf(p) < 0).sort((a, c) => (a.role === 'DF' ? 0 : a.role === 'MF' ? 1 : 2) - (c.role === 'DF' ? 0 : c.role === 'MF' ? 1 : 2));
       const threats = opp.players.filter((q) => !q.isGK && q !== owner && team.depth(q.x) < 0.66);
@@ -191,6 +202,12 @@
         }
         return;
       }
+      if (pl.cover === p && !pl.marks[p.id] && team.depth(owner.x) < 0.55) {
+        const lead = pl.pressers[0];
+        const [cx, cy] = U.norm(team.ownGoalX - lead.x, GY - lead.y);
+        m.moveTo(p, lead.x + cx * 7.5, lead.y + cy * 7.5 + (p.y < lead.y ? -3 : 3), 0.8);
+        return;
+      }
       const mk = pl.marks[p.id];
       let base = AI.formationPos(m, p, b.x, b.y, false);
       if (mk) {
@@ -227,7 +244,13 @@
         const dx = team.toX(Math.min(0.96, pl.offLine - 0.02)) ;
         const lat = U.clamp(p.y + m.rng.range(-9, 9), 5, W - 5);
         p.runTarget = { x: dx, y: lat };
+        // midfielders arrive late in the box, wide forwards cut inside
+        if (team.depth(carrier.x) > 0.62 && (p.role === 'MF' || Math.abs(p.y - GY) > 14)) p.runTarget.y = GY + m.rng.range(-7, 7);
         p.runT = m.rng.range(1.6, 3);
+      } else if (p.role === 'FW' && team.depth(carrier.x) < 0.55 && team.depth(carrier.x) > 0.25 && m.rng.chance(0.3) && U.dist(p, carrier) > 12) {
+        // striker drops deep to link up
+        p.runTarget = { x: team.toX(Math.min(0.9, team.depth(carrier.x) + 0.14)), y: U.clamp(carrier.y + m.rng.range(-10, 10), 6, W - 6) };
+        p.runT = m.rng.range(1.2, 2.2);
       } else p.runT = m.rng.range(0.8, 1.8);
     }
     let tx = base.x, ty = base.y;
