@@ -487,6 +487,27 @@
     m.moveTo(k, tx, ty, 0.7);
   }
 
+  // what a field player does with a header: { type: 'shot'|'pass', ... } or a plain launch { dx, dy, speed, vz }
+  AI.headerPick = function (m, p) {
+    const team = p.team, dir = team.dir, d = team.depth(p.x);
+    const human = p.ctrlHuman && (p.wx * p.wx + p.wy * p.wy) > 0.4;
+    const nearGoal = U.dist2(p.x, p.y, team.goalX, GY) < 13 && Math.abs(p.y - GY) < 11;
+    if (nearGoal && (!human || (p.wx * dir > 0.2)) && m.rng.chance(0.45 + (p.a.sho / 100) * 0.3)) {
+      const kp = m.keeperOf(m.opp(team));
+      let ty = GY + (kp && kp.y < GY ? 1 : -1) * m.rng.range(0.8, HG - 0.9);
+      return { type: 'shot', dx: team.goalX - p.x, dy: ty - p.y };
+    }
+    if (human) { const [nx, ny] = U.norm(p.wx, p.wy); return { dx: nx, dy: ny, speed: 14, vz: d < 0.3 ? 5 : 3 }; }
+    if (d < 0.3) {
+      // clearance: up the pitch and away from the middle
+      const side = p.y > GY ? 1 : -1;
+      return { dx: dir * 0.9, dy: side * m.rng.range(0.2, 0.7), speed: 17 + m.rng.range(0, 4), vz: 5 };
+    }
+    const bp = bestPass(m, p, {});
+    if (bp && U.dist(p, bp.q) < 26) return { type: 'pass', target: bp.q };
+    return { dx: dir, dy: m.rng.range(-0.4, 0.4), speed: 14, vz: 4 };
+  };
+
   AI.keeperRelease = function (m, k) {
     const team = k.team;
     const bp = bestPass(m, k, { clear: true });

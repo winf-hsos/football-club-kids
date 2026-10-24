@@ -371,7 +371,8 @@
         ctx.fillStyle = col;
         ctx.beginPath(); ctx.moveTo(0, -1.6 - Math.sin(this.t * 7) * 0.15); ctx.lineTo(-0.38, -2.2 - Math.sin(this.t * 7) * 0.15); ctx.lineTo(0.38, -2.2 - Math.sin(this.t * 7) * 0.15); ctx.closePath(); ctx.fill();
       }
-      ctx.scale(1.18, 1.18);
+      const jmp = p.jumpT > 0 ? 1 + Math.sin(Math.min(1, (0.45 - p.jumpT) / 0.45) * Math.PI) * 0.22 : 1;
+      ctx.scale(1.18 * jmp, 1.18 * jmp);
       ctx.rotate(p.ang);
       const ph = p.runPhase || 0;
       const run = Math.min(1, (p.spd || 0) / 6);

@@ -607,7 +607,8 @@
       // hips (root of the skeleton)
       const bounce = Math.abs(s) * 0.05 * run * freeze + (this.celeb > 0.02 ? Math.abs(Math.sin(t * 9 + this.seed)) * 0.28 * this.celeb : 0);
       const hip = bn[B.HIPS];
-      hip.position.y = BONE_POS[0][1] + bounce - this.drop - crouch * 0.2;
+      const jmp = p.jumpT > 0 ? Math.sin(Math.min(1, (0.45 - p.jumpT) / 0.45) * Math.PI) * 0.4 : 0;
+      hip.position.y = BONE_POS[0][1] + bounce + jmp - this.drop - crouch * 0.2;
       hip.rotation.set(0, 0, this.lie);
       // torso
       const ch = bn[B.CHEST];
