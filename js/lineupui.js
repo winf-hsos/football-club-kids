@@ -45,8 +45,12 @@
       const cls = 'lp-chip' + (o.sel === i ? ' sel' : '') + (p ? '' : ' empty') + (p && o.showFit ? ' fit' + LU.fit(p, sl.pos) : '') + (p && p.red ? ' red' : '');
       const b = h('button', { class: cls, type: 'button', style: { left: left + '%', top: top + '%' }, title: p ? (p.name || p.n) + ' · ' + FCK.posL(sl.pos) : FCK.posL(sl.pos) });
       if (p) {
-        b.appendChild(h('span', { class: 'lp-c', style: { background: color, color: ink } }, h('b', { text: String(p.num != null ? p.num : '') })));
-        b.appendChild(h('i', { class: 'lp-o ' + tier(p.ovr), text: String(Math.round(p.ovr)) }));
+        // overall rating instead of the shirt number (lineup editors); in the match menu the number stays
+        if (o.showOvr) b.appendChild(h('span', { class: 'lp-c lp-ovr ' + tier(p.ovr), style: { background: color, color: ink } }, h('b', { text: String(Math.round(p.ovr)) })));
+        else {
+          b.appendChild(h('span', { class: 'lp-c', style: { background: color, color: ink } }, h('b', { text: String(p.num != null ? p.num : '') })));
+          b.appendChild(h('i', { class: 'lp-o ' + tier(p.ovr), text: String(Math.round(p.ovr)) }));
+        }
         b.appendChild(h('span', { class: 'lp-n', text: lastName(p) }));
         b.appendChild(h('small', { class: 'lp-p', text: FCK.posL(sl.pos) }));
         if (p.stam != null) b.appendChild(h('i', { class: 'lp-s' }, h('u', { style: { width: Math.round(U.clamp(p.stam, 0, 1) * 100) + '%' } })));
@@ -67,7 +71,7 @@
   LU.row = function (p, o) {
     o = o || {};
     const b = h('button', { class: 'prow lp-row' + (o.on ? ' on' : '') + (o.queued ? ' queued' : ''), type: 'button' },
-      h('span', { class: 'pos', text: FCK.posL(p.pos0 || p.pos) }), h('b', { text: (p.num != null ? p.num + ' ' : '') + lastName(p) }), h('span', { class: 'ovr', text: String(Math.round(p.ovr)) }),
+      h('span', { class: 'pos', text: FCK.posL(p.pos0 || p.pos) }), h('b', { text: (p.num != null && !o.showOvr ? p.num + ' ' : '') + lastName(p) }), h('span', { class: 'ovr', text: String(Math.round(p.ovr)) }),
       o.extra || null);
     if (o.onClick) b.addEventListener('click', o.onClick);
     return b;
@@ -95,7 +99,7 @@
       const avg = slots.every(Boolean) ? slots.reduce((a, p) => a + p.ovr, 0) / 11 : 0;
       info.textContent = T('lu.hint') + (avg ? ' · ' + T('lu.avg', { v: avg.toFixed(1) }) : '');
       const left = h('div', { class: 'lp-col' }, LU.pitch({
-        formation: o.formation, color: o.color, slots, sel: selSlot, showFit: true,
+        formation: o.formation, color: o.color, slots, sel: selSlot, showFit: true, showOvr: true,
         onSlot: (i) => {
           UI.sfx('tick');
           if (selBench != null) { const old = ids[i]; ids[i] = selBench; selBench = null; if (!o.pick(pool, o.formation, ids)) { ids[i] = old; UI.toast(T('m.lineup.bad')); } draw(); return; }
@@ -108,7 +112,7 @@
       }), info);
       const right = h('div', { class: 'lp-col bench' }, h('h5', { text: T('subs.bench') }));
       bench.forEach((p) => {
-        right.appendChild(LU.row(p, {
+        right.appendChild(LU.row(p, { showOvr: true,
           on: selBench === p.sqi,
           onClick: () => {
             UI.sfx('tick');

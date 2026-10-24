@@ -23,6 +23,8 @@ Stufe 1: spielbares Freundschaftsspiel. Stufe 2: Welt & Karriere (Ligen, Pokale,
 
 > Die Spieler bleiben nicht starr auf ihrer Position: Außenspieler schalten sich über die Flanke mit nach vorn ein, Mittelfeldspieler laufen spät in den Strafraum, ein Stürmer lässt sich zum Aufbau fallen, und beim Verteidigen sichert ein zweiter Spieler hinter dem Ballführer ab. Die Mannschaft bleibt dabei kompakt (Test: `node test/fluid_roles.js`).
 
+> In den Aufstellungs-Editoren (Karriere, Manager, Freundschaftsspiel, Wettbewerbe) zeigen die Spielerkreise die Gesamtstärke statt der Rückennummer; Goldrand bei sehr starken Spielern.
+
 > Kopfbälle: Feldspieler köpfen hohe Bälle (Flanken, lange Bälle, Befreiungsschläge). Vor dem Tor geht der Kopfball aufs Tor, in der eigenen Hälfte wird weit geklärt, sonst wird der Ball weitergeleitet. Wer köpft, hängt von Physis und Abwehr ab; mit Richtungseingabe lenkt man den Kopfball selbst (Test: `node test/headers.js`).
 
 > Unten rechts im Hauptmenü steht der Button „♥ Spenden“. Im Dialog wählst du einen Betrag (1/2/5/10 € oder frei), spendest über PayPal und schickst deinen Wunsch per E-Mail. Je höher die Spende, desto höher die Priorität des Wunsches. Im Hauptmenü (nie im Spiel) erscheint alle 15 Minuten eine Erinnerung mit „Später“ und „Nicht mehr anzeigen“. Das Spiel bleibt kostenlos und ohne Werbung.
