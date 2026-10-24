@@ -1,16 +1,23 @@
-# Optional: Spiel als Webseite über GitHub Pages veröffentlichen (manuell starten).
-# Voraussetzung: Settings -> Pages -> Source: "GitHub Actions"
+# Publishes the game via GitHub Pages on every push to main (or manually).
+# Requires: Settings -> Pages -> Source: "GitHub Actions"
 name: Pages
-on: workflow_dispatch
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
 permissions:
   contents: read
   pages: write
   id-token: write
+concurrency:
+  group: pages
+  cancel-in-progress: true
 jobs:
   deploy:
     runs-on: ubuntu-latest
     environment:
       name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -20,4 +27,5 @@ jobs:
       - uses: actions/upload-pages-artifact@v3
         with:
           path: site
-      - uses: actions/deploy-pages@v4
+      - id: deployment
+        uses: actions/deploy-pages@v4

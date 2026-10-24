@@ -73,4 +73,4 @@ Nach Änderungen an Home/Menüs: `tpad_menus.py` und `browser*.py`, die `.mitem`
 
 - Hauptzweig `main`, kleine Commits mit deutscher Beschreibung (z. B. „Profikarriere: Wechselwunsch im Laufbahn-Tab“).
 - `dist/`, ZIPs und Screenshots gehören **nicht** ins Repository.
-- CI (`.github/workflows/ci.yml`) baut und führt `node test/run_all.js` aus. Optional: `pages.yml` veröffentlicht `dist/FCK.html` über GitHub Pages (manuell starten, einmalig unter Settings → Pages „GitHub Actions“ wählen).
+- CI (`.github/workflows/ci.yml`) baut und führt `node test/run_all.js` aus. `pages.yml` veröffentlicht `dist/FCK.html` bei jedem Push auf `main` über GitHub Pages (Repo `winf-hsos/football-club-kids`, öffentlich; Pages-Quelle „GitHub Actions“). Jeder Push auf `main` ist damit sofort live.
