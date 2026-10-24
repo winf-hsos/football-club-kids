@@ -1027,6 +1027,29 @@
       sp *= dvm;
       k.vx = nx * sp; k.vy = ny * sp;
     }
+    // keeper throws himself at the feet of a dribbler in the box
+    keeperSmother(k, target) {
+      const b = this.ball;
+      if (k.state !== 'idle' || b.owner !== target || this.mode !== 'play') return;
+      const [nx, ny] = U.norm(target.x - k.x, target.y - k.y);
+      k.state = 'dive'; k.stT = 0.6; k.tackleCd = 1.2; k.ang = Math.atan2(ny, nx); k.fx = nx; k.fy = ny;
+      k.vx = nx * 6; k.vy = ny * 6;
+      const win = U.clamp(0.45 + (k.a.gk - target.a.dri) / 160 - (target.spd > 6 ? 0.1 : 0) + (k.abx && k.abx.gkCatch || 0), 0.2, 0.85);
+      k.team.stats.tackles++; k.st.tackles++;
+      if (this.rng.next() < win) {
+        k.team.stats.tackleWon++; k.st.tackleWon++;
+        b.owner = k; b.vx = b.vy = b.vz = 0; b.z = 0.9; b.offsideSet = null;
+        b.shotBy = null; b.passTarget = null;
+        this.touch(k, 'catch');
+        k.holdingSince = this.time; k.holdT = 0; k.pendingHold = true;
+        k.st.saves++; k.team.stats.saves++;
+        this.emit('save', { by: k, kind: 'catch', team: k.ti });
+      } else {
+        // ball squirts loose, sometimes it is a foul
+        this.dispossess(target, k, 4 + this.rng.range(0, 3));
+        if (this.rng.chance(0.18 * (0.5 + this.ref.strict))) this.callFoul(k, target, this.rng.range(0.2, 0.6));
+      }
+    }
     callPress(team) { team.pressCall = 2.5; }
     callKeeperRush(team) { team.rushCall = 1.5; }
 

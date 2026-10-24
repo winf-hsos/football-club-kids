@@ -440,16 +440,26 @@
     const [ux, uy] = U.norm(bx - gx, by - GY);
     let tx = gx + ux * dpos, ty = GY + uy * dpos * 0.9;
     ty = U.clamp(ty, GY - HG - 2, GY + HG + 2);
-    // rush out
+    // rush out and smother: attacker with the ball near our goal
     const own = b.owner && b.owner.ti !== k.ti ? b.owner : null;
-    if (own && U.dist2(own.x, own.y, gx, GY) < 22 && U.dist(own, k) < 14 && (team.rushCall > 0 || m.diff.aggr > 0.4)) {
+    const ownIn = own && m.inBox(own.x, own.y, team);
+    if (own && k.state === 'idle' && k.tackleCd <= 0 && ownIn && U.dist(own, k) < 3.2) {
+      m.keeperSmother(k, own);
+      return;
+    }
+    if (own && U.dist2(own.x, own.y, gx, GY) < 24 && U.dist(own, k) < 16) {
       let defs = 0;
-      team.players.forEach((q) => { if (q !== k && team.depth(q.x) < team.depth(own.x) + 0.01 && U.dist(q, own) < 9) defs++; });
-      if (defs === 0 && m.rng.chance(0.02 + m.diff.aggr * 0.02)) { k.rush = 1.2; }
+      team.players.forEach((q) => { if (q !== k && q.onPitch && team.depth(q.x) < team.depth(own.x) + 0.01 && U.dist(q, own) < 6) defs++; });
+      if (ownIn || defs === 0 || team.rushCall > 0) k.rush = 0.6;
     }
     if (k.rush > 0) {
       k.rush -= dt;
-      if (own) { m.moveTo(k, own.x + (gx - own.x) * 0.15, own.y, 1); return; }
+      if (own) {
+        const lead = U.clamp(U.dist(own, k) * 0.05, 0, 0.5);
+        m.moveTo(k, own.x + own.vx * lead + (gx - own.x) * 0.05, own.y + own.vy * lead, 1);
+        k.sprint = true;
+        return;
+      }
     }
     m.moveTo(k, tx, ty, 0.7);
   }
