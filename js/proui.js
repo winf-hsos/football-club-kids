@@ -25,10 +25,8 @@
     return h('div', { class: 'pmeter ' + (cls || '') }, h('span', { class: 'pm-l', text: label }), h('span', { class: 'pm-b' }, h('i', { style: 'width:' + v + '%' })), h('b', { class: 'pm-v', text: v }));
   }
   function avatar(look, size) {
-    const d = h('span', { class: 'pavatar', style: 'width:' + (size || 54) + 'px;height:' + (size || 54) + 'px;background:' + look.skin });
-    d.appendChild(h('i', { class: 'hair hs-' + look.hairStyle, style: 'background:' + look.hair }));
-    if (look.beard) d.appendChild(h('i', { class: 'beard', style: 'background:' + look.hair }));
-    return d;
+    const w = size || 54;
+    return h('img', { class: 'pavatar', alt: '', width: w, height: Math.round(w * 1.2), src: FCK.Face.url(look, Math.max(96, w * 2)) });
   }
   const posChip = (pos) => h('span', { class: 'ci pos-' + FCK.ROLE_OF[pos], text: FCK.posL(pos) });
 
@@ -62,7 +60,7 @@
     const draw = () => {
       el.innerHTML = '';
       el.appendChild(UI.header(T('pro.new'), () => UI.back()));
-      const look = { skin: FCK.SKIN[st.skin], hairStyle: st.hairStyle, hair: FCK.HAIR[st.hair], beard: st.beard };
+      const look = st.look || (st.look = FCK.Face.norm({ skin: FCK.SKIN[st.skin || 1], hairStyle: st.hairStyle || 'short', hair: FCK.HAIR[st.hair || 1], beard: !!st.beard }));
       // --- player
       const s1 = UI.section(T('pro.s.player'));
       const nameIn = h('input', { class: 'txt', value: st.name, maxlength: 28, placeholder: T('pro.name.ph') });
@@ -79,11 +77,7 @@
       el.appendChild(s1);
       // --- looks
       const s2 = UI.section(T('pro.s.look'));
-      s2.appendChild(h('div', { class: 'row center' }, avatar(look, 72)));
-      s2.appendChild(h('div', { class: 'field' }, h('span', { class: 'lbl', text: T('pro.skin') }), h('div', { class: 'swatches' }, FCK.SKIN.map((c, i) => colorBtn(c, i === st.skin, () => { st.skin = i; draw(); })))));
-      s2.appendChild(h('div', { class: 'field' }, h('span', { class: 'lbl', text: T('pro.hairstyle') }), UI.chips(FCK.HAIR_STYLES.map((k) => ({ v: k, l: T('pro.hs.' + k) })), st.hairStyle, (v) => { st.hairStyle = v; draw(); }, 'scroll')));
-      s2.appendChild(h('div', { class: 'field' }, h('span', { class: 'lbl', text: T('pro.haircolor') }), h('div', { class: 'swatches' }, FCK.HAIR.map((c, i) => colorBtn(c, i === st.hair, () => { st.hair = i; draw(); })))));
-      s2.appendChild(UI.toggle(T('pro.beard'), st.beard, (v) => { st.beard = v; draw(); }));
+      s2.appendChild(UI.lookEditor(look, () => {}));
       el.appendChild(s2);
       // --- club
       const tmp = P.newPlayer({ name: st.name || 'X', nation: st.nation, pos: st.pos, age: st.age, arch: st.arch, talent: st.talent, seed: st.seed });
@@ -362,6 +356,12 @@
     });
     sect.appendChild(h('p', { class: 'fine', text: T('pro.attrs.note') }));
     body.appendChild(sect);
+    const fsec = UI.section(T('face.title'));
+    fsec.appendChild(h('div', { class: 'row' }, avatar(p.look, 64), UI.btn(T('face.edit'), () => {
+      const ed = UI.lookEditor(p.look, () => {});
+      UI.modal(T('face.title'), h('div', null, ed, h('div', { class: 'row center' }, UI.btn(T('close'), () => { UI.closeModal(); p.look = FCK.Face.norm(p.look); save(); refresh(); }, 'primary'))), { cls: 'face-modal', sticky: true });
+    }, 'ghost')));
+    body.appendChild(fsec);
     body.appendChild(abilitiesSection(c));
     const tr = UI.section(T('pro.train'));
     tr.appendChild(h('div', { class: 'field' }, h('span', { class: 'lbl', text: T('pro.train.focus') }), UI.chips(keys.filter((k) => k !== 'gk').map((k) => ({ v: k, l: T('pro.a.' + k) })).concat([{ v: 'all', l: T('pro.train.all') }]), p.train.focus, (v) => { p.train.focus = v; save(); refresh(); }, 'scroll')));

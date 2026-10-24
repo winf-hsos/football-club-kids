@@ -55,3 +55,11 @@
 .abrow .btn { flex: none; }
 @media (max-width: 520px) { .abrow { flex-wrap: wrap; } .abrow .btn { width: 100%; } }
 .attr.sub { padding-left: 14px; opacity: .92; } .attr.sub .at-n { font-size: .84rem; color: var(--muted); } .attr.sub .at-b { height: 7px; } .attr.head .at-n { font-weight: 700; }
+
+.pavatar { border-radius: 14px; background: linear-gradient(160deg, #2a3a5c, #131b2e); object-fit: cover; flex: none; border: 2px solid var(--line2); }
+.face-ed { display: flex; flex-direction: column; gap: 10px; }
+.face-top { display: flex; align-items: center; justify-content: center; gap: 16px; flex-wrap: wrap; }
+.face-prev { width: 150px; height: 180px; border-radius: 18px; background: linear-gradient(160deg, #2a3a5c, #131b2e); border: 2px solid var(--line2); }
+.face-h { margin: 8px 0 0; font-size: .8rem; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); border-top: 1px solid var(--line); padding-top: 8px; }
+.swatch-in { width: 34px; height: 34px; padding: 0; border: 2px solid var(--line2); border-radius: 50%; background: none; cursor: pointer; }
+.face-modal .modal { max-height: 92vh; overflow-y: auto; }
