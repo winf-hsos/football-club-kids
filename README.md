@@ -21,6 +21,8 @@ Stufe 1: spielbares Freundschaftsspiel. Stufe 2: Welt & Karriere (Ligen, Pokale,
 
 > Der computergesteuerte Torwart kommt heraus, wenn ein Stürmer allein auf das Tor zuläuft, und wirft sich dem Ballführer vor die Füße (Test: `node test/gk_rush.js`).
 
+> Die Spieler bleiben nicht starr auf ihrer Position: Außenspieler schalten sich über die Flanke mit nach vorn ein, Mittelfeldspieler laufen spät in den Strafraum, ein Stürmer lässt sich zum Aufbau fallen, und beim Verteidigen sichert ein zweiter Spieler hinter dem Ballführer ab. Die Mannschaft bleibt dabei kompakt (Test: `node test/fluid_roles.js`).
+
 > Unten rechts im Hauptmenü steht der Button „♥ Spenden“. Im Dialog wählst du einen Betrag (1/2/5/10 € oder frei), spendest über PayPal und schickst deinen Wunsch per E-Mail. Je höher die Spende, desto höher die Priorität des Wunsches. Im Hauptmenü (nie im Spiel) erscheint alle 15 Minuten eine Erinnerung mit „Später“ und „Nicht mehr anzeigen“. Das Spiel bleibt kostenlos und ohne Werbung.
 
 Spielt nur eine Person mit der Tastatur, gelten beide Belegungen zusammen (WASD oder Pfeile, Q/Leertaste, E/X, R/C, F/V).
@@ -57,8 +59,9 @@ Vereinfachungen: Alle Ligen laufen im gleichen Zeitraum (Aug–Juli); keine Qual
 
 Vereinfachungen: Die Vereine der Welt tauschen untereinander keine Spieler; ihre Kader werden jede Saison neu erzeugt. Transfers des Nutzers wirken nur auf die beteiligten Clubs. Sperren (Gelb/Rot) werden im Karrieremodus nicht über Spiele hinweg gezählt.
 
-## Inhalt Stufe 4 – Karten-Modus (Hauptmenü → Karten-Modus)
-- **Karten**: Generierte Spieler (Vereinsnamen echt, Spieler erfunden) in fünf Seltenheiten: Bronze (45–64), Silber (65–74), Gold (75–82), Elite (83–89), Legende (90+). Jede Karte hat Position, Land, Verein, Liga, Alter und Spielwerte; „Rare“-Karten glänzen.
+## Inhalt Stufe 4 – Ultimate Team (Hauptmenü → Ultimate Team)
+- **Karten**: Generierte Spieler (Vereinsnamen echt, Spieler erfunden) in fünf Seltenheiten: Bronze (45–64), Silber (65–74), Gold (75–82), Elite (83–89), Icon (90+). Jede Karte hat Position, Land, Verein, Liga, Alter und Spielwerte; „Rare“-Karten glänzen.
+- **Spezialkarten**: Ab Gold gibt es seltene Sonderstile mit eigenem Aussehen: Ones to Watch (Gold), Team der Woche, Team der Saison, Held und Spieler des Monats (Elite) sowie Team des Jahres (Icon-Stufe). Sie sind mehr wert und lassen sich in der Sammlung nach Stil filtern. Alle Spieler sind erfunden.
 - **Start**: Starter-Team (21 Bronze-Karten), 3.000 Münzen, 2 Bronze-Packs und ein kostenloses Bronze-Pack pro Tag.
 - **Packs**: Bronze, Silber, Gold, Premium und Legenden-Pack mit angezeigten Chancen und garantierter Mindest-Seltenheit; Aufdeck-Animation. Münzen gibt es nur im Spiel, echtes Geld wird nie gebraucht.
 - **Aufstellung & Chemie**: 7 Formationen auf einem Spielfeld, Karte antippen zum Tauschen (mit Vorschau). Chemie 0–3 pro Spieler aus gleichem Verein, Land und Liga (bis +3 Wertung), falsche Position gibt Abzüge. „Auto-Aufstellung“ sucht die beste Mischung.

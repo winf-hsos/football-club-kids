@@ -42,7 +42,7 @@
     "du.result.send": "Schick diesen Ergebnis-Code an {n}, damit {n} das Ergebnis eintragen kann.",
     "du.role.A": "du hast gegen {n} gespielt",
     "du.role.C": "{n} hat deine Herausforderung gespielt",
-    "du.team.cards": "Karten-Modus-Team ({n})",
+    "du.team.cards": "Ultimate-Team-Kader ({n})",
     "du.team.club": "Beliebiger Verein oder Nationalteam …",
     "du.team.editor": "Tipp: Auch deine eigenen Vereine aus dem Editor stehen in der Vereinsliste.",
     "du.team.mine": "Mein Team ändern",
