@@ -375,7 +375,7 @@
     if (!Array.isArray(cards)) { err('bad'); return; }
     save();
     cards.sort((a, b) => a.o - b.o);
-    sfx('whistle');
+    const showReveal = () => {
     const wrap = h('div', { class: 'opener' });
     const row = h('div', { class: 'op-row' });
     let revealed = 0;
@@ -409,6 +409,9 @@
     foot.appendChild(UI.btn(T('k.open.all'), () => { cells.forEach((c, i) => setTimeout(() => c._flip(), i * 180)); }, 'ghost'));
     wrap.appendChild(foot);
     UI.modal(packName(id), wrap, { sticky: true, cls: 'packfx' });
+    };
+    // 3D pack animation first (needs WebGL); without it the reveal starts right away
+    if (!(FCK.PackFX && FCK.PackFX.play({ id, cards, name: packName(id), sfx }, showReveal))) { sfx('whistle'); showReveal(); }
   }
   CUI.openPackFlow = openPackFlow;
 
