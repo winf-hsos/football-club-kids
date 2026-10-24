@@ -609,3 +609,5 @@ details.adv.big .grid2 { margin-top: 6px; }
   .tc-meta { flex-direction: column; gap: 2px !important; text-align: center; } .tcard { padding: 28px 6px 8px; }
 }
 @media (max-width: 520px) { .topbar { gap: 6px; } .topbar .btn { padding: 8px 12px; } .topbar .btn.xl { padding: 10px 14px; font-size: .95rem; } .topbar h2 { font-size: 1.05rem; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } }
+
+.build-tag { position: fixed; left: var(--gut-l, 10px); bottom: calc(var(--gut-b, 0px) + 4px); font-size: .62rem; opacity: .4; color: var(--text); pointer-events: none; z-index: 5; letter-spacing: .02em; }
