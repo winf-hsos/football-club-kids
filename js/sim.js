@@ -242,7 +242,7 @@
 
     integrate(p, dt) {
       const m = this;
-      p.noCtl = Math.max(0, p.noCtl - dt); p.tackleCd = Math.max(0, p.tackleCd - dt);
+      p.noCtl = Math.max(0, p.noCtl - dt); p.tackleCd = Math.max(0, p.tackleCd - dt); if (p.jumpT > 0) p.jumpT -= dt;
       let wx = p.wx, wy = p.wy, acc = 26;
       if (p.state === 'slide') {
         p.stT -= dt;
@@ -563,10 +563,13 @@
         if (p.isGK) reach = (p.state === 'dive' ? 2.1 : 1.15) + (p.abx && p.abx.gkReach || 0);
         if (p.state === 'slide') reach = 1.25;
         if (p.abx && !p.isGK) reach += (p.abx.reachLoose || 0) + (b.passTarget === p ? (p.abx.touch || 0) : 0);
-        const hmax = p.isGK ? 2.45 : 1.15;
+        // field players can head balls between knee and head height
+        const canHead = !p.isGK && p.state === 'idle' && b.z > 1.15 && sp < 30;
+        if (canHead) reach = 1.05 + (p.a.phy / 100) * 0.35;
+        const hmax = p.isGK ? 2.45 : canHead ? 2.3 : 1.15;
         if (b.z > hmax) continue;
         if (d > reach) continue;
-        const sc = (p.a.dri / 100) * 0.4 + this.rng.next() * 0.6 - d * 0.25 + (p.isGK ? 0.3 : 0);
+        const sc = canHead ? (p.a.phy * 0.6 + p.a.def * 0.15 + p.a.sho * 0.1) / 100 + this.rng.next() * 0.5 - d * 0.25 : (p.a.dri / 100) * 0.4 + this.rng.next() * 0.6 - d * 0.25 + (p.isGK ? 0.3 : 0);
         if (sc > bs) { bs = sc; best = p; }
       }
       if (!best) return;
@@ -575,6 +578,7 @@
         this.keeperTouch(p);
         return;
       }
+      if (!p.isGK && b.z > 1.15) { this.headBall(p); return; }
       // field player
       const rel = Math.sqrt((b.vx - p.vx) * (b.vx - p.vx) + (b.vy - p.vy) * (b.vy - p.vy));
       const skill = (p.a.dri * 0.6 + p.a.pas * 0.4) / 100;
@@ -590,6 +594,29 @@
         return;
       }
       this.gainControl(p);
+    }
+
+    // header: the ball is played on in the air (shot at goal, clearance, flick-on or pass); direction comes from the AI helper or the player's input
+    headBall(p) {
+      const b = this.ball, m = this, team = p.team;
+      if (!this.checkOffsideOnTouch(p)) return;
+      const z0 = b.z, prev = b.lastTouch;
+      const choice = FCK.AI && FCK.AI.headerPick ? FCK.AI.headerPick(m, p) : null;
+      p.jumpT = 0.45;
+      if (choice && choice.type === 'shot') {
+        this.shoot(p, choice.dx, choice.dy, 0.3 + (p.a.phy / 100) * 0.15, 0.55, 'header');
+        b.vz = -1.5 - m.rng.range(0, 1.5);
+      } else if (choice && choice.type === 'pass') {
+        this.passTo(p, choice.target, 'pass', 0.55);
+        b.vz = 0.5;
+      } else {
+        const c = choice || { dx: team.dir, dy: 0, speed: 14, vz: 4 };
+        this.launch(p, c.dx, c.dy, c.speed, c.vz, 'header');
+        b.offsideSet = null;
+      }
+      b.z = z0; b.lastKind = b.lastKind === 'shot' ? 'shot' : 'header';
+      p.noCtl = 0.45;
+      this.emit('header', { by: p, team: p.ti });
     }
 
     gainControl(p) {
