@@ -10,6 +10,63 @@
 
   const ATTR = ['pac', 'sho', 'pas', 'dri', 'def', 'phy'];
   Pro.ATTR = ATTR;
+  // 31 detail values (+5 for keepers) behind the six headline values; the headline value is their weighted average and is what the match engine uses
+  Pro.DET = {
+    pac: [['accel', 0.45], ['sprint', 0.55]],
+    sho: [['finish', 0.3], ['power', 0.2], ['long', 0.15], ['volley', 0.1], ['pen', 0.05], ['attpos', 0.2]],
+    pas: [['vision', 0.2], ['cross', 0.15], ['fk', 0.1], ['short', 0.3], ['long2', 0.15], ['curve', 0.1]],
+    dri: [['agil', 0.12], ['bal', 0.08], ['react', 0.12], ['ctrl', 0.22], ['drib', 0.22], ['comp', 0.1], ['skill', 0.14]],
+    def: [['inter', 0.2], ['head', 0.12], ['aware', 0.2], ['stand', 0.2], ['slide', 0.13], ['mark', 0.15]],
+    phy: [['jump', 0.2], ['stam', 0.3], ['str', 0.3], ['aggr', 0.2]],
+  };
+  Pro.GKD = ['gk_div', 'gk_han', 'gk_kic', 'gk_pos', 'gk_ref'];
+  Pro.DKEYS = ATTR.reduce((a, k) => a.concat(Pro.DET[k].map((x) => x[0])), []);
+  Pro.groupOf = (key) => ATTR.find((k) => Pro.DET[k].some((x) => x[0] === key)) || (Pro.GKD.includes(key) ? 'gk' : null);
+  // typical strengths by position (added to the group value before the group is re-centred)
+  const FLAVOR = {
+    ST: { finish: 5, attpos: 5, volley: 3, head: 3, comp: 3, power: 2, inter: -6, mark: -6, slide: -6, stand: -5, aware: -6, vision: -3, cross: -4 },
+    LW: { accel: 3, sprint: 2, cross: 4, skill: 5, drib: 3, agil: 4, finish: 1, head: -4, str: -5, jump: -3, slide: -4 },
+    RW: { accel: 3, sprint: 2, cross: 4, skill: 5, drib: 3, agil: 4, finish: 1, head: -4, str: -5, jump: -3, slide: -4 },
+    LM: { cross: 5, accel: 2, stam: 3, drib: 2, head: -3, str: -3 }, RM: { cross: 5, accel: 2, stam: 3, drib: 2, head: -3, str: -3 },
+    CAM: { vision: 6, short: 3, ctrl: 3, curve: 3, fk: 3, comp: 3, skill: 3, long: 2, mark: -6, slide: -5, str: -4 },
+    CM: { short: 4, vision: 3, stam: 4, inter: 2, long2: 3, ctrl: 2, finish: -2 },
+    CDM: { inter: 6, aware: 5, stand: 5, mark: 4, slide: 3, str: 3, short: 2, aggr: 4, finish: -5, volley: -5, skill: -5, curve: -4 },
+    CB: { head: 6, aware: 5, stand: 5, mark: 5, inter: 4, jump: 5, str: 5, aggr: 3, finish: -8, skill: -8, curve: -6, volley: -8, long: -6, agil: -5, accel: -3 },
+    LB: { cross: 3, stam: 5, accel: 3, sprint: 3, stand: 2, slide: 3, finish: -6, head: -2, skill: -3 }, RB: { cross: 3, stam: 5, accel: 3, sprint: 3, stand: 2, slide: 3, finish: -6, head: -2, skill: -3 },
+    GK: {},
+  };
+  const dmult = (p, key, v) => (v >= 0 ? p.dm[key] : 2 - p.dm[key]);
+  function buildDetails(p, rng) {
+    const fl = FLAVOR[p.pos] || {};
+    p.d = {}; p.dm = {};
+    ATTR.forEach((k) => {
+      const raw = Pro.DET[k].map((x) => p.a[k] + (fl[x[0]] || 0) + rng.gauss() * 3.2);
+      const avg = Pro.DET[k].reduce((s, x, i) => s + x[1] * raw[i], 0);
+      Pro.DET[k].forEach((x, i) => { p.d[x[0]] = clamp(raw[i] + (p.a[k] - avg), 20, 99); });
+    });
+    const gk = FCK.ROLE_OF[p.pos] === 'GK';
+    const raw = Pro.GKD.map(() => (gk ? p.a.gk : 18) + rng.gauss() * (gk ? 3 : 2));
+    const avg = raw.reduce((s, v) => s + v, 0) / raw.length;
+    Pro.GKD.forEach((k, i) => { p.d[k] = clamp(raw[i] + (gk ? p.a.gk - avg : 0), 10, 99); });
+    Pro.DKEYS.concat(Pro.GKD).forEach((k) => { p.dm[k] = 0.8 + rng.next() * 0.45; });
+  }
+  // headline values from the detail values
+  Pro.sync = function (p) {
+    ATTR.forEach((k) => { p.a[k] = Pro.DET[k].reduce((s, x) => s + x[1] * p.d[x[0]], 0); });
+    if (FCK.ROLE_OF[p.pos] === 'GK') p.a.gk = Pro.GKD.reduce((s, k) => s + p.d[k], 0) / Pro.GKD.length;
+  };
+  // old saves (before the detail values) get them built from the six values
+  Pro.fix = function (p) {
+    if (p.d && p.dm) return p;
+    buildDetails(p, U.makeRng(hash('det' + p.name + p.age + p.pos) >>> 0));
+    return p;
+  };
+  // grow (or shrink) a group of detail values
+  Pro.bump = function (p, group, v, top) {
+    const lim = top || Pro.cap(p);
+    const keys = group === 'gk' ? Pro.GKD : Pro.DET[group].map((x) => x[0]);
+    keys.forEach((k) => { p.d[k] = clamp(p.d[k] + v * dmult(p, k, v), 20, Math.max(lim, 20)); });
+  };
   Pro.POS = ['GK', 'LB', 'CB', 'RB', 'CDM', 'CM', 'CAM', 'LM', 'RM', 'LW', 'RW', 'ST'];
   // same offsets as the squad generator, so a rating means the same thing for the pro and for everybody else
   const BIAS = {
@@ -76,6 +133,8 @@
       contract: { until: 0, wage: 0 }, season: blankSeason(), hist: [], tot: { ap: 0, st: 0, g: 0, a: 0, min: 0, mom: 0, cs: 0, rs: 0, rn: 0 },
       trophies: [], awards: [], intl: { caps: 0, goals: 0, done: [], tour: [] }, obj: [], pending: null, offers: [], last: null, retired: false, rec: { seasons: 0 },
     };
+    buildDetails(p, rng);
+    Pro.sync(p);
     return p;
   };
   function defaultFocus(pos) {
@@ -97,7 +156,7 @@
   };
   // squad record as the match engine and the squad generator use it
   Pro.rec = function (c, noShift) {
-    const p = c.pro, sh = noShift ? 0 : Pro.shift(p);
+    const p = Pro.fix(c.pro), sh = noShift ? 0 : Pro.shift(p);
     const a = {};
     ATTR.forEach((k) => { a[k] = clamp(Math.round(p.a[k] + sh), 22, 99); });
     a.gk = FCK.ROLE_OF[p.pos] === 'GK' ? clamp(Math.round(p.a.gk + sh), 30, 99) : 20;
@@ -119,7 +178,7 @@
     return out;
   };
   Pro.attach = function (c) {
-    const sim = c.sim, p = c.pro;
+    const sim = c.sim, p = Pro.fix(c.pro);
     sim.userSquad = () => Pro.simSquad(c);
     sim.nameHook = null;
     sim.scorerHook = (k, rng) => {
@@ -213,9 +272,10 @@
     if (FCK.ROLE_OF[p.pos] === 'GK') return out;
     const star = p.trust >= 55;
     if (!star) return out;
-    if (p.a.sho >= 72 && FCK.ROLE_OF[p.pos] !== 'DF') out.push('penalty');
-    if (p.a.sho >= 68 || p.a.pas >= 72) out.push('freekick');
-    if (p.a.pas >= 70 && ['LM', 'RM', 'LW', 'RW', 'CAM', 'CM'].includes(p.pos)) out.push('corner');
+    Pro.fix(p);
+    if ((p.a.sho >= 72 || p.d.pen >= 76) && p.d.pen >= 62 && FCK.ROLE_OF[p.pos] !== 'DF') out.push('penalty');
+    if ((p.a.sho >= 68 || p.a.pas >= 72) && p.d.fk >= 58) out.push('freekick');
+    if (p.a.pas >= 70 && p.d.cross >= 62 && ['LM', 'RM', 'LW', 'RW', 'CAM', 'CM'].includes(p.pos)) out.push('corner');
     return out;
   };
   // match configuration additions for the engine; null when he cannot be controlled alone
@@ -307,9 +367,11 @@
     const room = Pro.ovr(p) < p.pt ? 1 : 0.4;
     const g = 0.05 * im * am * room;
     const fk = p.train.focus;
-    if (fk === 'all') ATTR.forEach((k) => { p.a[k] = Math.min(Pro.cap(p), p.a[k] + g * 0.4); });
-    else { p.a[fk] = Math.min(Pro.cap(p), p.a[fk] + g); ATTR.forEach((k) => { if (k !== fk) p.a[k] = Math.min(Pro.cap(p), p.a[k] + g * 0.12); }); }
-    if (FCK.ROLE_OF[p.pos] === 'GK') p.a.gk = Math.min(Pro.cap(p), p.a.gk + g * (fk === 'all' ? 0.4 : 0.6));
+    Pro.fix(p);
+    if (fk === 'all') ATTR.forEach((k) => Pro.bump(p, k, g * 0.4));
+    else { Pro.bump(p, fk, g); ATTR.forEach((k) => { if (k !== fk) Pro.bump(p, k, g * 0.12); }); }
+    if (FCK.ROLE_OF[p.pos] === 'GK') Pro.bump(p, 'gk', g * (fk === 'all' ? 0.4 : 0.6));
+    Pro.sync(p);
     p.fit = clamp(p.fit - (inten === 'low' ? 1 : inten === 'high' ? 6 : 3) + (inten === 'low' ? 19 : inten === 'high' ? 14 : 16), 0, 100);
     // experience
     const xp = played ? 6 + Math.max(0, rating - 5.5) * 5 + goals * 5 + assists * 3 + (rating >= 8.5 ? 8 : 0) + (win ? 2 : 0) : 2;
@@ -486,6 +548,7 @@
     if (S.ap >= 25 && avg >= 7.9 && Pro.ovr(p) >= 84 && (sm.pos <= 2 || sm.euroWon)) rep.awards.push('world');
     rep.awards.forEach((k) => p.awards.push({ y: sim.year, k }));
     // development
+    Pro.fix(p);
     const before = Pro.ovr(p);
     const dev = DEV(p.age) * (DEV(p.age) > 0 ? (Pro.ovr(p) < p.pt ? 1 : 0.3) : 1);
     ATTR.forEach((k) => {
@@ -493,9 +556,10 @@
       if (p.age >= 28 && k === 'pac') d = dev * 1.7 - 0.2;
       if (p.age <= 22 && k === 'phy') d = dev * 1.15;
       if (p.age >= 30 && (k === 'pas' || k === 'def')) d = dev * 0.5;
-      p.a[k] = clamp(p.a[k] + d, 25, Pro.cap(p));
+      Pro.bump(p, k, d);
     });
-    if (FCK.ROLE_OF[p.pos] === 'GK') p.a.gk = clamp(p.a.gk + dev * 0.9 + (p.age >= 30 ? 0.6 : 0), 30, Pro.cap(p));
+    if (FCK.ROLE_OF[p.pos] === 'GK') Pro.bump(p, 'gk', dev * 0.9 + (p.age >= 30 ? 0.6 : 0));
+    Pro.sync(p);
     rep.dev = Pro.ovr(p) - before;
     // summer tournament
     const T = Pro.tournament(c, sim.year + 1);
@@ -543,11 +607,19 @@
   };
 
   // ---------------------------------------------------------------- spending skill points
-  Pro.canSpend = (p, k) => p.sp > 0 && p.a[k] + 1 <= Pro.cap(p) && Math.round(p.a[k]) < 99;
+  // one point raises one detail value by 3 (a group name spreads the points over the whole group)
+  Pro.canSpend = (p, k) => {
+    Pro.fix(p);
+    if (p.sp <= 0) return false;
+    if (p.d[k] === undefined) return ATTR.includes(k) && Math.round(p.a[k]) < Math.min(99, Pro.cap(p));
+    return Math.round(p.d[k]) < Math.min(99, Pro.cap(p));
+  };
   Pro.spend = function (c, k) {
-    const p = c.pro;
+    const p = Pro.fix(c.pro);
     if (!Pro.canSpend(p, k)) return false;
-    p.sp--; p.a[k] = Math.min(99, p.a[k] + 1);
+    p.sp--;
+    if (p.d[k] === undefined) Pro.bump(p, k, 1.0); else p.d[k] = Math.min(99, Pro.cap(p), p.d[k] + 3);
+    Pro.sync(p);
     return true;
   };
   Pro.stats = function (p) {

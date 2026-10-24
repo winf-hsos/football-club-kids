@@ -54,3 +54,4 @@
 .abrow .abtx .abreq.bad { color: #ff8a8a; }
 .abrow .btn { flex: none; }
 @media (max-width: 520px) { .abrow { flex-wrap: wrap; } .abrow .btn { width: 100%; } }
+.attr.sub { padding-left: 14px; opacity: .92; } .attr.sub .at-n { font-size: .84rem; color: var(--muted); } .attr.sub .at-b { height: 7px; } .attr.head .at-n { font-weight: 700; }
