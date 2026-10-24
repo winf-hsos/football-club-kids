@@ -375,19 +375,20 @@
     if (!Array.isArray(cards)) { err('bad'); return; }
     save();
     cards.sort((a, b) => a.o - b.o);
-    const showReveal = () => {
+    let cells = [];
+    const showReveal = (auto) => {
     const wrap = h('div', { class: 'opener' });
     const row = h('div', { class: 'op-row' });
     let revealed = 0;
     const info = h('p', { class: 'fine center', text: T('k.open.tap') });
     const foot = h('div', { class: 'row center' });
-    const cells = cards.map((c) => {
+    cells = cards.map((c) => {
       const cell = h('button', { class: 'op-cell', type: 'button', 'aria-label': T('k.open') },
         h('div', { class: 'op-in' }, h('div', { class: 'op-back pk-' + id }, h('b', { text: '⚽' })), h('div', { class: 'op-front' }, fc(c, { sz: 'm', cls: 'op-fc' }))));
-      const flip = () => {
+      const flip = (quiet) => {
         if (cell.classList.contains('flipped')) return;
         cell.classList.add('flipped'); revealed++;
-        sfx(c.r >= 3 ? 'goal' : c.r === 2 ? 'ok' : 'tick');
+        if (quiet !== true) sfx(c.r >= 3 ? 'goal' : c.r === 2 ? 'ok' : 'tick');
         if (c.r >= 2) cell.classList.add('glow' + c.r);
         if (revealed === cards.length) done();
       };
@@ -411,7 +412,15 @@
     UI.modal(packName(id), wrap, { sticky: true, cls: 'packfx' });
     };
     // 3D pack animation first (needs WebGL); without it the reveal starts right away
-    if (!(FCK.PackFX && FCK.PackFX.play({ id, cards, name: packName(id), sfx }, showReveal))) { sfx('whistle'); showReveal(); }
+    const fxOpts = {
+      id, cards, name: packName(id), sfx,
+      faceUrl, crestUrl: (c) => { const cl = Cs.clubOf(c); try { return cl ? FCK.crestDataUrl(cl, 96) : ''; } catch (e) { return ''; } },
+      kitFor: (c) => { const cl = Cs.clubOf(c); try { return FCK.makeKits(cl || Cs.club(S, 60), Cs.club(S, 60))[0]; } catch (e) { return null; } },
+      lookFor: (c) => Cs.player(c, c.pos, c.o, 0).look,
+      statsFor: (c) => { const p = Cs.player(c, c.pos, c.o, 0); return ['pac', 'sho', 'pas', 'dri', 'def', 'phy'].map((k) => [T('m.a.' + k).slice(0, 3).toUpperCase(), p.a[k]]); },
+      flag: (c) => flag(c.nt), rarName: (c) => rarName(c.r) + (c.sk ? ' · ' + T('k.sk.' + c.sk) : ''),
+    };
+    if (!(FCK.PackFX && FCK.PackFX.play(fxOpts, (seen) => { showReveal(!!seen); if (seen) cells.forEach((c) => c._flip(true)); }))) { sfx('whistle'); showReveal(false); }
   }
   CUI.openPackFlow = openPackFlow;
 

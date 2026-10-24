@@ -641,3 +641,8 @@ details.adv.big .grid2 { margin-top: 6px; }
 .pfx-skip { position: absolute; right: var(--gut-r, 12px); top: var(--gut-t, 12px); background: rgba(255, 255, 255, .1); color: var(--text); border: 1px solid var(--line2); border-radius: 999px; padding: 6px 14px; font-size: .8rem; cursor: pointer; }
 @keyframes pfx-pulse { 0%, 100% { transform: translateX(-50%) scale(1); } 50% { transform: translateX(-50%) scale(1.06); } }
 @media (prefers-reduced-motion: reduce) { .pfx-open { animation: none; } }
+
+.pfx-info { position: absolute; left: 3%; width: 44%; bottom: calc(var(--gut-b, 10px) + 78px); text-align: center; pointer-events: none; opacity: 0; transform: translateY(10px); transition: opacity .35s, transform .35s; text-shadow: 0 2px 10px rgba(0, 0, 0, .8); }
+.pfx-info[hidden] { display: none; } .pfx-info.show { opacity: 1; transform: none; }
+.pfx-n { font-size: .75rem; opacity: .7; letter-spacing: .12em; } .pfx-name { display: block; font-size: 1.7rem; text-transform: uppercase; letter-spacing: .04em; } .pfx-sub { font-size: .95rem; opacity: .85; }
+@media (max-width: 700px) { .pfx-info { left: 0; width: 100%; bottom: calc(var(--gut-b, 10px) + 76px); } .pfx-name { font-size: 1.3rem; } }

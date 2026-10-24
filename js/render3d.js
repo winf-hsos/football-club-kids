@@ -1582,4 +1582,13 @@
   };
   FCK.rotInput = (inp) => { const r = FCK.game && FCK.game.r; if (r && r.mode3d && r.inputRot) r.inputRot(inp); };
   FCK.Renderer3D = Renderer3D;
+  // standalone player model for other 3D scenes (Ultimate Team pack opening): p = { look, num, isGK, sname }, kit as in a match
+  FCK.R3D_makePlayer = function (p, kit) {
+    const r = { matPlayer: new THREE.MeshLambertMaterial({ vertexColors: true, map: texAtlas(), alphaTest: 0.5, skinning: true }) };
+    const M = new PlayerModel(r, { x: 0, y: 0, ang: 0, num: p.num || 9, isGK: !!p.isGK, sname: p.sname || 'x', look: p.look }, kit, false);
+    M.dispose2 = () => { M.dispose(); r.matPlayer.dispose(); };
+    return M;
+  };
+  FCK.R3D_B = B;
+  FCK.R3D_ball = () => new THREE.Mesh(new THREE.SphereGeometry(0.26, 16, 12), new THREE.MeshLambertMaterial({ map: texBall() }));
 })((globalThis.FCK = globalThis.FCK || {}));
