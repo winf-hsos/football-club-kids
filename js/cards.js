@@ -581,12 +581,28 @@
   // ---------------------------------------------------------------- league ladder / matches
   Cards.oppRating = (div) => 48 + (Cards.DIVS - div) * 4.4;
   Cards.divMul = (div) => 1 + (Cards.DIVS - div) * 0.15;
+  // opponents are invented clubs (name, colours, crest, stadium) of a fitting strength; their squads are generated like all squads
+  const FK_PRE = ['FC', 'SC', 'SV', 'Real', 'Dynamo', 'Sporting', 'Union', 'Rapid', 'Olympia', 'Victoria', 'Atletic', 'Racing', 'Inter', 'Stern', 'United'];
+  const FK_PLACE = ['Nordhafen', 'Sonnental', 'Eisbach', 'Rotwald', 'Blaufeld', 'Goldküste', 'Silberberg', 'Mondstadt', 'Falkenau', 'Steinbruck', 'Wellenburg', 'Kornfeld', 'Lindenau', 'Adlerhorst', 'Sturmhafen', 'Birkenau', 'Felsenburg', 'Seewiesen', 'Rabenstein', 'Windmark', 'Tannenhain', 'Kupferstadt', 'Nebelgrund', 'Sonnenhafen', 'Wolkenfels', 'Löwenau', 'Quellental', 'Bernsdorf', 'Ostmark', 'Hirschfeld'];
+  const FK_SUF = ['', '', '', ' 04', ' 09', ' 1912', ' City', ' Athletic', ' Albion'];
+  const FK_KITS = ['solid', 'stripesV', 'hoops', 'halves', 'band', 'sash', 'sleeves'];
+  const FK_SHAPES = ['round', 'shield', 'diamond'];
+  const FK_PATTERNS = ['plain', 'halves', 'stripesV', 'chevron', 'bend', 'cross'];
+  const FK_EMBLEMS = ['star', 'ball', 'bolt', 'crown', 'ring', 'tower', 'leaf'];
+  Cards.fakeClub = function (rng, rating) {
+    const name = rng.pick(FK_PRE) + ' ' + rng.pick(FK_PLACE) + rng.pick(FK_SUF);
+    const pal = rng.pick(PALETTES);
+    const co = rng.pick(W.countries.filter((c) => c.uefa));
+    const short = name.replace(/^(FC|SC|SV) /, '').replace(/[^A-Za-zÄÖÜäöü]/g, '').toUpperCase().slice(0, 3);
+    return {
+      id: 'fk' + W.hash(name + '|' + Math.round(rating)).toString(36), name, short, cc: co.cc, country: co.cc, league: 'Ultimate Team', lname: 'Ultimate Team', tier: 1,
+      rating: Math.round(rating), colors: { p: pal[0], s: pal[1], t: FCK.color && FCK.color.lum(pal[0]) > 0.55 ? '#14213d' : '#ffffff' }, kit: rng.pick(FK_KITS),
+      crest: { shape: rng.pick(FK_SHAPES), pattern: rng.pick(FK_PATTERNS), emblem: rng.pick(FK_EMBLEMS) }, stadium: name.split(' ')[1] + ' Arena', cap: 12000 + rng.int(0, 40) * 1000, world: true, fake: true,
+    };
+  };
   Cards.opponent = function (S) {
     const rng = U.makeRng(W.hash('opp' + S.seed + ':' + S.st.rounds + ':' + S.rank.m));
-    const target = Cards.oppRating(S.rank.div) + rng.range(-2.2, 2.2);
-    const pool = W.clubs.filter((c) => Math.abs(c.rating - target) <= 2.2);
-    const list = pool.length ? pool : [W.clubs.slice().sort((a, b) => Math.abs(a.rating - target) - Math.abs(b.rating - target))[0]];
-    return list[rng.int(0, list.length - 1)];
+    return Cards.fakeClub(rng, Cards.oppRating(S.rank.div) + rng.range(-2.2, 2.2));
   };
   const OPP_FORMS = ['4-4-2', '4-3-3', '4-2-3-1', '3-5-2', '4-1-4-1', '5-3-2', '3-4-3'];
   Cards.buildCfg = function (S, kind, opp) {

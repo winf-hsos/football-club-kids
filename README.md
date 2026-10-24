@@ -67,7 +67,7 @@ Vereinfachungen: Die Vereine der Welt tauschen untereinander keine Spieler; ihre
 - **Start**: Starter-Team (21 Bronze-Karten), 3.000 Münzen, 2 Bronze-Packs und ein kostenloses Bronze-Pack pro Tag.
 - **Packs**: Bronze, Silber, Gold, Premium und Legenden-Pack mit angezeigten Chancen und garantierter Mindest-Seltenheit; Aufdeck-Animation. Münzen gibt es nur im Spiel, echtes Geld wird nie gebraucht.
 - **Aufstellung & Chemie**: 7 Formationen auf einem Spielfeld, Karte antippen zum Tauschen (mit Vorschau). Chemie 0–3 pro Spieler aus gleichem Verein, Land und Liga (bis +3 Wertung), falsche Position gibt Abzüge. „Auto-Aufstellung“ sucht die beste Mischung.
-- **Liga-Serie**: Division 10 bis 1, je 5 Spiele (Sieg 3, Unentschieden 1). 10+ Punkte = Aufstieg mit Pack, 3 oder weniger = Abstieg. Gegner sind echte Vereine passender Stärke, gespielt wird mit der normalen Match-Engine. Dazu Freundschaftsspiele gegen jeden Verein.
+- **Liga-Serie**: Division 10 bis 1, je 5 Spiele (Sieg 3, Unentschieden 1). 10+ Punkte = Aufstieg mit Pack, 3 oder weniger = Abstieg. Gegner sind ausgedachte Vereine (Name, Farben, Wappen, Stadion) passender Stärke mit generierten Spielern, gespielt wird mit der normalen Match-Engine. Dazu Freundschaftsspiele gegen jeden Verein.
 - **Markt**: 30 Angebote, die sich nach jedem Spiel ändern; eigene Karten mit eigenem Preis anbieten (Verkaufschance hängt vom Preis ab, 5 % Gebühr) oder sofort verkaufen.
 - **Aufgaben & Tausch**: 3 Tagesaufgaben, 15 Erfolge, 10 Tausch-Aufgaben (Karten abgeben, Belohnung bekommen) und ein Tages-Tausch.
 - **Eigener Verein**: Name, Farben, Trikot und Wappen. Sammlung als Text exportieren/importieren; sie ist auch in den Speicherplätzen des Hauptmenüs enthalten.

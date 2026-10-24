@@ -104,6 +104,7 @@ C.setForm(S, '4-3-3');
 {
   S.preset = 'cpu';
   const opp = C.opponent(S);
+  ok(opp.fake && !W.byId[opp.id] && opp.name === C.opponent(S).name, 'opponent is an invented, stable club');
   const cfg = C.buildCfg(S, 'ladder', opp);
   ok(cfg.squads[0].lineup.length === 11 && cfg.squads[0].bench.length === 7, 'cfg squad sizes');
   const m = new FCK.Match({ clubs: cfg.clubs, settings: cfg.settings, slots: [], squads: cfg.squads });
