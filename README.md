@@ -21,7 +21,7 @@ Stufe 1: spielbares Freundschaftsspiel. Stufe 2: Welt & Karriere (Ligen, Pokale,
 
 > Der computergesteuerte Torwart kommt heraus, wenn ein Stürmer allein auf das Tor zuläuft, und wirft sich dem Ballführer vor die Füße (Test: `node test/gk_rush.js`).
 
-> Unten rechts im Hauptmenü gibt es einen kleinen Link „♥ Spenden“. Nach einem Hinweis „Nur mit Erlaubnis der Eltern“ öffnet er PayPal in einem neuen Tab. Das Spiel selbst bleibt kostenlos und ohne Werbung.
+> Unten rechts im Hauptmenü steht der Button „♥ Spenden“. Im Dialog wählst du einen Betrag (1/2/5/10 € oder frei), spendest über PayPal und schickst deinen Wunsch per E-Mail. Je höher die Spende, desto höher die Priorität des Wunsches. Im Hauptmenü (nie im Spiel) erscheint alle 15 Minuten eine Erinnerung mit „Später“ und „Nicht mehr anzeigen“. Das Spiel bleibt kostenlos und ohne Werbung.
 
 Spielt nur eine Person mit der Tastatur, gelten beide Belegungen zusammen (WASD oder Pfeile, Q/Leertaste, E/X, R/C, F/V).
 
