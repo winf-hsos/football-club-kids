@@ -646,3 +646,4 @@ details.adv.big .grid2 { margin-top: 6px; }
 .pfx-info[hidden] { display: none; } .pfx-info.show { opacity: 1; transform: none; }
 .pfx-n { font-size: .75rem; opacity: .7; letter-spacing: .12em; } .pfx-name { display: block; font-size: 1.7rem; text-transform: uppercase; letter-spacing: .04em; } .pfx-sub { font-size: .95rem; opacity: .85; }
 @media (max-width: 700px) { .pfx-info { left: 0; width: 100%; bottom: calc(var(--gut-b, 10px) + 76px); } .pfx-name { font-size: 1.3rem; } }
+.lp-chip .lp-ovr b { font-size: 1.02em; letter-spacing: -.02em; } .lp-chip .lp-ovr.elite { box-shadow: 0 0 0 2px #f5c542, 0 2px 6px rgba(0,0,0,.45); } .lp-chip .lp-ovr.gold { box-shadow: 0 0 0 2px #d8b040, 0 2px 6px rgba(0,0,0,.45); }
