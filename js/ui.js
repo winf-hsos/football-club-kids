@@ -150,10 +150,13 @@
           mk('normal', '🎮', T('profile.normal'), T('profile.normal.desc'))));
         el.appendChild(h('div', { class: 'row center' }, this.btn(T('welcome.go'), () => { S.welcomed = true; FCK.saveSettings(); FCK.Audio.init(); this.stack = []; this.cur = null; this.show('home'); }, 'primary xl')));
         el.appendChild(h('p', { class: 'fine', text: T('welcome.fine') }));
+        el.appendChild(this.buildTag());
       };
       draw();
       return el;
     },
+
+    buildTag() { return h('div', { class: 'build-tag', text: FCK.BUILD ? 'v ' + FCK.BUILD : '' }); },
 
     logo(big) {
       return h('div', { class: 'logo' + (big ? ' big' : '') },
@@ -193,6 +196,7 @@
       const fs = h('button', { class: 'fs-btn', type: 'button', title: T('fullscreen'), 'aria-label': T('fullscreen') }, '⛶');
       fs.addEventListener('click', () => { this.sfx('click'); try { if (document.fullscreenElement) document.exitFullscreen(); else document.documentElement.requestFullscreen().catch(() => {}); } catch (e) { /* not available */ } });
       el.appendChild(fs);
+      el.appendChild(this.buildTag());
       mark('play');
       return el;
     },
