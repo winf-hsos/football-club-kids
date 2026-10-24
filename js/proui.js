@@ -333,6 +333,7 @@
     sect.appendChild(h('p', { class: 'fine', text: T('ab.note') }));
     return sect;
   }
+  const openAttrs = {};
   function tabPlayer(body, c) {
     const p = c.pro;
     const cap = P.cap(p);
@@ -340,13 +341,24 @@
     sect.appendChild(h('div', { class: 'row tight' }, h('span', { class: 'ci ovr-big', text: Math.round(P.ovr(p)) }), posChip(p.pos), h('span', { class: 'ci', text: T('pro.pot', { n: p.pt }) }), h('span', { class: 'ci', text: T('pro.cap', { n: Math.round(cap) }) }), h('span', { class: 'ci eu', text: T('pro.sp', { n: p.sp }) })));
     sect.appendChild(h('div', { class: 'xpbar' }, h('i', { style: 'width:' + Math.round(p.xp) + '%' }), h('small', { text: T('pro.xp', { n: Math.round(p.xp) }) })));
     const keys = FCK.ROLE_OF[p.pos] === 'GK' ? ['gk'].concat(P.ATTR) : P.ATTR;
+    P.fix(p);
+    const open = openAttrs;
+    const detRow = (key, cls) => {
+      const v = p.d[key];
+      const r = h('div', { class: 'attr ' + (cls || '') }, h('span', { class: 'at-n', text: T('pro.d.' + key) }), h('span', { class: 'at-b' }, h('i', { style: 'width:' + Math.round(U.clamp(v, 0, 99)) + '%' })), h('b', { class: 'at-v', text: Math.round(v) }));
+      const add = UI.btn('+', () => { if (P.spend(c, key)) { UI.sfx('ok'); save(); refresh(); } }, 'primary sm round');
+      if (!P.canSpend(p, key)) add.disabled = true;
+      r.appendChild(add);
+      return r;
+    };
     keys.forEach((k) => {
       const v = p.a[k];
-      const row = h('div', { class: 'attr' }, h('span', { class: 'at-n', text: T('pro.a.' + k) }), h('span', { class: 'at-b' }, h('i', { style: 'width:' + Math.round(U.clamp(v, 0, 99)) + '%' })), h('b', { class: 'at-v', text: Math.round(v) }));
-      const add = UI.btn('+', () => { if (P.spend(c, k)) { UI.sfx('ok'); save(); refresh(); } }, 'primary sm round');
-      if (!P.canSpend(p, k)) add.disabled = true;
-      row.appendChild(add);
+      const row = h('div', { class: 'attr head' }, h('span', { class: 'at-n', text: T('pro.a.' + k) }), h('span', { class: 'at-b' }, h('i', { style: 'width:' + Math.round(U.clamp(v, 0, 99)) + '%' })), h('b', { class: 'at-v', text: Math.round(v) }));
+      const tog = UI.btn(open[k] ? '▴' : '▾', () => { open[k] = !open[k]; refresh(); }, 'ghost sm round');
+      tog.setAttribute('aria-expanded', open[k] ? 'true' : 'false'); tog.setAttribute('aria-label', T('pro.a.' + k));
+      row.appendChild(tog);
       sect.appendChild(row);
+      if (open[k]) (k === 'gk' ? P.GKD : P.DET[k].map((x) => x[0])).forEach((key) => sect.appendChild(detRow(key, 'sub')));
     });
     sect.appendChild(h('p', { class: 'fine', text: T('pro.attrs.note') }));
     body.appendChild(sect);
