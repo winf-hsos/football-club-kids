@@ -347,12 +347,30 @@
         ctx.fillStyle = skin; ctx.beginPath(); ctx.ellipse(r * 0.55, 0, r * 0.4, r * 0.65, 0, 0, Math.PI * 2); ctx.fill();
       } else if (st === 'mohawk') {
         ctx.beginPath(); ctx.ellipse(0, 0, r * 1.05, r * 0.38, 0, 0, Math.PI * 2); ctx.fill();
+      } else if (st === 'afro') {
+        ctx.beginPath(); ctx.arc(-r * 0.1, 0, r * 1.38, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = skin; ctx.beginPath(); ctx.ellipse(r * 0.62, 0, r * 0.32, r * 0.5, 0, 0, Math.PI * 2); ctx.fill();
+      } else if (st === 'ponytail') {
+        ctx.beginPath(); ctx.arc(0, 0, r * 1.0, Math.PI * 0.45, Math.PI * 1.55); ctx.lineTo(r * 0.1, 0); ctx.closePath(); ctx.fill();
+        ctx.beginPath(); ctx.arc(-r * 0.05, 0, r * 0.85, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.ellipse(-r * 1.25, 0, r * 0.7, r * 0.28, 0, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = skin; ctx.beginPath(); ctx.ellipse(r * 0.55, 0, r * 0.42, r * 0.7, 0, 0, Math.PI * 2); ctx.fill();
+      } else if (st === 'quiff' || st === 'sidepart' || st === 'curtains' || st === 'undercut' || st === 'braids') {
+        ctx.beginPath(); ctx.arc(0, 0, r * 1.02, Math.PI * 0.42, Math.PI * 1.58); ctx.lineTo(r * 0.1, 0); ctx.closePath(); ctx.fill();
+        ctx.beginPath(); ctx.arc(-r * 0.05, 0, r * 0.85, 0, Math.PI * 2); ctx.fill();
+        if (st === 'quiff') { ctx.beginPath(); ctx.ellipse(r * 0.35, 0, r * 0.38, r * 0.62, 0, 0, Math.PI * 2); ctx.fill(); }
+        if (st === 'braids') { ctx.strokeStyle = hair; ctx.lineWidth = r * 0.16; for (let i = -2; i <= 2; i++) { ctx.beginPath(); ctx.moveTo(-r * 0.3, i * r * 0.32); ctx.lineTo(-r * 1.15, i * r * 0.4); ctx.stroke(); } }
+        ctx.fillStyle = skin; ctx.beginPath(); ctx.ellipse(r * 0.55, 0, r * 0.42, r * 0.7, 0, 0, Math.PI * 2); ctx.fill();
       }
-      if (look.beard) {
-        ctx.fillStyle = hair; ctx.globalAlpha = 0.9;
-        ctx.beginPath(); ctx.arc(r * 0.15, 0, r * 0.98, -Math.PI * 0.42, Math.PI * 0.42); ctx.arc(r * 0.1, 0, r * 0.55, Math.PI * 0.42, -Math.PI * 0.42, true); ctx.closePath(); ctx.fill();
+      const bst = look.beard ? (look.beardStyle || 'full') : 'none';
+      if (bst !== 'none') {
+        ctx.fillStyle = look.beardCol || hair; ctx.globalAlpha = bst === 'stubble' ? 0.4 : 0.9;
+        if (bst === 'goatee') { ctx.beginPath(); ctx.arc(r * 0.78, 0, r * 0.3, 0, Math.PI * 2); ctx.fill(); }
+        else if (bst === 'mustache') { ctx.beginPath(); ctx.ellipse(r * 0.8, 0, r * 0.14, r * 0.38, 0, 0, Math.PI * 2); ctx.fill(); }
+        else { ctx.beginPath(); ctx.arc(r * 0.15, 0, r * 0.98, -Math.PI * 0.42, Math.PI * 0.42); ctx.arc(r * 0.1, 0, r * 0.55, Math.PI * 0.42, -Math.PI * 0.42, true); ctx.closePath(); ctx.fill(); }
         ctx.globalAlpha = 1;
       }
+      if (look.f && look.f.band) { ctx.strokeStyle = look.f.band; ctx.lineWidth = r * 0.22; ctx.beginPath(); ctx.arc(0, 0, r * 0.9, Math.PI * 0.2, Math.PI * 0.8); ctx.stroke(); ctx.beginPath(); ctx.arc(0, 0, r * 0.9, Math.PI * 1.2, Math.PI * 1.8); ctx.stroke(); }
     }
 
     drawPlayer(ctx, p, view) {

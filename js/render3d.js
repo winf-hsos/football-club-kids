@@ -465,6 +465,13 @@
     if (st === 'long') gb.box(cx - 0.22, cy - 0.36, -0.17, cx - 0.1, cy + 0.08, 0.17, hair);
     if (st === 'curly') { gb.sphere(cx - 0.04, cy + 0.08, 0, rx * 1.28, ry * 1.1, rz * 1.3, 8, 6, hair, 0, 4); }
     if (st === 'bun') gb.sphere(cx - 0.17, cy + 0.17, 0, 0.09, 0.09, 0.09, 6, 4, hair);
+    if (st === 'afro') gb.sphere(cx - 0.02, cy + 0.07, 0, rx * 1.55, ry * 1.4, rz * 1.6, 8, 6, hair, 0, 4);
+    if (st === 'ponytail') { gb.sphere(cx - 0.2, cy + 0.02, 0, 0.06, 0.06, 0.06, 6, 4, hair); gb.box(cx - 0.3, cy - 0.3, -0.04, cx - 0.17, cy, 0.04, hair); }
+    if (st === 'quiff') gb.box(cx - 0.02, cy + 0.14, -0.13, cx + 0.2, cy + 0.27, 0.13, hair);
+    if (st === 'undercut') gb.box(cx - 0.14, cy + 0.17, -0.12, cx + 0.12, cy + 0.26, 0.12, hair);
+    if (st === 'braids') { gb.box(cx - 0.22, cy - 0.3, -0.17, cx - 0.14, cy + 0.02, -0.1, hair); gb.box(cx - 0.22, cy - 0.3, 0.1, cx - 0.14, cy + 0.02, 0.17, hair); gb.box(cx - 0.22, cy - 0.34, -0.03, cx - 0.14, cy + 0.02, 0.03, hair); }
+    if (st === 'curtains') { gb.box(cx - 0.05, cy - 0.06, -0.2, cx + 0.12, cy + 0.12, -0.14, hair); gb.box(cx - 0.05, cy - 0.06, 0.14, cx + 0.12, cy + 0.12, 0.2, hair); }
+    if (look.f && look.f.band) gb.box(cx - 0.2, cy + 0.07, -0.19, cx + 0.2, cy + 0.12, 0.19, look.f.band);
   }
 
   function buildPlayerGeo(kit, look, num, isGK, ref, bootCol) {
@@ -503,7 +510,13 @@
     gb.bone = B.HEAD;
     gb.sphere(0.0, 1.78, 0, 0.19, 0.21, 0.185, 8, 6, skin);
     gb.box(0.165, 1.72, -0.085, 0.2, 1.79, -0.035, '#1b1b22'); gb.box(0.165, 1.72, 0.035, 0.2, 1.79, 0.085, '#1b1b22'); // eyes -> shows facing
-    if (look.beard) gb.box(0.07, 1.6, -0.11, 0.19, 1.72, 0.11, look.hair);
+    if (look.beard) {
+      const bs = look.beardStyle || 'full', bcol = look.beardCol || look.hair;
+      if (bs === 'full') gb.box(0.07, 1.6, -0.11, 0.19, 1.72, 0.11, bcol);
+      else if (bs === 'stubble') gb.box(0.07, 1.62, -0.1, 0.17, 1.7, 0.1, mixCol(look.skin, bcol, 0.45));
+      else if (bs === 'goatee') gb.box(0.1, 1.6, -0.04, 0.19, 1.7, 0.04, bcol);
+      else if (bs === 'mustache') gb.box(0.15, 1.72, -0.08, 0.2, 1.75, 0.08, bcol);
+    }
     addHair(gb, look);
     // arms
     [[B.ARM_L, B.FORE_L, -1], [B.ARM_R, B.FORE_R, 1]].forEach((a) => {
