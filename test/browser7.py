@@ -1,0 +1,67 @@
+import os as _os
+_ROOT = _os.path.abspath(_os.path.join(_os.path.dirname(__file__), '..'))
+_OUT = _os.path.join(_os.environ.get('FCK_SHOTS', _os.path.join(_os.environ.get('TMPDIR', '/tmp'), 'fck-shots')), '')
+_os.makedirs(_OUT, exist_ok=True)
+import time
+from playwright.sync_api import sync_playwright
+OUT=_OUT
+with sync_playwright() as p:
+    b=p.chromium.launch(executable_path='/opt/pw-browsers/chromium', args=['--no-sandbox'])
+    ctx=b.new_context(viewport={'width':1280,'height':720}, locale='de-DE')
+    pg=ctx.new_page()
+    errs=[]
+    pg.on('console', lambda m: errs.append(m.type+': '+m.text) if m.type in ('error','warning') and 'ERR_FAILED' not in m.text else None)
+    pg.on('pageerror', lambda e: errs.append('PAGEERR '+str(e)))
+    pg.route('**/*', lambda r: r.abort() if r.request.url.startswith('http') else r.continue_())
+    pg.goto(('file://' + _ROOT + '/dist/FCK.html'))
+    pg.wait_for_timeout(1200)
+    pg.click('.pcard >> nth=1'); pg.click('text=Los geht'); pg.wait_for_timeout(500)
+    pg.screenshot(path=OUT+'c0_home.png')
+    pg.click('.mitem:has-text("Karriere")'); pg.wait_for_timeout(400)
+    pg.screenshot(path=OUT+'c1_menu.png')
+    pg.click('text=Neue Karriere >> nth=0'); pg.wait_for_timeout(300)
+    pg.click('button:has-text("Verein wählen") >> nth=0'); pg.wait_for_timeout(500)
+    pg.fill('input[type=search]', 'Osnabr'); pg.wait_for_timeout(300)
+    pg.screenshot(path=OUT+'c2_picker.png')
+    print('results osnabr', pg.evaluate("document.querySelectorAll('.picker-grid .pick').length"))
+    pg.fill('input[type=search]', 'Bayern'); pg.wait_for_timeout(300)
+    (pg.click('.picker-grid .pick >> nth=0') if pg.query_selector('#modal .pick') else pg.click('#modal .pk-ok')); pg.wait_for_timeout(400)
+    pg.screenshot(path=OUT+'c3_new.png')
+    pg.click('text=Karriere starten'); pg.wait_for_timeout(900)
+    pg.screenshot(path=OUT+'c4_hub.png')
+    for tab,name in [('Tabelle','table'),('Spielplan','fix'),('Wettbewerbe','comps'),('Kader','squad'),('Welt','world'),('Historie','hist'),('Menü','menu')]:
+        pg.click('.chips.tabs .chip:has-text("%s")'%tab); pg.wait_for_timeout(350)
+        pg.screenshot(path=OUT+'c5_%s.png'%name)
+    pg.click('.chips.tabs .chip:has-text("Übersicht")'); pg.wait_for_timeout(300)
+    # simulate a few
+    for i in range(3):
+        pg.click('button:has-text("Simulieren") >> nth=0'); pg.wait_for_timeout(300)
+    pg.screenshot(path=OUT+'c6_after_sim.png')
+    # play a real match, speed it up
+    pg.click('button:has-text("Spielen")'); pg.wait_for_timeout(600)
+    pg.evaluate("FCK.setup.match.halfMins")
+    pg.wait_for_function("FCK.game.m && FCK.game.m.mode==='play' && FCK.game.m.clock>20", timeout=60000)
+    pg.screenshot(path=OUT+'c7_match.png')
+    # fast-forward through the engine
+    pg.evaluate("""(()=>{const m=FCK.game.m; m.autoProceed=true; let n=0; while(m.mode!=='over'&&n<600000){ m.update(1/60); n++; } return n;})()""")
+    print('mode', pg.evaluate("FCK.game.m.mode"), pg.evaluate("FCK.game.m.teams.map(t=>t.score)"))
+    pg.evaluate("FCK.game.replay=null")
+    pg.wait_for_function("FCK.UI.cur==='result'", timeout=15000)
+    pg.wait_for_timeout(400)
+    pg.screenshot(path=OUT+'c8_result.png')
+    print('log', pg.evaluate("FCK.Career.cur.log.length"))
+    pg.click('text=Weiterspielen'); pg.wait_for_timeout(600)
+    pg.screenshot(path=OUT+'c9_back.png')
+    # sim the rest of the season
+    pg.click('button:has-text("Saison simulieren") >> nth=0'); pg.wait_for_timeout(300)
+    pg.click('.modal button:has-text("Saison simulieren")'); pg.wait_for_timeout(1500)
+    pg.screenshot(path=OUT+'ca_seasonend.png')
+    pg.click('button:has-text("Neue Saison starten")'); pg.wait_for_timeout(800)
+    if pg.locator('#modal button:has-text("Neue Saison beginnen")').count(): pg.click('#modal button:has-text("Neue Saison beginnen")')
+    pg.wait_for_timeout(1200)
+    pg.screenshot(path=OUT+'cb_newseason.png')
+    pg.click('.modal button:has-text("OK")'); pg.wait_for_timeout(500)
+    pg.screenshot(path=OUT+'cc_hub2.png')
+    print('stored bytes', pg.evaluate("(localStorage.getItem('fck.cauto')||'').length"))
+    print('\n'.join(errs[:20]) or 'no errors')
+    b.close()

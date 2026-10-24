@@ -1,0 +1,4 @@
+{"countries":[{"cc":"xx","name":"Beispielland","nameEn":"Exampleland","flag":"🏳️","names":"en","uefa":true,"cup":{"de":"Landespokal","en":"National Cup"},
+"leagues":[{"tier":1,"name":"Premier Liga","rounds":2,"relegate":2,"groups":[{"name":null,"clubs":[
+{"n":"Alpha FC","s":"ALP","r":60,"c":["#ff0000","#ffffff"],"st":"Alpha Park","cap":20000},{"n":"Beta United","s":"BET","r":55,"c":["#0000ff"]},{"n":"C","s":"CCC","r":50},{"n":"D","s":"DDD","r":50},{"n":"E","s":"EEE","r":50},{"n":"F","s":"FFF","r":50}]}]},
+{"tier":2,"name":"Zweite Liga","rounds":2,"relegate":0,"groups":[{"name":null,"clubs":[{"n":"G","s":"GGG","r":40},{"n":"H","s":"HHH","r":40},{"n":"I","s":"III","r":40},{"n":"J","s":"JJJ","r":40},{"n":"K","s":"KKK","r":40},{"n":"L","s":"LLL","r":40}]}]}]}]}

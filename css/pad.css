@@ -1,0 +1,50 @@
+/* pad.css : controller navigation - focus ring, hint bar, option list, on-screen keyboard, device line */
+
+/* ---------- focus ring (only while the pad was the last input device) ---------- */
+.padfocus { scroll-margin: 96px 14px 92px; }
+html.padmode, html.padmode * { cursor: none !important; }
+html.padmode .padfocus { outline: 3px solid var(--accent); outline-offset: 3px; box-shadow: 0 0 0 7px rgba(45, 255, 143, .16), 0 0 26px 4px rgba(45, 255, 143, .55) !important; }
+html.padmode tr.padfocus { box-shadow: none !important; background: rgba(45, 255, 143, .12); }
+html.padmode .mitem.padfocus { transform: translateX(4px); }
+html.padmode .chip.padfocus, html.padmode .swatch.padfocus { outline-offset: 2px; }
+html.padmode .toggle.padfocus, html.padmode label.sl.padfocus { border-radius: 12px; outline-offset: 5px; }
+html.padmode .btn.padfocus { transform: scale(1.03); }
+html.padmode .btn.padfocus:active { transform: scale(.98); }
+@media (max-width: 560px) { html.padmode .chips.scroll .padfocus { outline-offset: -3px; box-shadow: 0 0 14px 2px rgba(45, 255, 143, .5) !important; } }
+
+/* ---------- hint bar ---------- */
+#padui { position: absolute; inset: 0; z-index: 40; pointer-events: none; }
+.padhints { z-index: 5; position: absolute; left: 50%; transform: translateX(-50%); bottom: calc(var(--gut-b) + 2px); display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 6px 18px; padding: 7px 18px; width: max-content; max-width: calc(100% - 20px); background: rgba(8, 12, 22, .94); border: 1px solid var(--line2); border-radius: 22px; backdrop-filter: blur(6px); box-shadow: 0 8px 30px rgba(0, 0, 0, .55); font-size: .85rem; }
+.ph { display: inline-flex; align-items: center; gap: 7px; white-space: nowrap; }
+.pk { font-family: var(--font-d); font-weight: 700; font-size: .72rem; min-width: 24px; height: 24px; padding: 0 8px; border-radius: 999px; display: inline-grid; place-items: center; background: var(--panel2); border: 1px solid var(--line2); color: var(--text); letter-spacing: .02em; }
+.pk-a { background: #2dff8f; border-color: #2dff8f; color: #04170d; } .pk-b { background: #ff4d6d; border-color: #ff4d6d; color: #fff; }
+.pk-x { background: #3d8bff; border-color: #3d8bff; color: #fff; } .pk-y { background: #ffe14d; border-color: #ffe14d; color: #1a1500; }
+.pk-st { background: var(--cyan); border-color: var(--cyan); color: #00222b; }
+html.padhint #toast { bottom: calc(var(--gut-b) + 68px); }
+html.padhint #screen { padding-bottom: calc(var(--gut-b) + 58px); }
+html.padhint .modal-wrap { padding-bottom: calc(var(--gut-b) + 58px); }
+@media (max-width: 560px) { .ph.mv { display: none; } .padhints { gap: 4px 12px; padding: 6px 12px; font-size: .78rem; border-radius: 18px; } .pk { min-width: 22px; height: 22px; padding: 0 6px; font-size: .68rem; } }
+
+/* ---------- option list (replaces the native select popup) and on-screen keyboard ---------- */
+.padov { position: absolute; inset: 0; pointer-events: auto; background: rgba(4, 7, 14, .8); backdrop-filter: blur(5px); display: flex; align-items: center; justify-content: center; padding: var(--gut-t) var(--gut-r) calc(var(--gut-b) + 58px) var(--gut-l); animation: fade .15s; }
+.padbox { width: min(100%, 420px); max-height: 100%; display: flex; flex-direction: column; gap: 10px; padding: 18px; box-shadow: 0 20px 80px rgba(0, 0, 0, .65); min-height: 0; }
+.padbox .modal-t { margin: 0 0 4px; }
+.padlist { display: flex; flex-direction: column; gap: 6px; overflow-y: auto; min-height: 0; padding: 4px 6px 4px 4px; margin: 0 -6px 0 -4px; }
+.padopt { text-align: left; padding: 11px 14px; border-radius: 11px; border: 1px solid var(--line2); background: var(--panel2); font-weight: 600; }
+.padopt.on { border-color: var(--accent); background: rgba(45, 255, 143, .12); } .padopt.on::after { content: ' ✓'; color: var(--accent); }
+.padopt:disabled { opacity: .4; }
+.padbox.osk { width: min(100%, 580px); }
+.osk-prev { min-height: 50px; padding: 10px 14px; background: var(--bg2); border: 1px solid var(--line2); border-radius: 12px; font-family: var(--font-d); font-size: 1.2rem; display: flex; align-items: center; flex-wrap: wrap; word-break: break-all; }
+.osk-prev small { margin-left: auto; padding-left: 10px; font-size: .75rem; }
+.osk-caret { display: inline-block; width: 2px; height: 1.2em; background: var(--accent); margin-left: 2px; animation: oskblink 1s steps(1) infinite; }
+@keyframes oskblink { 50% { opacity: 0; } }
+.osk-keys { display: flex; flex-direction: column; gap: 6px; }
+.osk-row { display: flex; gap: 6px; justify-content: center; }
+.osk-k { flex: 1 1 0; min-width: 0; height: 44px; border-radius: 10px; border: 1px solid var(--line2); background: var(--panel2); font-family: var(--font-d); font-weight: 600; font-size: 1.05rem; padding: 0 2px; }
+.osk-k.wide { flex: 1.6 1 0; font-size: .9rem; } .osk-k.space { flex: 3 1 0; font-size: .9rem; } .osk-k.ok { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+@media (max-width: 560px) { .osk-row { gap: 4px; } .osk-keys { gap: 4px; } .osk-k { height: 40px; font-size: .95rem; } .padbox { padding: 14px; } }
+
+/* ---------- device line on mode screens, settings ---------- */
+.ctl-line { display: flex; align-items: center; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 12px; padding: 7px 8px 7px 12px; border: 1px dashed var(--line2); border-radius: 12px; font-size: .9rem; }
+.ctl-line .ctl-t { flex: 1 1 200px; min-width: 0; } .ctl-line .btn { margin-left: auto; } .ctl-h { color: var(--muted); font-size: .8rem; }
+.pad-found .pad-row { display: flex; gap: 10px; align-items: baseline; padding: 4px 0; } .pad-found .ok { color: var(--accent); }

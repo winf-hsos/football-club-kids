@@ -1,0 +1,10 @@
+/* 3d.css : 3D match view (WebGL canvas + overlay canvas sit between #cv and #hud) */
+#cv3d, #cv3dov { position: absolute; inset: 0; width: 100%; height: 100%; display: none; touch-action: none; }
+#cv3d { background: #0a0e17; }
+#cv3dov { pointer-events: none; }
+#cam3d { position: absolute; z-index: 4; top: calc(var(--gut-t) + 56px); right: var(--gut-r); width: auto; min-width: 46px; height: 46px; padding: 0 12px; border-radius: 23px; display: flex; align-items: center; justify-content: center; gap: 6px; letter-spacing: 0; font-size: .8rem; font-family: var(--font-d); font-weight: 600; opacity: .85; }
+#cam3d i { font-style: normal; font-size: 1.15rem; line-height: 1; }
+#cam3d b { font-weight: 600; max-width: 10em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+#cam3d:hover { opacity: 1; border-color: var(--cyan); }
+body:not(.in-match) #cam3d { display: none; }
+@media (max-width: 520px) { #cam3d b { display: none; } #cam3d { min-width: 46px; padding: 0; } }

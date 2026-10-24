@@ -1,0 +1,2282 @@
+{
+"countries": [
+{
+"cc": "de",
+"name": "Deutschland",
+"nameEn": "Germany",
+"flag": "🇩🇪",
+"names": "de",
+"uefa": true,
+"cup": {
+"de": "DFB-Pokal",
+"en": "German Cup"
+},
+"leagues": [
+{
+"tier": 1,
+"name": "Bundesliga",
+"rounds": 2,
+"relegate": 2,
+"groups": [
+{
+"name": null,
+"clubs": [
+{
+"n": "FC Bayern München",
+"s": "BAY",
+"r": 90,
+"c": [
+"#dc052d",
+"#ffffff"
+],
+"st": "Allianz Arena",
+"cap": 75000
+},
+{
+"n": "Borussia Dortmund",
+"s": "BVB",
+"r": 82,
+"c": [
+"#fde100",
+"#000000"
+],
+"st": "Signal Iduna Park",
+"cap": 81365
+},
+{
+"n": "Bayer 04 Leverkusen",
+"s": "B04",
+"r": 82,
+"c": [
+"#e32221",
+"#000000"
+],
+"st": "BayArena",
+"cap": 30210
+},
+{
+"n": "RB Leipzig",
+"s": "RBL",
+"r": 81,
+"c": [
+"#ffffff",
+"#dd0741"
+],
+"st": "Red Bull Arena",
+"cap": 47800
+},
+{
+"n": "VfB Stuttgart",
+"s": "VFB",
+"r": 78,
+"c": [
+"#ffffff",
+"#e32219"
+],
+"st": "MHPArena",
+"cap": 60058
+},
+{
+"n": "Eintracht Frankfurt",
+"s": "SGE",
+"r": 77,
+"c": [
+"#e1000f",
+"#000000"
+],
+"st": "Deutsche Bank Park",
+"cap": 59500
+},
+{
+"n": "SC Freiburg",
+"s": "SCF",
+"r": 74,
+"c": [
+"#d4001a",
+"#000000"
+],
+"st": "Europa-Park Stadion",
+"cap": 34700
+},
+{
+"n": "TSG Hoffenheim",
+"s": "TSG",
+"r": 73,
+"c": [
+"#1961b5",
+"#ffffff"
+],
+"st": "PreZero Arena",
+"cap": 30150
+},
+{
+"n": "1. FSV Mainz 05",
+"s": "M05",
+"r": 71,
+"c": [
+"#c3141e",
+"#ffffff"
+],
+"st": "MEWA Arena",
+"cap": 33305
+},
+{
+"n": "Borussia Mönchengladbach",
+"s": "BMG",
+"r": 71,
+"c": [
+"#ffffff",
+"#0a7d3e"
+],
+"st": "Borussia-Park",
+"cap": 54057
+},
+{
+"n": "Werder Bremen",
+"s": "SVW",
+"r": 71,
+"c": [
+"#1d9053",
+"#ffffff"
+],
+"st": "Weserstadion",
+"cap": 42100
+},
+{
+"n": "1. FC Union Berlin",
+"s": "FCU",
+"r": 70,
+"c": [
+"#eb1923",
+"#ffffff"
+],
+"st": "Stadion An der Alten Försterei",
+"cap": 22012
+},
+{
+"n": "FC Augsburg",
+"s": "FCA",
+"r": 69,
+"c": [
+"#ba3733",
+"#46714d"
+],
+"st": "WWK Arena",
+"cap": 30660
+},
+{
+"n": "1. FC Köln",
+"s": "KOE",
+"r": 69,
+"c": [
+"#ffffff",
+"#e2001a"
+],
+"st": "RheinEnergieStadion",
+"cap": 49698
+},
+{
+"n": "Hamburger SV",
+"s": "HSV",
+"r": 69,
+"c": [
+"#ffffff",
+"#0a3a8c"
+],
+"st": "Volksparkstadion",
+"cap": 57000
+},
+{
+"n": "FC Schalke 04",
+"s": "S04",
+"r": 68,
+"c": [
+"#004d9d",
+"#ffffff"
+],
+"st": "Veltins-Arena",
+"cap": 62271
+},
+{
+"n": "SC Paderborn 07",
+"s": "SCP",
+"r": 66,
+"c": [
+"#0046a0",
+"#000000"
+],
+"st": "Home Deluxe Arena",
+"cap": 15000
+},
+{
+"n": "SV Elversberg",
+"s": "SVE",
+"r": 65,
+"c": [
+"#ffffff",
+"#000000"
+],
+"st": "Waldstadion an der Kaiserlinde",
+"cap": 10000
+}
+]
+}
+]
+},
+{
+"tier": 2,
+"name": "2. Bundesliga",
+"rounds": 2,
+"relegate": 3,
+"groups": [
+{
+"name": null,
+"clubs": [
+{
+"n": "Hertha BSC",
+"s": "BSC",
+"r": 65,
+"c": [
+"#005ca9",
+"#ffffff"
+],
+"st": "Olympiastadion",
+"cap": 74649
+},
+{
+"n": "VfL Wolfsburg",
+"s": "WOB",
+"r": 65,
+"c": [
+"#65b32e",
+"#ffffff"
+],
+"st": "Volkswagen Arena",
+"cap": 30000
+},
+{
+"n": "FC St. Pauli",
+"s": "STP",
+"r": 64,
+"c": [
+"#6b3a1e",
+"#ffffff"
+],
+"st": "Millerntor-Stadion",
+"cap": 29546
+},
+{
+"n": "Hannover 96",
+"s": "H96",
+"r": 63,
+"c": [
+"#007a33",
+"#000000"
+],
+"st": "Heinz von Heiden Arena",
+"cap": 49000
+},
+{
+"n": "1. FC Heidenheim",
+"s": "HDH",
+"r": 62,
+"c": [
+"#e2001a",
+"#003c8f"
+],
+"st": "Voith-Arena",
+"cap": 15000
+},
+{
+"n": "1. FC Nürnberg",
+"s": "FCN",
+"r": 61,
+"c": [
+"#a5002b",
+"#000000"
+],
+"st": "Max-Morlock-Stadion",
+"cap": 49923
+},
+{
+"n": "1. FC Kaiserslautern",
+"s": "FCK",
+"r": 61,
+"c": [
+"#e2001a",
+"#ffffff"
+],
+"st": "Fritz-Walter-Stadion",
+"cap": 49327
+},
+{
+"n": "Karlsruher SC",
+"s": "KSC",
+"r": 60,
+"c": [
+"#0056a8",
+"#ffffff"
+],
+"st": "BBBank Wildpark",
+"cap": 34302
+},
+{
+"n": "VfL Bochum",
+"s": "BOC",
+"r": 60,
+"c": [
+"#005ca9",
+"#ffffff"
+],
+"st": "Vonovia Ruhrstadion",
+"cap": 26000
+},
+{
+"n": "Dynamo Dresden",
+"s": "SGD",
+"r": 60,
+"c": [
+"#f5c800",
+"#000000"
+],
+"st": "Rudolf-Harbig-Stadion",
+"cap": 32249
+},
+{
+"n": "Darmstadt 98",
+"s": "D98",
+"r": 60,
+"c": [
+"#004e9f",
+"#ffffff"
+],
+"st": "Merck-Stadion am Böllenfalltor",
+"cap": 17650
+},
+{
+"n": "1. FC Magdeburg",
+"s": "FCM",
+"r": 59,
+"c": [
+"#0070b8",
+"#ffffff"
+],
+"st": "Avnet Arena",
+"cap": 30098
+},
+{
+"n": "Holstein Kiel",
+"s": "KIE",
+"r": 58,
+"c": [
+"#0b5aa7",
+"#ffffff"
+],
+"st": "Holstein-Stadion",
+"cap": 15034
+},
+{
+"n": "Arminia Bielefeld",
+"s": "DSC",
+"r": 58,
+"c": [
+"#005ca9",
+"#ffffff"
+],
+"st": "Schüco-Arena",
+"cap": 27332
+},
+{
+"n": "Eintracht Braunschweig",
+"s": "EBS",
+"r": 56,
+"c": [
+"#f7c600",
+"#1b3f94"
+],
+"st": "Eintracht-Stadion",
+"cap": 23325
+},
+{
+"n": "SpVgg Greuther Fürth",
+"s": "SGF",
+"r": 56,
+"c": [
+"#ffffff",
+"#00a651"
+],
+"st": "Sportpark Ronhof Thomas Sommer",
+"cap": 16626
+},
+{
+"n": "Energie Cottbus",
+"s": "FCE",
+"r": 54,
+"c": [
+"#e2001a",
+"#ffffff"
+],
+"st": "LEAG Energie Stadion",
+"cap": 22528
+},
+{
+"n": "VfL Osnabrück",
+"s": "VFL",
+"r": 53,
+"c": [
+"#6b2c91",
+"#ffffff"
+],
+"st": "Stadion an der Bremer Brücke",
+"cap": 15741
+}
+]
+}
+]
+},
+{
+"tier": 3,
+"name": "3. Liga",
+"rounds": 2,
+"relegate": 4,
+"groups": [
+{
+"name": null,
+"clubs": [
+{
+"n": "Fortuna Düsseldorf",
+"s": "F95",
+"r": 55,
+"c": [
+"#e2001a",
+"#ffffff"
+],
+"st": "Merkur Spiel-Arena",
+"cap": 54600
+},
+{
+"n": "FC Ingolstadt 04",
+"s": "FCI",
+"r": 53,
+"c": [
+"#cc0000",
+"#000000"
+],
+"st": "Audi Sportpark",
+"cap": 15200
+},
+{
+"n": "Hansa Rostock",
+"s": "FCH",
+"r": 53,
+"c": [
+"#005ca9",
+"#ffffff"
+],
+"st": "Ostseestadion",
+"cap": 29000
+},
+{
+"n": "Preußen Münster",
+"s": "PRM",
+"r": 52,
+"c": [
+"#0a8f3c",
+"#ffffff"
+],
+"st": "LVM-Preußenstadion",
+"cap": 14300
+},
+{
+"n": "Alemannia Aachen",
+"s": "AAC",
+"r": 51,
+"c": [
+"#000000",
+"#ffd800"
+],
+"st": "Tivoli",
+"cap": 32960
+},
+{
+"n": "Waldhof Mannheim",
+"s": "WAL",
+"r": 51,
+"c": [
+"#0067b1",
+"#000000"
+],
+"st": "Carl-Benz-Stadion",
+"cap": 24302
+},
+{
+"n": "Jahn Regensburg",
+"s": "SSV",
+"r": 50,
+"c": [
+"#e2001a",
+"#ffffff"
+],
+"st": "Jahnstadion Regensburg",
+"cap": 15210
+},
+{
+"n": "1. FC Saarbrücken",
+"s": "FCS",
+"r": 50,
+"c": [
+"#1d4f9c",
+"#000000"
+],
+"st": "Ludwigsparkstadion",
+"cap": 16003
+},
+{
+"n": "Rot-Weiss Essen",
+"s": "RWE",
+"r": 50,
+"c": [
+"#e2001a",
+"#ffffff"
+],
+"st": "Stadion an der Hafenstraße",
+"cap": 19962
+},
+{
+"n": "Wehen Wiesbaden",
+"s": "SVW",
+"r": 50,
+"c": [
+"#e2001a",
+"#ffffff"
+],
+"st": "BRITA-Arena",
+"cap": 15295
+},
+{
+"n": "MSV Duisburg",
+"s": "MSV",
+"r": 49,
+"c": [
+"#005ca9",
+"#ffffff"
+],
+"st": "Schauinsland-Reisen-Arena",
+"cap": 31514
+},
+{
+"n": "Viktoria Köln",
+"s": "VIK",
+"r": 49,
+"cap": 8343
+},
+{
+"n": "SV Meppen",
+"s": "MEP",
+"r": 47,
+"c": [
+"#005ca9",
+"#000000"
+],
+"st": "Hänsch-Arena",
+"cap": 13241
+},
+{
+"n": "SC Verl",
+"s": "VER",
+"r": 47,
+"st": "Sportclub Arena",
+"cap": 5207
+},
+{
+"n": "TSG Hoffenheim II",
+"s": "TS2",
+"r": 46,
+"c": [
+"#1961b5",
+"#ffffff"
+],
+"st": "Dietmar-Hopp-Stadion",
+"cap": 6350
+},
+{
+"n": "VfB Stuttgart II",
+"s": "VS2",
+"r": 46,
+"c": [
+"#ffffff",
+"#e32219"
+],
+"st": "WIRmachenDRUCK Arena",
+"cap": 10001
+},
+{
+"n": "Fortuna Köln",
+"s": "FKO",
+"r": 46,
+"st": "Südstadion",
+"cap": 11748
+},
+{
+"n": "TSV Havelse",
+"s": "HAV",
+"r": 45,
+"st": "Eilenriedestadion",
+"cap": 5001
+},
+{
+"n": "Würzburger Kickers",
+"s": "FWK",
+"r": 45,
+"c": [
+"#e2001a",
+"#ffffff"
+],
+"st": "Akon Arena",
+"cap": 13090
+},
+{
+"n": "Sonnenhof Großaspach",
+"s": "SGA",
+"r": 44,
+"st": "WIRmachenDRUCK Arena",
+"cap": 10001
+}
+]
+}
+]
+},
+{
+"tier": 4,
+"name": "Regionalliga",
+"rounds": 2,
+"relegate": 0,
+"groups": [
+{
+"name": "Nord",
+"clubs": [
+{
+"n": "Weiche Flensburg",
+"s": "WEI",
+"r": 40
+},
+{
+"n": "FSV Schöningen",
+"s": "SCH",
+"r": 36
+},
+{
+"n": "VfB Oldenburg",
+"s": "OLD",
+"r": 43
+},
+{
+"n": "Phönix Lübeck",
+"s": "PHO",
+"r": 38
+},
+{
+"n": "Hannover 96 II",
+"s": "H92",
+"r": 40
+},
+{
+"n": "SV Drochtersen/Assel",
+"s": "DRO",
+"r": 39
+},
+{
+"n": "Atlas Delmenhorst",
+"s": "ATL",
+"r": 38
+},
+{
+"n": "Eintracht Norderstedt",
+"s": "EIN",
+"r": 39
+},
+{
+"n": "Kickers Emden",
+"s": "KIC",
+"r": 38
+},
+{
+"n": "Eimsbütteler TV",
+"s": "EIM",
+"r": 37
+},
+{
+"n": "SV Todesfelde",
+"s": "TOD",
+"r": 37
+},
+{
+"n": "HSC Hannover",
+"s": "HSC",
+"r": 36
+},
+{
+"n": "Hamburger SV II",
+"s": "HS2",
+"r": 41,
+"c": [
+"#ffffff",
+"#0a3a8c"
+]
+},
+{
+"n": "Werder Bremen II",
+"s": "SV2",
+"r": 40,
+"c": [
+"#1d9053",
+"#ffffff"
+]
+},
+{
+"n": "Bremer SV",
+"s": "BRE",
+"r": 37
+},
+{
+"n": "FC St. Pauli II",
+"s": "SP2",
+"r": 39,
+"c": [
+"#6b3a1e",
+"#ffffff"
+]
+},
+{
+"n": "SSV Jeddeloh",
+"s": "JED",
+"r": 36
+},
+{
+"n": "VfB Lübeck",
+"s": "LUB",
+"r": 42,
+"c": [
+"#00a651",
+"#ffffff"
+]
+}
+]
+},
+{
+"name": "Nordost",
+"clubs": [
+{
+"n": "Rot-Weiß Erfurt",
+"s": "ROT",
+"r": 42,
+"c": [
+"#e2001a",
+"#ffffff"
+]
+},
+{
+"n": "Chemnitzer FC",
+"s": "CHE",
+"r": 44,
+"c": [
+"#00a0e3",
+"#ffffff"
+]
+},
+{
+"n": "Erzgebirge Aue",
+"s": "ERZ",
+"r": 44,
+"c": [
+"#7b2d8e",
+"#ffffff"
+]
+},
+{
+"n": "1. FC Magdeburg II",
+"s": "MD2",
+"r": 38,
+"c": [
+"#0070b8",
+"#ffffff"
+]
+},
+{
+"n": "Carl Zeiss Jena",
+"s": "CAR",
+"r": 44,
+"c": [
+"#005ca9",
+"#ffd800"
+]
+},
+{
+"n": "FSV Zwickau",
+"s": "ZWI",
+"r": 41,
+"c": [
+"#e2001a",
+"#000000"
+]
+},
+{
+"n": "Greifswalder FC",
+"s": "GRE",
+"r": 38
+},
+{
+"n": "VSG Altglienicke",
+"s": "ALT",
+"r": 40
+},
+{
+"n": "Hallescher FC",
+"s": "HAL",
+"r": 45,
+"c": [
+"#e2001a",
+"#ffffff"
+]
+},
+{
+"n": "BFC Dynamo",
+"s": "DYN",
+"r": 42,
+"c": [
+"#8b1a2b",
+"#ffffff"
+]
+},
+{
+"n": "Lokomotive Leipzig",
+"s": "LOK",
+"r": 43,
+"c": [
+"#0057b8",
+"#ffd800"
+]
+},
+{
+"n": "RSV Eintracht",
+"s": "EIN",
+"r": 36
+},
+{
+"n": "SV Babelsberg",
+"s": "BAB",
+"r": 40,
+"c": [
+"#0057b8",
+"#ffffff"
+]
+},
+{
+"n": "Hertha BSC II",
+"s": "HB2",
+"r": 40,
+"c": [
+"#005ca9",
+"#ffffff"
+]
+},
+{
+"n": "Tasmania Berlin",
+"s": "TAS",
+"r": 37
+},
+{
+"n": "BFC Preussen",
+"s": "PRE",
+"r": 36
+},
+{
+"n": "FSV Luckenwalde",
+"s": "LUC",
+"r": 37
+},
+{
+"n": "Chemie Leipzig",
+"s": "CHL",
+"r": 39,
+"c": [
+"#00873e",
+"#ffffff"
+]
+}
+]
+},
+{
+"name": "West",
+"clubs": [
+{
+"n": "FC Gütersloh",
+"s": "GUT",
+"r": 38
+},
+{
+"n": "Rot-Weiß Oberhausen",
+"s": "ROT",
+"r": 41,
+"c": [
+"#e2001a",
+"#ffffff"
+]
+},
+{
+"n": "Borussia Mönchengladbach II",
+"s": "BM2",
+"r": 41,
+"c": [
+"#ffffff",
+"#0a7d3e"
+]
+},
+{
+"n": "Borussia Dortmund II",
+"s": "BV2",
+"r": 42,
+"c": [
+"#fde100",
+"#000000"
+]
+},
+{
+"n": "1. FC Köln II",
+"s": "KO2",
+"r": 41,
+"c": [
+"#ffffff",
+"#e2001a"
+]
+},
+{
+"n": "Westfalia Rhynern",
+"s": "WES",
+"r": 37
+},
+{
+"n": "SV Bergisch Gladbach",
+"s": "BER",
+"r": 37
+},
+{
+"n": "1. FC Bocholt",
+"s": "BOC",
+"r": 38
+},
+{
+"n": "SC Paderborn II",
+"s": "SP2",
+"r": 38
+},
+{
+"n": "Sportfreunde Siegen",
+"s": "SIE",
+"r": 39
+},
+{
+"n": "Schalke 04 II",
+"s": "S42",
+"r": 41,
+"c": [
+"#004d9d",
+"#ffffff"
+]
+},
+{
+"n": "Bonner SC",
+"s": "BON",
+"r": 37
+},
+{
+"n": "SG Wattenscheid",
+"s": "WAT",
+"r": 39
+},
+{
+"n": "VfB Hilden",
+"s": "HIL",
+"r": 36
+},
+{
+"n": "SV Rödinghausen",
+"s": "ROD",
+"r": 40
+},
+{
+"n": "VfL Bochum II",
+"s": "BO2",
+"r": 38,
+"c": [
+"#005ca9",
+"#ffffff"
+]
+},
+{
+"n": "SC Wiedenbrück",
+"s": "WIE",
+"r": 38
+},
+{
+"n": "Sportfreunde Lotte",
+"s": "LOT",
+"r": 39
+}
+]
+},
+{
+"name": "Südwest",
+"clubs": [
+{
+"n": "Kickers Offenbach",
+"s": "KIC",
+"r": 44,
+"c": [
+"#e2001a",
+"#ffffff"
+]
+},
+{
+"n": "SGV Heilbronn-Freiberg",
+"s": "HEI",
+"r": 37
+},
+{
+"n": "Stuttgarter Kickers",
+"s": "STU",
+"r": 43,
+"c": [
+"#e2001a",
+"#0057b8"
+]
+},
+{
+"n": "SC Freiburg II",
+"s": "SF2",
+"r": 41,
+"c": [
+"#d4001a",
+"#000000"
+]
+},
+{
+"n": "Eintracht Trier",
+"s": "EIN",
+"r": 40
+},
+{
+"n": "VfR Aalen",
+"s": "AAL",
+"r": 40
+},
+{
+"n": "FC 08 Homburg",
+"s": "HOM",
+"r": 40
+},
+{
+"n": "FSV Frankfurt",
+"s": "FRA",
+"r": 40
+},
+{
+"n": "Hessen Kassel",
+"s": "KAS",
+"r": 39
+},
+{
+"n": "TSV Steinbach Haiger",
+"s": "STE",
+"r": 39
+},
+{
+"n": "Mainz 05 II",
+"s": "M52",
+"r": 40,
+"c": [
+"#c3141e",
+"#ffffff"
+]
+},
+{
+"n": "Barockstadt Fulda-Lehnerz",
+"s": "BAR",
+"r": 38
+},
+{
+"n": "1. FC Kaiserslautern II",
+"s": "FK2",
+"r": 40,
+"c": [
+"#e2001a",
+"#ffffff"
+]
+},
+{
+"n": "VfR Mannheim",
+"s": "MAN",
+"r": 37
+},
+{
+"n": "Eintracht Frankfurt II",
+"s": "SG2",
+"r": 41,
+"c": [
+"#e1000f",
+"#000000"
+]
+},
+{
+"n": "SV Sandhausen",
+"s": "SVS",
+"r": 44
+},
+{
+"n": "SSV Ulm",
+"s": "ULM",
+"r": 44,
+"c": [
+"#e2001a",
+"#ffffff"
+]
+},
+{
+"n": "Astoria Walldorf",
+"s": "AST",
+"r": 38
+}
+]
+},
+{
+"name": "Bayern",
+"clubs": [
+{
+"n": "TSV Buchbach",
+"s": "BUC",
+"r": 37
+},
+{
+"n": "FC Memmingen",
+"s": "MEM",
+"r": 40
+},
+{
+"n": "DJK Vilzing",
+"s": "VIL",
+"r": 37
+},
+{
+"n": "SC Eltersdorf",
+"s": "ELT",
+"r": 36
+},
+{
+"n": "FV Illertissen",
+"s": "ILL",
+"r": 38
+},
+{
+"n": "SpVgg Unterhaching",
+"s": "UNT",
+"r": 44
+},
+{
+"n": "1. FC Schweinfurt",
+"s": "SCH",
+"r": 42
+},
+{
+"n": "FC Augsburg II",
+"s": "FA2",
+"r": 39
+},
+{
+"n": "Wacker Burghausen",
+"s": "WAC",
+"r": 38
+},
+{
+"n": "1860 München",
+"s": "M60",
+"r": 46,
+"c": [
+"#00a0e3",
+"#ffffff"
+]
+},
+{
+"n": "TSV Aubstadt",
+"s": "AUB",
+"r": 39
+},
+{
+"n": "Schwaben Augsburg",
+"s": "SCA",
+"r": 36
+},
+{
+"n": "VfB Eichstätt",
+"s": "EIC",
+"r": 38
+},
+{
+"n": "FC Bayern München II",
+"s": "FB2",
+"r": 43,
+"c": [
+"#dc052d",
+"#ffffff"
+]
+},
+{
+"n": "1. FC Nürnberg II",
+"s": "FN2",
+"r": 39
+},
+{
+"n": "SpVgg Bayreuth",
+"s": "BAH",
+"r": 38
+},
+{
+"n": "SpVgg Greuther Fürth II",
+"s": "GF2",
+"r": 38
+},
+{
+"n": "TSV Landsberg",
+"s": "LAN",
+"r": 37
+},
+{
+"n": "SpVgg Ansbach",
+"s": "ANS",
+"r": 36
+}
+]
+}
+]
+}
+]
+},
+{
+"cc": "at",
+"name": "Österreich",
+"nameEn": "Austria",
+"flag": "🇦🇹",
+"names": "de",
+"uefa": true,
+"cup": {
+"de": "ÖFB-Cup",
+"en": "Austrian Cup"
+},
+"leagues": [
+{
+"tier": 1,
+"name": "Bundesliga",
+"rounds": 2,
+"relegate": 1,
+"groups": [
+{
+"name": null,
+"clubs": [
+{
+"n": "Red Bull Salzburg",
+"s": "RBS",
+"r": 69,
+"c": [
+"#ffffff",
+"#d5001c"
+],
+"st": "Red Bull Arena",
+"cap": 30188
+},
+{
+"n": "SK Sturm Graz",
+"s": "STU",
+"r": 66,
+"c": [
+"#000000",
+"#ffffff"
+],
+"st": "Merkur-Arena",
+"cap": 16364
+},
+{
+"n": "SK Rapid Wien",
+"s": "RAP",
+"r": 63,
+"c": [
+"#00873e",
+"#ffffff"
+],
+"st": "Allianz Stadion",
+"cap": 28600
+},
+{
+"n": "LASK",
+"s": "LAS",
+"r": 62,
+"c": [
+"#000000",
+"#ffffff"
+],
+"st": "Raiffeisen Arena",
+"cap": 19080
+},
+{
+"n": "FK Austria Wien",
+"s": "AUW",
+"r": 61,
+"c": [
+"#7a2a8f",
+"#ffffff"
+],
+"st": "Generali Arena",
+"cap": 17656
+},
+{
+"n": "Wolfsberger AC",
+"s": "WAC",
+"r": 57,
+"c": [
+"#000000",
+"#ffffff"
+],
+"st": "Lavanttal-Arena",
+"cap": 7300
+},
+{
+"n": "Grazer AK",
+"s": "GAK",
+"r": 55,
+"c": [
+"#e2001a",
+"#ffffff"
+],
+"st": "Merkur-Arena",
+"cap": 16364
+},
+{
+"n": "TSV Hartberg",
+"s": "HAR",
+"r": 54,
+"st": "Profertil Arena Hartberg",
+"cap": 5024
+},
+{
+"n": "WSG Tirol",
+"s": "WSG",
+"r": 52,
+"st": "Tivoli Stadion Tirol",
+"cap": 16008
+},
+{
+"n": "SCR Altach",
+"s": "ALT",
+"r": 51,
+"c": [
+"#000000",
+"#ffd800"
+],
+"st": "Stadion Schnabelholz",
+"cap": 8500
+},
+{
+"n": "SV Ried",
+"s": "RIE",
+"r": 50,
+"c": [
+"#00a651",
+"#ffffff"
+],
+"st": "Keine Sorgen Arena",
+"cap": 7680
+},
+{
+"n": "Austria Lustenau",
+"s": "LUS",
+"r": 48,
+"st": "Sun Minimeal Arena",
+"cap": 5138
+}
+]
+}
+]
+},
+{
+"tier": 2,
+"name": "2. Liga",
+"rounds": 2,
+"relegate": 2,
+"groups": [
+{
+"name": null,
+"clubs": [
+{
+"n": "FC Liefering",
+"s": "LIE",
+"r": 48,
+"c": [
+"#e30613",
+"#ffffff"
+],
+"st": "Untersberg-Arena",
+"cap": 4128
+},
+{
+"n": "Blau-Weiß Linz",
+"s": "BWL",
+"r": 47,
+"c": [
+"#0057b8",
+"#ffffff"
+],
+"st": "Hofmann Personal Stadion",
+"cap": 5000
+},
+{
+"n": "SKN St. Pölten",
+"s": "STP",
+"r": 46,
+"st": "NV Arena",
+"cap": 8000
+},
+{
+"n": "Admira Wacker",
+"s": "ADM",
+"r": 45,
+"st": "Datenpol Arena",
+"cap": 10600
+},
+{
+"n": "Rapid Wien II",
+"s": "RA2",
+"r": 44,
+"c": [
+"#00873e",
+"#ffffff"
+],
+"st": "Allianz Stadion",
+"cap": 28345
+},
+{
+"n": "Wacker Innsbruck",
+"s": "WAI",
+"r": 44,
+"st": "Tivoli Stadion Tirol",
+"cap": 17000
+},
+{
+"n": "First Vienna FC",
+"s": "FIV",
+"r": 43,
+"c": [
+"#ffd800",
+"#0b3d91"
+],
+"st": "Hohe Warte Stadium",
+"cap": 5500
+},
+{
+"n": "SKU Amstetten",
+"s": "AMS",
+"r": 42,
+"st": "Ertl Glas Stadion",
+"cap": 2000
+},
+{
+"n": "Austria Wien II",
+"s": "AW2",
+"r": 41,
+"c": [
+"#7a2a8f",
+"#ffffff"
+],
+"st": "Generali Arena",
+"cap": 17500
+},
+{
+"n": "Sturm Graz II",
+"s": "ST2",
+"r": 41,
+"c": [
+"#000000",
+"#ffffff"
+],
+"st": "Merkur Arena",
+"cap": 16364
+},
+{
+"n": "Schwarz-Weiß Bregenz",
+"s": "BRE",
+"r": 40,
+"st": "ImmoAgentur Stadion",
+"cap": 12000
+},
+{
+"n": "KSV 1919",
+"s": "KSV",
+"r": 40,
+"st": "Franz Fekete Stadium",
+"cap": 10000
+},
+{
+"n": "FAC Wien",
+"s": "FAC",
+"r": 39,
+"st": "FAC-Platz",
+"cap": 3000
+},
+{
+"n": "SV Austria Salzburg",
+"s": "ASA",
+"r": 38,
+"st": "Max Aicher Stadion",
+"cap": 1566
+},
+{
+"n": "ASK Voitsberg",
+"s": "VOI",
+"r": 38,
+"st": "Münzer Bioindustrie Sportpark",
+"cap": 2500
+},
+{
+"n": "HOGO Hertha Wels",
+"s": "WEL",
+"r": 38,
+"st": "Huber Arena",
+"cap": 3000
+}
+]
+}
+]
+},
+{
+"tier": 3,
+"name": "Regionalliga",
+"rounds": 2,
+"relegate": 0,
+"groups": [
+{
+"name": "Ost",
+"clubs": [
+{
+"n": "SC Marchfeld Donauauen",
+"s": "MAR",
+"r": 36
+},
+{
+"n": "Wiener Sport-Club",
+"s": "WIE",
+"r": 38
+},
+{
+"n": "SV Oberwart",
+"s": "OBE",
+"r": 33
+},
+{
+"n": "SV Parndorf",
+"s": "PAR",
+"r": 32
+},
+{
+"n": "SC Warth",
+"s": "WAR",
+"r": 31
+},
+{
+"n": "Donaufeld Wien",
+"s": "DON",
+"r": 32
+},
+{
+"n": "SV Horn",
+"s": "HOR",
+"r": 36
+},
+{
+"n": "SC Traiskirchen",
+"s": "TRA",
+"r": 31
+},
+{
+"n": "SV Gloggnitz",
+"s": "GLO",
+"r": 30
+},
+{
+"n": "Mattersburg SV 2020",
+"s": "MAT",
+"r": 34
+},
+{
+"n": "Favoritner AC",
+"s": "FAV",
+"r": 34
+},
+{
+"n": "SV Leobendorf",
+"s": "LEO",
+"r": 31
+},
+{
+"n": "Wiener Viktoria",
+"s": "WIV",
+"r": 34
+},
+{
+"n": "SV Donau",
+"s": "DOU",
+"r": 33
+},
+{
+"n": "Kremser SC",
+"s": "KRE",
+"r": 33
+},
+{
+"n": "Wienerberger SV",
+"s": "WIR",
+"r": 30
+}
+]
+},
+{
+"name": "Nord",
+"clubs": [
+{
+"n": "Wallern/St. Marienkirchen",
+"s": "WAL",
+"r": 31
+},
+{
+"n": "Wals-Grünau",
+"s": "WAG",
+"r": 32
+},
+{
+"n": "Kuchl",
+"s": "KUC",
+"r": 31
+},
+{
+"n": "Union Gurten",
+"s": "GUR",
+"r": 31
+},
+{
+"n": "SV Ried II",
+"s": "RI2",
+"r": 34
+},
+{
+"n": "SV Grödig",
+"s": "GRO",
+"r": 36
+},
+{
+"n": "LASK II",
+"s": "LA2",
+"r": 36
+},
+{
+"n": "SV Schallerbach",
+"s": "SCH",
+"r": 32
+},
+{
+"n": "TSV St. Johann",
+"s": "STJ",
+"r": 30
+},
+{
+"n": "Seekirchen",
+"s": "SEE",
+"r": 31
+},
+{
+"n": "Leonfelden",
+"s": "LEO",
+"r": 30
+},
+{
+"n": "UFC Hallein",
+"s": "UFC",
+"r": 30
+},
+{
+"n": "Dietach",
+"s": "DIE",
+"r": 30
+},
+{
+"n": "Vorwärts Steyr",
+"s": "VOR",
+"r": 36
+},
+{
+"n": "Saalfelden",
+"s": "SAA",
+"r": 32
+}
+]
+},
+{
+"name": "Süd",
+"clubs": [
+{
+"n": "Kalsdorf",
+"s": "KAL",
+"r": 32
+},
+{
+"n": "Deutschlandsberger SC",
+"s": "DEU",
+"r": 31
+},
+{
+"n": "SV Lafnitz",
+"s": "LAF",
+"r": 37
+},
+{
+"n": "Tillmitsch",
+"s": "TIL",
+"r": 30
+},
+{
+"n": "SC Weiz",
+"s": "WEI",
+"r": 31
+},
+{
+"n": "Allerheiligen",
+"s": "ALL",
+"r": 30
+},
+{
+"n": "Gleisdorf",
+"s": "GLE",
+"r": 31
+},
+{
+"n": "TSV Hartberg II",
+"s": "HA2",
+"r": 32
+},
+{
+"n": "Treibach",
+"s": "TRE",
+"r": 31
+},
+{
+"n": "Austria Klagenfurt",
+"s": "AUS",
+"r": 38
+},
+{
+"n": "ATUS Velden",
+"s": "ATU",
+"r": 30
+},
+{
+"n": "Völkermarkt",
+"s": "VOL",
+"r": 30
+},
+{
+"n": "Wolfsberger AC II",
+"s": "WA2",
+"r": 34
+},
+{
+"n": "Bleiburg",
+"s": "BLE",
+"r": 30
+},
+{
+"n": "ATSV Wolfsberg",
+"s": "WOG",
+"r": 31
+},
+{
+"n": "Donau Klagenfurt",
+"s": "DON",
+"r": 32
+}
+]
+},
+{
+"name": "West",
+"clubs": [
+{
+"n": "SC Imst",
+"s": "IMS",
+"r": 33
+},
+{
+"n": "FC Dornbirn",
+"s": "DOR",
+"r": 36
+},
+{
+"n": "Hohenems",
+"s": "HOH",
+"r": 30
+},
+{
+"n": "Schwaz",
+"s": "SCH",
+"r": 32
+},
+{
+"n": "Fügen",
+"s": "FUG",
+"r": 31
+},
+{
+"n": "Kitzbühel",
+"s": "KIT",
+"r": 31
+},
+{
+"n": "SK St. Johann",
+"s": "STJ",
+"r": 30
+},
+{
+"n": "Reichenau",
+"s": "REI",
+"r": 30
+},
+{
+"n": "Röthis",
+"s": "ROT",
+"r": 30
+},
+{
+"n": "Kufstein",
+"s": "KUF",
+"r": 31
+},
+{
+"n": "WSG Tirol II",
+"s": "WS2",
+"r": 34
+},
+{
+"n": "Lochau",
+"s": "LOC",
+"r": 30
+},
+{
+"n": "SCR Altach II",
+"s": "AL2",
+"r": 33
+},
+{
+"n": "Wolfurt",
+"s": "WOL",
+"r": 30
+},
+{
+"n": "Lauterach",
+"s": "LAU",
+"r": 31
+},
+{
+"n": "FC Lustenau",
+"s": "FLU",
+"r": 32
+}
+]
+}
+]
+}
+]
+},
+{
+"cc": "ch",
+"name": "Schweiz",
+"nameEn": "Switzerland",
+"flag": "🇨🇭",
+"names": "de",
+"uefa": true,
+"cup": {
+"de": "Schweizer Cup",
+"en": "Swiss Cup"
+},
+"leagues": [
+{
+"tier": 1,
+"name": "Super League",
+"rounds": 2,
+"relegate": 1,
+"groups": [
+{
+"name": null,
+"clubs": [
+{
+"n": "FC Basel",
+"s": "BAS",
+"r": 68,
+"c": [
+"#d6001c",
+"#003a8f"
+],
+"st": "St. Jakob-Park",
+"cap": 37994
+},
+{
+"n": "BSC Young Boys",
+"s": "YBS",
+"r": 67,
+"c": [
+"#ffd200",
+"#000000"
+],
+"st": "Stadion Wankdorf",
+"cap": 31120
+},
+{
+"n": "FC Lugano",
+"s": "LUG",
+"r": 63,
+"c": [
+"#000000",
+"#ffffff"
+],
+"st": "AIL Arena",
+"cap": 8793
+},
+{
+"n": "Servette FC",
+"s": "SER",
+"r": 62,
+"c": [
+"#7b1e3a",
+"#ffffff"
+],
+"st": "Stade de Genève",
+"cap": 28833
+},
+{
+"n": "FC Zürich",
+"s": "FCZ",
+"r": 61,
+"c": [
+"#ffffff",
+"#0057b8"
+]
+},
+{
+"n": "FC St. Gallen",
+"s": "STG",
+"r": 61,
+"c": [
+"#00a651",
+"#ffffff"
+],
+"st": "Berit Sitterstadion",
+"cap": 19455
+},
+{
+"n": "Grasshopper Club Zürich",
+"s": "GCZ",
+"r": 60,
+"c": [
+"#ffffff",
+"#0057b8"
+],
+"st": "Letzigrund",
+"cap": 26103
+},
+{
+"n": "FC Lausanne-Sport",
+"s": "LAU",
+"r": 60,
+"c": [
+"#ffffff",
+"#0057b8"
+],
+"st": "Stade de la Tuilière",
+"cap": 12544
+},
+{
+"n": "FC Luzern",
+"s": "LUZ",
+"r": 59,
+"c": [
+"#0057b8",
+"#ffffff"
+],
+"st": "Thermoplan Arena",
+"cap": 16490
+},
+{
+"n": "FC Thun",
+"s": "THU",
+"r": 58,
+"c": [
+"#e2001a",
+"#ffffff"
+],
+"st": "Visana Stadion",
+"cap": 10000
+},
+{
+"n": "FC Sion",
+"s": "SIO",
+"r": 57,
+"c": [
+"#e2001a",
+"#ffffff"
+],
+"st": "Stade de Tourbillon",
+"cap": 14283
+},
+{
+"n": "FC Vaduz",
+"s": "VAD",
+"r": 50,
+"c": [
+"#e2001a",
+"#0057b8"
+],
+"st": "Rheinpark Stadion",
+"cap": 7584
+}
+]
+}
+]
+},
+{
+"tier": 2,
+"name": "Challenge League",
+"rounds": 2,
+"relegate": 1,
+"groups": [
+{
+"name": null,
+"clubs": [
+{
+"n": "FC Winterthur",
+"s": "WIN",
+"r": 48,
+"c": [
+"#d6001c",
+"#ffffff"
+],
+"st": "Stadion Schützenwiese",
+"cap": 8700
+},
+{
+"n": "Neuchâtel Xamax",
+"s": "XAM",
+"r": 45,
+"c": [
+"#e2001a",
+"#000000"
+],
+"st": "Stade de la Maladière",
+"cap": 11997
+},
+{
+"n": "FC Aarau",
+"s": "AAR",
+"r": 44,
+"c": [
+"#e2001a",
+"#ffffff"
+],
+"st": "Stadion Brügglifeld",
+"cap": 8000
+},
+{
+"n": "Stade Lausanne-Ouchy",
+"s": "SLO",
+"r": 44,
+"st": "Stade Olympique",
+"cap": 15850
+},
+{
+"n": "SC Kriens",
+"s": "KRI",
+"r": 42,
+"st": "Stadion Kleinfeld",
+"cap": 3500
+},
+{
+"n": "Yverdon-Sport",
+"s": "YVE",
+"r": 42,
+"st": "Stade Municipal",
+"cap": 4200
+},
+{
+"n": "FC Wil 1900",
+"s": "WIL",
+"r": 41,
+"st": "Lidl Arena",
+"cap": 6958
+},
+{
+"n": "Stade Nyonnais",
+"s": "NYO",
+"r": 40,
+"st": "Stade de Colovray",
+"cap": 7200
+},
+{
+"n": "FC Rapperswil-Jona",
+"s": "RAJ",
+"r": 39,
+"st": "Stadion Grünfeld",
+"cap": 3200
+},
+{
+"n": "Étoile Carouge",
+"s": "CAR",
+"r": 38,
+"st": "Stade de la Fontenette",
+"cap": 3600
+}
+]
+}
+]
+},
+{
+"tier": 3,
+"name": "Promotion League",
+"rounds": 2,
+"relegate": 0,
+"groups": [
+{
+"name": null,
+"clubs": [
+{
+"n": "FC Biel-Bienne",
+"s": "BIE",
+"r": 40
+},
+{
+"n": "FC Schaffhausen",
+"s": "SCH",
+"r": 40
+},
+{
+"n": "FC Bulle",
+"s": "BUL",
+"r": 38
+},
+{
+"n": "SC Cham",
+"s": "CHA",
+"r": 37
+},
+{
+"n": "FC Paradiso",
+"s": "PAR",
+"r": 36
+},
+{
+"n": "FC Grand-Saconnex",
+"s": "GRA",
+"r": 35
+},
+{
+"n": "FC Basel U21",
+"s": "BA2",
+"r": 38,
+"c": [
+"#d6001c",
+"#003a8f"
+]
+},
+{
+"n": "FC Zürich U21",
+"s": "ZU2",
+"r": 37,
+"c": [
+"#ffffff",
+"#0057b8"
+]
+},
+{
+"n": "FC Breitenrain Bern",
+"s": "BRE",
+"r": 38,
+"c": [
+"#ffd200",
+"#000000"
+]
+},
+{
+"n": "YF Juventus Zürich",
+"s": "YFJ",
+"r": 34
+},
+{
+"n": "FC Amical Saint-Prex",
+"s": "AMI",
+"r": 32
+},
+{
+"n": "FC Kreuzlingen",
+"s": "KRE",
+"r": 33
+},
+{
+"n": "SC Brühl St. Gallen",
+"s": "BRU",
+"r": 36
+},
+{
+"n": "FC Lugano U21",
+"s": "LU2",
+"r": 36,
+"c": [
+"#000000",
+"#ffffff"
+]
+},
+{
+"n": "BSC Young Boys U21",
+"s": "YB2",
+"r": 37,
+"c": [
+"#ffd200",
+"#000000"
+]
+},
+{
+"n": "FC Bavois",
+"s": "BAV",
+"r": 33
+},
+{
+"n": "AC Bellinzona",
+"s": "ACB",
+"r": 39
+},
+{
+"n": "FC Luzern U21",
+"s": "LZ2",
+"r": 36,
+"c": [
+"#0057b8",
+"#ffffff"
+]
+}
+]
+}
+]
+}
+]
+}
+]
+}

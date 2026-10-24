@@ -1,0 +1,1550 @@
+{
+"countries": [
+{
+"cc": "it",
+"name": "Italien",
+"nameEn": "Italy",
+"flag": "🇮🇹",
+"names": "it",
+"uefa": true,
+"cup": {
+"de": "Coppa Italia",
+"en": "Coppa Italia"
+},
+"leagues": [
+{
+"tier": 1,
+"name": "Serie A",
+"rounds": 2,
+"relegate": 3,
+"groups": [
+{
+"name": null,
+"clubs": [
+{
+"n": "Inter Mailand",
+"s": "INT",
+"r": 86,
+"c": [
+"#0a3d8f",
+"#111111"
+],
+"st": "Stadio Giuseppe Meazza",
+"cap": 75710
+},
+{
+"n": "SSC Neapel",
+"s": "NAP",
+"r": 82,
+"c": [
+"#12a0d7",
+"#ffffff"
+],
+"st": "Stadio Diego Armando Maradona",
+"cap": 54732
+},
+{
+"n": "Juventus",
+"s": "JUV",
+"r": 82,
+"c": [
+"#111111",
+"#ffffff"
+],
+"st": "Allianz Stadium",
+"cap": 41507
+},
+{
+"n": "AC Mailand",
+"s": "MIL",
+"r": 81,
+"c": [
+"#c8102e",
+"#111111"
+],
+"st": "San Siro",
+"cap": 75710
+},
+{
+"n": "Atalanta",
+"s": "ATA",
+"r": 79,
+"c": [
+"#1e71b8",
+"#111111"
+],
+"st": "New Balance Arena",
+"cap": 23439
+},
+{
+"n": "AS Rom",
+"s": "ROM",
+"r": 77,
+"c": [
+"#8e1f2f",
+"#f0bc42"
+],
+"st": "Stadio Olimpico",
+"cap": 70634
+},
+{
+"n": "Lazio",
+"s": "LAZ",
+"r": 75,
+"c": [
+"#87d8f7",
+"#ffffff"
+],
+"st": "Stadio Olimpico",
+"cap": 70634
+},
+{
+"n": "Fiorentina",
+"s": "FIO",
+"r": 73,
+"c": [
+"#5b2d8e",
+"#ffffff"
+],
+"st": "Stadio Artemio Franchi",
+"cap": 43118
+},
+{
+"n": "Bologna",
+"s": "BOL",
+"r": 73,
+"c": [
+"#1a2f5a",
+"#a21c26"
+],
+"st": "Stadio Renato Dall'Ara",
+"cap": 38279
+},
+{
+"n": "Como",
+"s": "COM",
+"r": 71,
+"c": [
+"#0d3b8e",
+"#ffffff"
+],
+"st": "Stadio Giuseppe Sinigaglia",
+"cap": 13602
+},
+{
+"n": "Torino",
+"s": "TOR",
+"r": 68,
+"c": [
+"#8b1a1a",
+"#ffffff"
+],
+"st": "Stadio Olimpico Grande Torino",
+"cap": 28177
+},
+{
+"n": "Genua",
+"s": "GEN",
+"r": 66,
+"c": [
+"#9b1c2e",
+"#12306b"
+],
+"st": "Stadio Luigi Ferraris",
+"cap": 33205
+},
+{
+"n": "Sassuolo",
+"s": "SAS",
+"r": 66,
+"c": [
+"#00a550",
+"#111111"
+],
+"st": "Mapei Stadium",
+"cap": 21515
+},
+{
+"n": "Udinese",
+"s": "UDI",
+"r": 65,
+"c": [
+"#111111",
+"#ffffff"
+],
+"st": "Bluenergy Stadium",
+"cap": 25132
+},
+{
+"n": "Parma",
+"s": "PAR",
+"r": 65,
+"c": [
+"#ffd200",
+"#1a3a7a"
+],
+"st": "Stadio Ennio Tardini",
+"cap": 22352
+},
+{
+"n": "Cagliari",
+"s": "CAG",
+"r": 63,
+"c": [
+"#a31c2e",
+"#12306b"
+],
+"st": "Unipol Domus",
+"cap": 16416
+},
+{
+"n": "Lecce",
+"s": "LEC",
+"r": 63,
+"c": [
+"#f6d200",
+"#d3112a"
+],
+"st": "Stadio Via del Mare",
+"cap": 30354
+},
+{
+"n": "Monza",
+"s": "MNZ",
+"r": 62,
+"c": [
+"#d3112a",
+"#ffffff"
+],
+"st": "Stadio Brianteo",
+"cap": 17102
+},
+{
+"n": "Venezia",
+"s": "VEN",
+"r": 61,
+"c": [
+"#1a1a1a",
+"#f07d00"
+],
+"st": "Stadio Pier Luigi Penzo",
+"cap": 12048
+},
+{
+"n": "Frosinone",
+"s": "FRO",
+"r": 60,
+"c": [
+"#f6d200",
+"#1a3a7a"
+],
+"st": "Stadio Benito Stirpe",
+"cap": 16227
+}
+]
+}
+]
+},
+{
+"tier": 2,
+"name": "Serie B",
+"rounds": 2,
+"relegate": 4,
+"groups": [
+{
+"name": null,
+"clubs": [
+{
+"n": "Palermo",
+"s": "PAL",
+"r": 62,
+"c": [
+"#f2a1c0",
+"#111111"
+],
+"st": "Stadio Renzo Barbera",
+"cap": 36365
+},
+{
+"n": "Pisa",
+"s": "PIS",
+"r": 60,
+"c": [
+"#111111",
+"#1e5aa8"
+],
+"st": "Arena Garibaldi",
+"cap": 12508
+},
+{
+"n": "Cremonese",
+"s": "CRE",
+"r": 60,
+"c": [
+"#a8a8a8",
+"#c8102e"
+],
+"st": "Stadio Giovanni Zini",
+"cap": 20641
+},
+{
+"n": "Hellas Verona",
+"s": "VER",
+"r": 59,
+"c": [
+"#ffd200",
+"#1a3a7a"
+],
+"st": "Stadio Marcantonio Bentegodi",
+"cap": 39211
+},
+{
+"n": "Sampdoria",
+"s": "SAM",
+"r": 59,
+"c": [
+"#1c5bb5",
+"#ffffff"
+],
+"st": "Stadio Luigi Ferraris",
+"cap": 33205
+},
+{
+"n": "Empoli",
+"s": "EMP",
+"r": 58,
+"c": [
+"#1b64b5",
+"#ffffff"
+],
+"st": "Stadio Carlo Castellani",
+"cap": 16284
+},
+{
+"n": "Modena",
+"s": "MOD",
+"r": 56,
+"c": [
+"#ffd200",
+"#1a3a7a"
+],
+"st": "Stadio Alberto Braglia",
+"cap": 21151
+},
+{
+"n": "Catanzaro",
+"s": "CTZ",
+"r": 56,
+"c": [
+"#f6c000",
+"#d3112a"
+],
+"st": "Stadio Nicola Ceravolo",
+"cap": 14650
+},
+{
+"n": "Cesena",
+"s": "CES",
+"r": 55,
+"c": [
+"#111111",
+"#ffffff"
+],
+"st": "Stadio Dino Manuzzi",
+"cap": 20194
+},
+{
+"n": "Avellino",
+"s": "AVE",
+"r": 55,
+"c": [
+"#0b6b3a",
+"#ffffff"
+],
+"st": "Stadio Partenio-Adriano Lombardi",
+"cap": 26000
+},
+{
+"n": "Padova",
+"s": "PAD",
+"r": 55,
+"c": [
+"#d3112a",
+"#ffffff"
+],
+"st": "Stadio Euganeo",
+"cap": 32420
+},
+{
+"n": "Benevento",
+"s": "BEN",
+"r": 54,
+"c": [
+"#d3112a",
+"#f6c000"
+],
+"st": "Stadio Ciro Vigorito",
+"cap": 16867
+},
+{
+"n": "Vicenza",
+"s": "VIC",
+"r": 54,
+"c": [
+"#d3112a",
+"#ffffff"
+],
+"st": "Stadio Romeo Menti",
+"cap": 12000
+},
+{
+"n": "Südtirol",
+"s": "SUD",
+"r": 53,
+"c": [
+"#ffffff",
+"#d3112a"
+],
+"st": "Stadio Marco Druso",
+"cap": 5539
+},
+{
+"n": "Mantova",
+"s": "MAN",
+"r": 52,
+"c": [
+"#d3112a",
+"#ffffff"
+],
+"st": "Stadio Danilo Martelli",
+"cap": 14884
+},
+{
+"n": "Carrarese",
+"s": "CAR",
+"r": 52,
+"c": [
+"#f6c000",
+"#1a3a7a"
+],
+"st": "Stadio dei Marmi",
+"cap": 4194
+},
+{
+"n": "Juve Stabia",
+"s": "JST",
+"r": 51,
+"c": [
+"#f6c000",
+"#1a3a7a"
+],
+"st": "Stadio Romeo Menti",
+"cap": 7642
+},
+{
+"n": "Virtus Entella",
+"s": "ENT",
+"r": 51,
+"c": [
+"#ffffff",
+"#1a3a7a"
+],
+"st": "Stadio Comunale",
+"cap": 5535
+},
+{
+"n": "Arezzo",
+"s": "ARE",
+"r": 51,
+"c": [
+"#8b1a1a",
+"#ffffff"
+],
+"st": "Stadio Città di Arezzo",
+"cap": 13128
+},
+{
+"n": "Ascoli",
+"s": "ASC",
+"r": 50,
+"c": [
+"#111111",
+"#ffffff"
+],
+"st": "Stadio Cino e Lillo Del Duca",
+"cap": 12461
+}
+]
+}
+]
+},
+{
+"tier": 3,
+"name": "Serie C",
+"rounds": 2,
+"relegate": 0,
+"groups": [
+{
+"name": "Girone A",
+"clubs": [
+{
+"n": "AlbinoLeffe",
+"s": "ALB",
+"r": 44,
+"st": "AlbinoLeffe Stadium",
+"cap": 1791
+},
+{
+"n": "Alcione Milano",
+"s": "ALC",
+"r": 43,
+"st": "Ernesto Breda",
+"cap": 3523
+},
+{
+"n": "Arzignano Valchiampo",
+"s": "ARZ",
+"r": 42,
+"st": "Tommaso Dal Molin",
+"cap": 1690
+},
+{
+"n": "Carpi",
+"s": "CPI",
+"r": 46,
+"st": "Sandro Cabassi",
+"cap": 5510
+},
+{
+"n": "Cittadella",
+"s": "CIT",
+"r": 49,
+"c": [
+"#7b1e2b",
+"#1a3a7a"
+],
+"st": "Piercesare Tombolato",
+"cap": 7623
+},
+{
+"n": "Desenzano",
+"s": "DES",
+"r": 42,
+"st": "Comunale Gino Corioni",
+"cap": 9000
+},
+{
+"n": "Dolomiti Bellunesi",
+"s": "DOL",
+"r": 43,
+"st": "Zugni Tauro",
+"cap": 1700
+},
+{
+"n": "Folgore Caratese",
+"s": "FOL",
+"r": 42,
+"st": "XXV Aprile",
+"cap": 1450
+},
+{
+"n": "Giana Erminio",
+"s": "GIA",
+"r": 43,
+"st": "Città di Gorgonzola",
+"cap": 3766
+},
+{
+"n": "Juventus Next Gen",
+"s": "JNG",
+"r": 47,
+"st": "Giuseppe Moccagatta",
+"cap": 5827
+},
+{
+"n": "Lecco",
+"s": "LCC",
+"r": 46,
+"st": "Rigamonti-Ceppi",
+"cap": 5508
+},
+{
+"n": "Lumezzane",
+"s": "LUM",
+"r": 45,
+"st": "Tullio Saleri",
+"cap": 4150
+},
+{
+"n": "Novara",
+"s": "NOV",
+"r": 48,
+"c": [
+"#ffffff",
+"#1e6fc5"
+],
+"st": "Silvio Piola",
+"cap": 17875
+},
+{
+"n": "Ospitaletto",
+"s": "OSP",
+"r": 43,
+"st": "Comunale Gino Corioni",
+"cap": 9000
+},
+{
+"n": "Pergolettese",
+"s": "PGL",
+"r": 43,
+"st": "Giuseppe Voltini",
+"cap": 4095
+},
+{
+"n": "Pro Vercelli",
+"s": "PRV",
+"r": 46,
+"st": "Silvio Piola",
+"cap": 5526
+},
+{
+"n": "Renate",
+"s": "REN",
+"r": 44,
+"st": "XXV Aprile",
+"cap": 1450
+},
+{
+"n": "Trento",
+"s": "TRE",
+"r": 44,
+"st": "Briamasco",
+"cap": 3000
+},
+{
+"n": "Treviso",
+"s": "TVS",
+"r": 47,
+"st": "Omobono Tenni",
+"cap": 10000
+},
+{
+"n": "Union Brescia",
+"s": "BRE",
+"r": 50,
+"c": [
+"#1a5fb4",
+"#ffffff"
+],
+"st": "Mario Rigamonti",
+"cap": 19550
+}
+]
+},
+{
+"name": "Girone B",
+"clubs": [
+{
+"n": "Atalanta U23",
+"s": "A23",
+"r": 44,
+"st": "Comunale di Caravaggio",
+"cap": 2180
+},
+{
+"n": "Campobasso",
+"s": "CAM",
+"r": 45,
+"st": "Antonio Molinari",
+"cap": 25000
+},
+{
+"n": "Forlì",
+"s": "FOR",
+"r": 43,
+"st": "Tullo Morgagni",
+"cap": 3500
+},
+{
+"n": "Grosseto",
+"s": "GRO",
+"r": 46,
+"st": "Carlo Zecchini",
+"cap": 9779
+},
+{
+"n": "Gubbio",
+"s": "GUB",
+"r": 45,
+"st": "Pietro Barbetti",
+"cap": 4939
+},
+{
+"n": "Guidonia Montecelio",
+"s": "GUI",
+"r": 42,
+"st": "Comunale di Guidonia Montecelio",
+"cap": 2900
+},
+{
+"n": "Latina",
+"s": "LAT",
+"r": 46,
+"st": "Domenico Francioni",
+"cap": 9310
+},
+{
+"n": "Livorno",
+"s": "LIV",
+"r": 49,
+"c": [
+"#7b1e2b",
+"#ffffff"
+],
+"st": "Armando Picchi",
+"cap": 14312
+},
+{
+"n": "Ostia Mare",
+"s": "OST",
+"r": 42,
+"st": "Pasquale Giannattasio",
+"cap": 1500
+},
+{
+"n": "Pescara",
+"s": "PES",
+"r": 51,
+"c": [
+"#ffffff",
+"#6cb4e4"
+],
+"st": "Stadio Adriatico",
+"cap": 20476
+},
+{
+"n": "Perugia",
+"s": "PRG",
+"r": 51,
+"c": [
+"#d3112a",
+"#ffffff"
+],
+"st": "Renato Curi",
+"cap": 23625
+},
+{
+"n": "Pianese",
+"s": "PIA",
+"r": 42,
+"st": "Comunale di Piancastagnaio",
+"cap": 1500
+},
+{
+"n": "Pineto",
+"s": "PIN",
+"r": 43,
+"st": "Pavone-Mariani",
+"cap": 1500
+},
+{
+"n": "Ravenna",
+"s": "RAV",
+"r": 48,
+"c": [
+"#d3112a",
+"#ffffff"
+],
+"st": "Bruno Benelli",
+"cap": 12020
+},
+{
+"n": "Reggiana",
+"s": "REG",
+"r": 50,
+"c": [
+"#7b1e2b",
+"#ffffff"
+],
+"st": "Mapei Stadium",
+"cap": 21525
+},
+{
+"n": "Sambenedettese",
+"s": "SBE",
+"r": 46,
+"st": "Riviera delle Palme",
+"cap": 13786
+},
+{
+"n": "Spezia",
+"s": "SPE",
+"r": 52,
+"c": [
+"#ffffff",
+"#111111"
+],
+"st": "Stadio Alberto Picco",
+"cap": 12273
+},
+{
+"n": "Torres",
+"s": "TRS",
+"r": 46,
+"st": "Vanni Sanna",
+"cap": 6145
+},
+{
+"n": "Vado",
+"s": "VAD",
+"r": 42,
+"st": "Giuseppe Sivori",
+"cap": 1500
+},
+{
+"n": "Vis Pesaro",
+"s": "VIS",
+"r": 45,
+"st": "Tonino Benelli",
+"cap": 4898
+}
+]
+},
+{
+"name": "Girone C",
+"clubs": [
+{
+"n": "Audace Cerignola",
+"s": "CER",
+"r": 47,
+"st": "Domenico Monterisi",
+"cap": 7453
+},
+{
+"n": "Bari",
+"s": "BAR",
+"r": 53,
+"c": [
+"#d3112a",
+"#ffffff"
+],
+"st": "San Nicola",
+"cap": 58270
+},
+{
+"n": "Barletta",
+"s": "BTA",
+"r": 42,
+"st": "Cosimo Puttilli",
+"cap": 10000
+},
+{
+"n": "Casarano",
+"s": "CSR",
+"r": 44,
+"st": "Giuseppe Capozza",
+"cap": 6500
+},
+{
+"n": "Casertana",
+"s": "CSE",
+"r": 46,
+"st": "Alberto Pinto",
+"cap": 12000
+},
+{
+"n": "Catania",
+"s": "CTA",
+"r": 52,
+"c": [
+"#c8102e",
+"#1f6fc5"
+],
+"st": "Angelo Massimino",
+"cap": 20881
+},
+{
+"n": "Cavese",
+"s": "CVS",
+"r": 43,
+"st": "Simonetta Lamberti",
+"cap": 5200
+},
+{
+"n": "Cosenza",
+"s": "COS",
+"r": 49,
+"c": [
+"#1a3a7a",
+"#d3112a"
+],
+"st": "San Vito-Gigi Marulla",
+"cap": 20987
+},
+{
+"n": "Crotone",
+"s": "CRO",
+"r": 49,
+"c": [
+"#d3112a",
+"#1a3a7a"
+],
+"st": "Ezio Scida",
+"cap": 16640
+},
+{
+"n": "Foggia",
+"s": "FOG",
+"r": 48,
+"c": [
+"#d3112a",
+"#111111"
+],
+"st": "Pino Zaccheria",
+"cap": 25085
+},
+{
+"n": "Giugliano",
+"s": "GIU",
+"r": 45,
+"st": "Alberto De Cristofaro",
+"cap": 6030
+},
+{
+"n": "Inter Mailand U23",
+"s": "I23",
+"r": 45,
+"st": "Ernesto Breda",
+"cap": 3523
+},
+{
+"n": "Monopoli",
+"s": "MNP",
+"r": 45,
+"st": "Vito Simone Veneziani",
+"cap": 6880
+},
+{
+"n": "Picerno",
+"s": "PIC",
+"r": 42,
+"st": "Donato Curcio",
+"cap": 1600
+},
+{
+"n": "Potenza",
+"s": "POT",
+"r": 45,
+"st": "Alfredo Viviani",
+"cap": 4977
+},
+{
+"n": "Salernitana",
+"s": "SAL",
+"r": 53,
+"c": [
+"#7b1e2b",
+"#ffffff"
+],
+"st": "Stadio Arechi",
+"cap": 20194
+},
+{
+"n": "Savoia",
+"s": "SVA",
+"r": 43,
+"st": "Alfredo Giraud",
+"cap": 10750
+},
+{
+"n": "Scafatese",
+"s": "SCA",
+"r": 42,
+"st": "Giovanni Vitiello",
+"cap": 2650
+},
+{
+"n": "Sorrento",
+"s": "SOR",
+"r": 44,
+"st": "Italia",
+"cap": 3600
+},
+{
+"n": "Team Altamura",
+"s": "ALT",
+"r": 43,
+"st": "Antonio D'Angelo",
+"cap": 2800
+}
+]
+}
+]
+}
+]
+},
+{
+"cc": "fr",
+"name": "Frankreich",
+"nameEn": "France",
+"flag": "🇫🇷",
+"names": "fr",
+"uefa": true,
+"cup": {
+"de": "Coupe de France",
+"en": "Coupe de France"
+},
+"leagues": [
+{
+"tier": 1,
+"name": "Ligue 1",
+"rounds": 2,
+"relegate": 2,
+"groups": [
+{
+"name": null,
+"clubs": [
+{
+"n": "Paris Saint-Germain",
+"s": "PSG",
+"r": 86,
+"c": [
+"#004170",
+"#da291c"
+],
+"st": "Parc des Princes",
+"cap": 47926
+},
+{
+"n": "Olympique Marseille",
+"s": "OM",
+"r": 78,
+"c": [
+"#ffffff",
+"#2faee0"
+],
+"st": "Stade Vélodrome",
+"cap": 67394
+},
+{
+"n": "AS Monaco",
+"s": "ASM",
+"r": 76,
+"c": [
+"#e8112d",
+"#ffffff"
+],
+"st": "Stade Louis II",
+"cap": 18523
+},
+{
+"n": "OSC Lille",
+"s": "LIL",
+"r": 74,
+"c": [
+"#e01e13",
+"#1a2a5c"
+],
+"st": "Stade Pierre-Mauroy",
+"cap": 50186
+},
+{
+"n": "Olympique Lyon",
+"s": "OL",
+"r": 74,
+"c": [
+"#ffffff",
+"#1a3a8a"
+],
+"st": "Groupama Stadium",
+"cap": 59186
+},
+{
+"n": "RC Lens",
+"s": "RCL",
+"r": 73,
+"c": [
+"#f6d200",
+"#d3112a"
+],
+"st": "Stade Bollaert-Delelis",
+"cap": 37705
+},
+{
+"n": "OGC Nizza",
+"s": "NIC",
+"r": 70,
+"c": [
+"#d3112a",
+"#111111"
+],
+"st": "Allianz Riviera",
+"cap": 35624
+},
+{
+"n": "Stade Rennes",
+"s": "REN",
+"r": 69,
+"c": [
+"#d3112a",
+"#111111"
+],
+"st": "Roazhon Park",
+"cap": 29778
+},
+{
+"n": "RC Strasbourg",
+"s": "STR",
+"r": 67,
+"c": [
+"#0a5aa8",
+"#ffffff"
+],
+"st": "Stade de la Meinau",
+"cap": 29230
+},
+{
+"n": "FC Toulouse",
+"s": "TFC",
+"r": 63,
+"c": [
+"#5b2a86",
+"#ffffff"
+],
+"st": "Stadium de Toulouse",
+"cap": 33150
+},
+{
+"n": "Stade Brest",
+"s": "BRE",
+"r": 62,
+"c": [
+"#d3112a",
+"#ffffff"
+],
+"st": "Stade Francis-Le Blé",
+"cap": 15931
+},
+{
+"n": "FC Lorient",
+"s": "LOR",
+"r": 60,
+"c": [
+"#f08a00",
+"#111111"
+],
+"st": "Stade du Moustoir",
+"cap": 18890
+},
+{
+"n": "AJ Auxerre",
+"s": "AUX",
+"r": 59,
+"c": [
+"#ffffff",
+"#1a5fb4"
+],
+"st": "Stade Abbé Deschamps",
+"cap": 21379
+},
+{
+"n": "Paris FC",
+"s": "PFC",
+"r": 59,
+"c": [
+"#1a3a7a",
+"#6cb4e4"
+],
+"st": "Stade Jean-Bouin",
+"cap": 20000
+},
+{
+"n": "SCO Angers",
+"s": "ANG",
+"r": 57,
+"c": [
+"#111111",
+"#ffffff"
+],
+"st": "Stade Raymond Kopa",
+"cap": 18752
+},
+{
+"n": "Le Havre AC",
+"s": "HAC",
+"r": 57,
+"c": [
+"#6cb4e4",
+"#1a3a7a"
+],
+"st": "Stade Océane",
+"cap": 25178
+},
+{
+"n": "ESTAC Troyes",
+"s": "TRO",
+"r": 56,
+"c": [
+"#1a5fb4",
+"#ffffff"
+],
+"st": "Stade de l'Aube",
+"cap": 20400
+},
+{
+"n": "Le Mans FC",
+"s": "LMF",
+"r": 56,
+"c": [
+"#f6d200",
+"#d3112a"
+],
+"st": "Stade Marie-Marvingt",
+"cap": 25000
+}
+]
+}
+]
+},
+{
+"tier": 2,
+"name": "Ligue 2",
+"rounds": 2,
+"relegate": 3,
+"groups": [
+{
+"name": null,
+"clubs": [
+{
+"n": "FC Metz",
+"s": "MET",
+"r": 57,
+"c": [
+"#7b1e2b",
+"#ffffff"
+],
+"st": "Stade Saint-Symphorien",
+"cap": 28786
+},
+{
+"n": "FC Nantes",
+"s": "NAN",
+"r": 57,
+"c": [
+"#f6d200",
+"#0b6b3a"
+],
+"st": "Stade de la Beaujoire",
+"cap": 35322
+},
+{
+"n": "AS Saint-Étienne",
+"s": "STE",
+"r": 56,
+"c": [
+"#0b6b3a",
+"#ffffff"
+],
+"st": "Stade Geoffroy-Guichard",
+"cap": 41965
+},
+{
+"n": "Montpellier HSC",
+"s": "MHS",
+"r": 55,
+"c": [
+"#1a3a7a",
+"#f08a00"
+],
+"st": "Stade de la Mosson",
+"cap": 32900
+},
+{
+"n": "Stade Reims",
+"s": "REI",
+"r": 53,
+"c": [
+"#d3112a",
+"#ffffff"
+],
+"st": "Stade Auguste-Delaune",
+"cap": 21029
+},
+{
+"n": "EA Guingamp",
+"s": "GUI",
+"r": 51,
+"c": [
+"#d3112a",
+"#111111"
+],
+"st": "Stade de Roudourou",
+"cap": 18378
+},
+{
+"n": "Clermont Foot",
+"s": "CLE",
+"r": 50,
+"st": "Stade Gabriel Montpied",
+"cap": 11980
+},
+{
+"n": "FC Sochaux",
+"s": "SOC",
+"r": 50,
+"c": [
+"#f6d200",
+"#1a3a7a"
+],
+"st": "Stade Auguste-Bonal",
+"cap": 20005
+},
+{
+"n": "Dijon FCO",
+"s": "DIJ",
+"r": 50,
+"c": [
+"#d3112a",
+"#ffffff"
+],
+"st": "Stade Gaston Gérard",
+"cap": 15995
+},
+{
+"n": "AS Nancy",
+"s": "ASN",
+"r": 49,
+"c": [
+"#ffffff",
+"#d3112a"
+],
+"st": "Stade Marcel Picot",
+"cap": 20087
+},
+{
+"n": "Grenoble Foot",
+"s": "GRE",
+"r": 48,
+"st": "Stade des Alpes",
+"cap": 20068
+},
+{
+"n": "Stade Laval",
+"s": "LAV",
+"r": 48,
+"c": [
+"#f08a00",
+"#111111"
+],
+"st": "Stade Francis Le Basser",
+"cap": 18607
+},
+{
+"n": "FC Annecy",
+"s": "ANN",
+"r": 47,
+"st": "Parc des Sports",
+"cap": 15660
+},
+{
+"n": "US Boulogne",
+"s": "BOU",
+"r": 47,
+"st": "Stade de la Libération",
+"cap": 9534
+},
+{
+"n": "Red Star FC",
+"s": "RSF",
+"r": 47,
+"c": [
+"#0b6b3a",
+"#ffffff"
+],
+"st": "Stade Bauer",
+"cap": 10000
+},
+{
+"n": "USL Dunkerque",
+"s": "DUN",
+"r": 46,
+"st": "Stade Marcel Tribut",
+"cap": 4933
+},
+{
+"n": "Pau FC",
+"s": "PAU",
+"r": 46,
+"st": "Nouste Camp",
+"cap": 4031
+},
+{
+"n": "Rodez AF",
+"s": "ROD",
+"r": 46,
+"c": [
+"#d3112a",
+"#f6d200"
+],
+"st": "Stade Paul Lignon",
+"cap": 5955
+}
+]
+}
+]
+},
+{
+"tier": 3,
+"name": "Ligue 3",
+"rounds": 2,
+"relegate": 0,
+"groups": [
+{
+"name": null,
+"clubs": [
+{
+"n": "Amiens SC",
+"s": "AMI",
+"r": 48,
+"c": [
+"#ffffff",
+"#111111"
+],
+"st": "Stade de la Licorne",
+"cap": 12097
+},
+{
+"n": "SC Bastia",
+"s": "BAS",
+"r": 48,
+"c": [
+"#1a5fb4",
+"#ffffff"
+],
+"st": "Stade Armand-Cesari",
+"cap": 16048
+},
+{
+"n": "SM Caen",
+"s": "CAE",
+"r": 47,
+"c": [
+"#1a5fb4",
+"#d3112a"
+],
+"st": "Stade Michel d'Ornano",
+"cap": 21215
+},
+{
+"n": "Valenciennes FC",
+"s": "VAL",
+"r": 44,
+"st": "Stade du Hainaut",
+"cap": 25172
+},
+{
+"n": "FC Rouen",
+"s": "ROU",
+"r": 44,
+"st": "Stade Robert Diochon",
+"cap": 8372
+},
+{
+"n": "Quevilly-Rouen",
+"s": "QRM",
+"r": 43,
+"st": "Stade Robert Diochon",
+"cap": 8372
+},
+{
+"n": "Orléans",
+"s": "ORL",
+"r": 42,
+"st": "Stade de la Source",
+"cap": 7000
+},
+{
+"n": "Versailles",
+"s": "VER",
+"r": 42,
+"st": "Stade de Montbauron",
+"cap": 7545
+},
+{
+"n": "AS Cannes",
+"s": "CAN",
+"r": 42,
+"st": "Stade Pierre de Coubertin",
+"cap": 9819
+},
+{
+"n": "Paris 13 Atletico",
+"s": "P13",
+"r": 41,
+"st": "Stade Sébastien Charléty",
+"cap": 20000
+},
+{
+"n": "Bourg-Péronnas",
+"s": "BOP",
+"r": 41,
+"st": "Stade Marcel-Verchère",
+"cap": 11400
+},
+{
+"n": "La Roche VF",
+"s": "LRO",
+"r": 41,
+"st": "Stade Henri Desgranges",
+"cap": 10000
+},
+{
+"n": "Villefranche",
+"s": "VIL",
+"r": 40,
+"st": "Stade Armand Chouffet",
+"cap": 3500
+},
+{
+"n": "Concarneau",
+"s": "CON",
+"r": 40,
+"st": "Stade Guy-Piriou",
+"cap": 5800
+},
+{
+"n": "Fleury 91",
+"s": "FLE",
+"r": 39,
+"st": "Stade Auguste Gentelet",
+"cap": 2000
+},
+{
+"n": "Le Puy Foot",
+"s": "LEP",
+"r": 38,
+"st": "Stade Charles Massot",
+"cap": 4800
+},
+{
+"n": "Aubagne Air Bel",
+"s": "AUB",
+"r": 38,
+"st": "Stade de Lattre-de-Tassigny",
+"cap": 1000
+},
+{
+"n": "Thionville",
+"s": "THI",
+"r": 38,
+"st": "Stade de la Plaine",
+"cap": 1000
+}
+]
+}
+]
+}
+]
+}
+]
+}

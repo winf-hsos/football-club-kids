@@ -1,0 +1,75 @@
+import os as _os
+_ROOT = _os.path.abspath(_os.path.join(_os.path.dirname(__file__), '..'))
+_OUT = _os.path.join(_os.environ.get('FCK_SHOTS', _os.path.join(_os.environ.get('TMPDIR', '/tmp'), 'fck-shots')), '')
+_os.makedirs(_OUT, exist_ok=True)
+from playwright.sync_api import sync_playwright
+import sys
+OUT=_OUT
+MOBILE = len(sys.argv)>1 and sys.argv[1]=='m'
+P = 'm_' if MOBILE else 'd_'
+with sync_playwright() as p:
+    b=p.chromium.launch(executable_path='/opt/pw-browsers/chromium', args=['--no-sandbox'])
+    ctx=b.new_context(viewport={'width':390,'height':1800} if MOBILE else {'width':1180,'height':1500}, locale='de-DE')
+    pg=ctx.new_page(); errs=[]
+    pg.on('console', lambda m: errs.append(m.type+': '+m.text) if m.type in ('error','warning') and 'ERR_FAILED' not in m.text else None)
+    pg.on('pageerror', lambda e: errs.append('PAGEERR '+str(e)))
+    pg.route('**/*', lambda r: r.abort() if r.request.url.startswith('http') else r.continue_())
+    pg.goto(('file://' + _ROOT + '/dist/FCK.html')); pg.wait_for_timeout(1000)
+    def hs(tag): print(tag, 'hscroll', pg.evaluate("(()=>{const s=document.getElementById('screen');return s.scrollWidth>s.clientWidth+1})()"))
+    pg.click('.pcard >> nth=1'); pg.click('.btn.primary >> nth=0'); pg.wait_for_timeout(400)
+    pg.screenshot(path=OUT+P+'p0_home.png', full_page=True); hs('home')
+    pg.click('.mitem:has-text("Profikarriere")'); pg.wait_for_timeout(500)
+    pg.screenshot(path=OUT+P+'p1_menu.png', full_page=True); hs('menu')
+    pg.click('.mitem:has-text("Neuer Spieler")'); pg.wait_for_timeout(500)
+    pg.fill('input.txt', 'Leon Testmann')
+    pg.click('.chips .chip:has-text("Kraftpaket")'); pg.wait_for_timeout(200)
+    pg.click('button:has-text("Verein wählen")'); pg.wait_for_timeout(400)
+    pg.fill('#modal input[type=search]', 'Osnabr'); pg.wait_for_timeout(300)
+    (pg.click('#modal .pick >> nth=0') if pg.query_selector('#modal .pick') else pg.click('#modal .pk-ok')); pg.wait_for_timeout(400)
+    pg.screenshot(path=OUT+P+'p2_new.png', full_page=True); hs('new')
+    print('club', pg.evaluate("FCK.proDraft.clubId"))
+    pg.click('button:has-text("Karriere starten")'); pg.wait_for_timeout(800)
+    pg.screenshot(path=OUT+P+'p3_hub.png', full_page=True); hs('hub')
+    print('pro', pg.evaluate("JSON.stringify({n:FCK.Career.cur.pro.name,club:FCK.World.clubs[FCK.Career.cur.idx].name,role:FCK.Pro.roleLabel(FCK.Career.cur),ovr:Math.round(FCK.Pro.ovr(FCK.Career.cur.pro)),ctl:FCK.Career.cur.pro.ctl})"))
+    for tab in ['Spieler','Tabelle','Spielplan','Wettbewerbe','Laufbahn','Welt','Menü']:
+        pg.click('.chips.tabs .chip:has-text("%s")'%tab); pg.wait_for_timeout(300)
+        pg.screenshot(path=OUT+P+'p4_'+tab[:4]+'.png', full_page=True); hs(tab)
+    # spend a point
+    pg.click('.chips.tabs .chip:has-text("Spieler")'); pg.wait_for_timeout(200)
+    before = pg.evaluate("FCK.Career.cur.pro.sp")
+    pg.click('.attr .btn >> nth=0'); pg.wait_for_timeout(200)
+    print('sp', before, '->', pg.evaluate("FCK.Career.cur.pro.sp"))
+    pg.click('.chips.tabs .chip:has-text("Übersicht")'); pg.wait_for_timeout(300)
+    # play in player mode: engine must tie control to the pro
+    pg.click('button:has-text("Spielen"), button:has-text("Zuschauen")'); pg.wait_for_function("FCK.game.m && FCK.game.m.clock>3", timeout=60000)
+    print('lock', pg.evaluate("JSON.stringify({lock:!!FCK.game.m.lock, slots:FCK.game.m.slots.length, ctl:FCK.game.m.teams.map(t=>t.players.filter(p=>p.ctrl>=0).map(p=>p.name+(p.d.pro?'*':''))), role:FCK.game.cfg.career.role})"))
+    pg.screenshot(path=OUT+P+'p5_match.png')
+    pg.evaluate("""(()=>{const m=FCK.game.m; m.autoProceed=true; let n=0; while(m.mode!=='over'&&n<600000){ m.update(1/60); n++; } return n;})()""")
+    pg.wait_for_function("FCK.UI.cur==='result'", timeout=20000); pg.wait_for_timeout(500)
+    pg.screenshot(path=OUT+P+'p6_result.png', full_page=True)
+    print('after match', pg.evaluate("JSON.stringify(FCK.Career.cur.pro.last)"))
+    pg.evaluate("FCK.UI.stack=['home']; FCK.UI.show('proHub',null,true)"); pg.wait_for_timeout(500)
+    pg.screenshot(path=OUT+P+'p7_hub2.png', full_page=True)
+    # simulate the rest of the season
+    pg.click('button:has-text("Saison simulieren")'); pg.wait_for_timeout(300)
+    pg.screenshot(path=OUT+P+'p8_confirm.png')
+    pg.click('#modal button.primary'); pg.wait_for_timeout(1500)
+    pg.screenshot(path=OUT+P+'p9_end.png', full_page=True)
+    pg.click('button:has-text("Neue Saison starten")'); pg.wait_for_timeout(1500)
+    pg.screenshot(path=OUT+P+'pa_review.png', full_page=True)
+    print('review', pg.evaluate("document.querySelector('#modal') && document.querySelector('#modal').innerText.slice(0,300)"))
+    pg.click('#modal button.primary'); pg.wait_for_timeout(600)
+    pg.screenshot(path=OUT+P+'pb_after.png', full_page=True)
+    print('pending', pg.evaluate("JSON.stringify({p:FCK.Career.cur.pro.pending,offers:FCK.Career.cur.pro.offers.length,age:FCK.Career.cur.pro.age})"))
+    # reload and continue
+    pg.reload(); pg.wait_for_timeout(1000)
+    pg.evaluate("FCK.UI.show('proMenu')"); pg.wait_for_timeout(400)
+    pg.screenshot(path=OUT+P+'pc_menu2.png', full_page=True)
+    pg.click('.mitem:has-text("Karriere fortsetzen")'); pg.wait_for_timeout(800)
+    print('continued', pg.evaluate("FCK.UI.cur+' '+FCK.Career.cur.pro.name+' '+FCK.Career.cur.sim.year"))
+    # team mode match
+    pg.evaluate("FCK.Career.cur.pro.pending=null; FCK.Career.cur.pro.ctl='team'; FCK.Career.autosave(); FCK.UI.show('proHub',null,true)"); pg.wait_for_timeout(400)
+    pg.click('button:has-text("Spielen")'); pg.wait_for_function("FCK.game.m && FCK.game.m.clock>3", timeout=60000)
+    print('team mode lock', pg.evaluate("!!FCK.game.m.lock"))
+    print('ERRS', errs[:8])
+    b.close()
