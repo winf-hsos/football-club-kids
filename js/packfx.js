@@ -340,7 +340,8 @@
       if (R.shake > 0) { cam.position.x += (Math.random() - 0.5) * R.shake * 0.25; cam.position.y += (Math.random() - 0.5) * R.shake * 0.25; R.shake = Math.max(0, R.shake - dt * 1.4); }
       cam.lookAt(0, 0.15, 0);
       if (!info.classList.contains('show') && t > 0.9) info.classList.add('show');
-      if (t >= R.dur) nextReveal();
+      // the player stays on stage (idle show) until the user moves on
+      if (t >= R.dur) R.ready = true;
     }
 
     function stepShocks(dt) {
@@ -357,7 +358,8 @@
       if (phase !== 'idle') return;
       prompt.hidden = true; go('shake'); sfx('whistle');
     }
-    function advance() { if (phase === 'reveal' && cur) { cur.t = Math.max(cur.t, cur.dur); } }
+    // first tap: skip to the end of the performance; next tap: on to the next card
+    function advance() { if (phase !== 'reveal' || !cur) return; if (cur.ready) nextReveal(); else cur.t = Math.max(cur.t, cur.dur); }
     function finish() {
       if (finished) return; finished = true;
       cancelAnimationFrame(raf); window.removeEventListener('resize', layout); document.removeEventListener('keydown', onKey, true);
