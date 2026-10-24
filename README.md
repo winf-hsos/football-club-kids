@@ -19,6 +19,8 @@ Stufe 1: spielbares Freundschaftsspiel. Stufe 2: Welt & Karriere (Ligen, Pokale,
 | Flanke (halten) / Torwart raus | F | Ö (Taste „;“) | X | D |
 | Pause | Esc / P | | Start | ❚❚ |
 
+> Der computergesteuerte Torwart kommt heraus, wenn ein Stürmer allein auf das Tor zuläuft, und wirft sich dem Ballführer vor die Füße (Test: `node test/gk_rush.js`).
+
 Spielt nur eine Person mit der Tastatur, gelten beide Belegungen zusammen (WASD oder Pfeile, Q/Leertaste, E/X, R/C, F/V).
 
 ## Inhalt Stufe 1
