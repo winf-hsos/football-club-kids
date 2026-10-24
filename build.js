@@ -24,6 +24,8 @@ const TITLE = 'FCK Football Club Kids';
 const safeJs = js.replace(/<\/script/gi, '<\\/script');
 // three.js r128 (3D match view): inlined into the single file, loaded from cdnjs for the hosted page, lib/ file for the ZIP
 const THREE_LIB = fs.readFileSync(path.join(root, 'lib', 'three.r128.min.js'), 'utf8').replace(/<\/script/gi, '<\\/script');
+// privacy-friendly visit counter (GoatCounter: no cookies, no personal data); only in the hosted single file, switchable off in Help
+const GC = '<script data-goatcounter="https://fck.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>';
 const THREE_CDN = '<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>';
 
 // 1) standalone file

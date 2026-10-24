@@ -201,6 +201,13 @@
       mark('play');
       return el;
     },
+    privacyToggle() {
+      const off = () => { try { return window.localStorage.getItem('skipgc') === 't'; } catch (e) { return false; } };
+      const b = this.btn('', () => { try { if (off()) window.localStorage.removeItem('skipgc'); else window.localStorage.setItem('skipgc', 't'); } catch (e) { /* no storage */ } label(); }, 'ghost');
+      const label = () => { b.textContent = T(off() ? 'privacy.on' : 'privacy.off'); };
+      label();
+      return b;
+    },
 
     // --- settings (global) ---
     screen_settings() {
@@ -273,6 +280,7 @@
       el.appendChild(grid);
       el.appendChild(h('section', { class: 'card sect' }, h('h3', { text: T('help.tips') }),
         h('ul', { class: 'tips' }, ...[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((i) => h('li', { text: T('help.tip' + i) })))));
+      el.appendChild(h('section', { class: 'card sect' }, h('h3', { text: T('privacy.t') }), h('p', { class: 'fine', text: T('privacy.txt') }), this.privacyToggle()));
       return el;
     },
 

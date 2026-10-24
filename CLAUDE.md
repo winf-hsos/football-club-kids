@@ -67,7 +67,7 @@ Nach Änderungen an Home/Menüs: `tpad_menus.py` und `browser*.py`, die `.mitem`
 - Saudi-Arabien: 2. Liga ist näherungsweise; Namen für `sa` zu 50 % „arabisch“ (Gruppe `ar`).
 - Profikarriere: Vereinswechsel über Saisonende-Angebote **und** über „Verein wechseln“ im Laufbahn-Tab (max. 2 Wünsche pro Saison, Annahme abhängig von Niveau, Form, Kaderplatz).
 - `README.md` beschreibt alle Funktionen für Spieler (Deutsch); bei neuen Features dort einen Absatz ergänzen.
-- Das Spiel soll **kinderfreundlich und offline** bleiben: keine Tracker, keine Konten, keine externen Dienste (außer den optionalen Google Fonts). Einzige Ausnahme: der „♥ Spenden“-Button auf dem Hauptmenü und ein Erinnerungs-Pop-up alle 15 Minuten, nur im Hauptmenü, nie im Spiel (`js/donateui.js`: PayPal.me, Wunsch per `mailto:`; „Später“ und „Nicht mehr anzeigen“ vorhanden, Eltern-Hinweis steht im Dialog).
+- Das Spiel soll **kinderfreundlich und offline** bleiben: keine Konten, keine Werbung, keine personenbezogenen Tracker, keine externen Dienste außer den optionalen Google Fonts und dem anonymen Besuchszähler GoatCounter (`fck.goatcounter.com`, nur in `dist/FCK.html`, ohne Cookies, in der Hilfe abschaltbar über `localStorage.skipgc`). Einzige Ausnahme: der „♥ Spenden“-Button auf dem Hauptmenü und ein Erinnerungs-Pop-up alle 15 Minuten, nur im Hauptmenü, nie im Spiel (`js/donateui.js`: PayPal.me, Wunsch per `mailto:`; „Später“ und „Nicht mehr anzeigen“ vorhanden, Eltern-Hinweis steht im Dialog).
 
 ## Git / GitHub
 
