@@ -43,7 +43,7 @@
   function fc(c, o) {
     o = o || {};
     const sz = o.sz || 'm';
-    const el = h('div', { class: 'fc r' + c.r + (c.rare ? ' rare' : '') + ' sz-' + sz + (o.cls ? ' ' + o.cls : ''), title: c.n + ' · ' + FCK.posL(c.pos) + ' ' + c.o });
+    const el = h('div', { class: 'fc r' + c.r + (c.sk ? ' sk-' + c.sk : '') + (c.rare ? ' rare' : '') + ' sz-' + sz + (o.cls ? ' ' + o.cls : ''), title: c.n + ' · ' + FCK.posL(c.pos) + ' ' + c.o });
     const shown = o.eff !== undefined ? o.eff : c.o;
     el.appendChild(h('div', { class: 'fc-ovr' + (o.eff !== undefined && o.eff > c.o ? ' up' : o.eff !== undefined && o.eff < c.o ? ' dn' : ''), text: String(shown) }));
     el.appendChild(h('div', { class: 'fc-pos', text: FCK.posL(c.pos) }));
@@ -59,6 +59,7 @@
       [['pac', 'pac'], ['sho', 'sho'], ['pas', 'pas'], ['dri', 'dri'], ['def', 'def'], ['phy', 'phy']].forEach((a) => st.appendChild(h('span', null, h('b', { text: String(p.a[a[0]]) }), ' ' + T('m.a.' + a[1]).slice(0, 3).toUpperCase())));
       el.appendChild(st);
     }
+    if (sz !== 's' && (c.sk || c.r === 4)) el.appendChild(h('div', { class: 'fc-sk', text: T('k.sk.' + (c.sk || 'icon') + '.s') }));
     if (c.nw) el.appendChild(h('i', { class: 'fc-new', text: T('k.new') }));
     if (o.chem !== undefined) el.appendChild(h('div', { class: 'fc-chem c' + o.chem }, h('i'), h('i'), h('i')));
     if (o.onClick) { el.classList.add('tap'); el.setAttribute('role', 'button'); el.tabIndex = 0; el.addEventListener('click', o.onClick); el.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); o.onClick(e); } }); }
@@ -257,6 +258,7 @@
   function cardMatches(c, f) {
     if (f.role !== 'all' && ROLE[c.pos] !== f.role) return false;
     if (f.rar !== 'all' && c.r !== f.rar) return false;
+    if (f.sk && f.sk !== 'all' && (f.sk === 'std' ? !!c.sk : c.sk !== f.sk)) return false;
     if (f.q && !(c.n + ' ' + clubName(c) + ' ' + c.pos).toLowerCase().includes(f.q)) return false;
     return true;
   }
@@ -267,6 +269,7 @@
     const wrap = h('div', { class: 'fbar' });
     wrap.appendChild(UI.chips([{ v: 'all', l: T('k.f.all') }].concat(ROLES.map((r) => ({ v: r, l: T('m.role.' + r) }))), f.role, (v) => { f.role = v; onChange(); }, 'scroll'));
     wrap.appendChild(UI.chips([{ v: 'all', l: T('k.f.all') }].concat([0, 1, 2, 3, 4].map((r) => ({ v: r, l: rarName(r) }))), f.rar, (v) => { f.rar = v; onChange(); }, 'scroll'));
+    wrap.appendChild(UI.chips([{ v: 'all', l: T('k.f.style') + ': ' + T('k.f.all') }, { v: 'std', l: T('k.sk.std') }].concat(Cs.SK_KEYS.map((k) => ({ v: k, l: T('k.sk.' + k + '.s') }))), f.sk || 'all', (v) => { f.sk = v; onChange(); }, 'scroll'));
     if (extra) wrap.appendChild(extra);
     return wrap;
   }
@@ -306,7 +309,7 @@
     const cl = Cs.clubOf(c);
     const info = h('div', { class: 'cd-i' });
     info.appendChild(h('b', { class: 'big', text: c.n }));
-    info.appendChild(infoRow(rarName(c.r) + (c.rare ? ' · ' + T('k.rare') : ''), FCK.posL(c.pos) + ' · ' + c.o));
+    info.appendChild(infoRow(rarName(c.r) + (c.sk ? ' · ' + T('k.sk.' + c.sk) : c.rare ? ' · ' + T('k.rare') : ''), FCK.posL(c.pos) + ' · ' + c.o));
     info.appendChild(infoRow(T('k.club'), h('span', null, cl ? UI.crestImg(cl, 18) : null, ' ' + clubName(c))));
     info.appendChild(infoRow(T('k.nation'), flag(c.nt) + ' ' + T('k.nt.' + c.nt)));
     info.appendChild(infoRow(T('k.lg'), leagueName(c)));

@@ -27,6 +27,7 @@
     let v = 9 * Math.exp((o - 45) * 0.135);
     if (o >= 75) v *= Math.exp((o - 75) * 0.12);
     if (c.rare && o < 83) v *= 1.4;
+    if (c.sk) v *= 1.3;
     return Math.max(10, nice(v));
   };
   Cards.sellValue = (c) => Math.max(5, Math.round(Cards.value(c) * 0.5 / 5) * 5);
@@ -89,7 +90,20 @@
     const dn = FCK.drawName(nt, rng);
     const n = (dn.first ? dn.first + ' ' : '') + dn.last;
     const rare = r >= 3 ? 1 : (rng.chance(0.12) ? 1 : 0);
-    return { id: 0, n, nt, cl: club.id, pos, o, r: Cards.rarOf(o), rare, ag: opt.ag || U.clamp(Math.round(25 + rng.gauss() * 4.5), 17, 38), sd: rng.int(1, 4e9), gl: 0, ap: 0 };
+    const card = { id: 0, n, nt, cl: club.id, pos, o, r: Cards.rarOf(o), rare, ag: opt.ag || U.clamp(Math.round(25 + rng.gauss() * 4.5), 17, 38), sd: rng.int(1, 4e9), gl: 0, ap: 0 };
+    const sk = Cards.rollStyle(card);
+    if (sk) { card.sk = sk; card.rare = 1; }
+    return card;
+  };
+  // special card styles (like Team of the Week or Icon); rolled from the card seed so the main RNG stream stays untouched
+  Cards.SK = { 2: [['otw', 0.05]], 3: [['totw', 0.3], ['tots', 0.2], ['hero', 0.12], ['potm', 0.1]], 4: [['toty', 0.3]] };
+  Cards.SK_KEYS = ['otw', 'totw', 'tots', 'hero', 'potm', 'toty'];
+  Cards.rollStyle = function (c) {
+    const list = Cards.SK[c.r];
+    if (!list) return null;
+    let x = U.makeRng((c.sd ^ 0x5bd1e995) >>> 0).next();
+    for (const [k, p] of list) { if (x < p) return k; x -= p; }
+    return null;
   };
   Cards.add = function (S, card) {
     card.id = S.nid++;

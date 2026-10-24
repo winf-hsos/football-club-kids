@@ -619,3 +619,16 @@ details.adv.big .grid2 { margin-top: 6px; }
 .donate-box textarea.code { width: 100%; box-sizing: border-box; }
 .donate-box input.txt { width: 100%; box-sizing: border-box; }
 .donate-modal .modal { max-height: 92vh; overflow-y: auto; }
+/* special card styles (Ultimate Team): Icon (r4), Team of the Week/Season/Year, Hero, Player of the Month, Ones to Watch */
+.fc.r4 { --c1: #fff4cf; --c2: #c9a247; --ink: #3a2706; --edge: #fff8dc; box-shadow: 0 0 20px rgba(255, 224, 140, .8), 0 4px 14px rgba(0, 0, 0, .5), inset 0 0 0 2px rgba(255, 255, 255, .55); }
+.fc.r4 .fc-ovr.up, .fc.r4 .fc-ovr.dn { text-shadow: none; } .fc.r4 .fc-ovr.up { color: #0b8f3f; } .fc.r4 .fc-ovr.dn { color: #c4162d; }
+.fc.sk-otw { --c1: #14424a; --c2: #04161b; --ink: #7ffcf0; --edge: #2fe0d0; box-shadow: 0 0 12px rgba(47, 224, 208, .55), 0 4px 14px rgba(0, 0, 0, .5); }
+.fc.sk-totw { --c1: #2c2c33; --c2: #060608; --ink: #f6d77e; --edge: #d9b04a; box-shadow: 0 0 16px rgba(217, 176, 74, .6), 0 4px 14px rgba(0, 0, 0, .5), inset 0 0 0 2px rgba(246, 215, 126, .3); background-image: repeating-linear-gradient(135deg, rgba(255, 255, 255, .05) 0 4px, transparent 4px 9px), linear-gradient(165deg, var(--c1), var(--c2)); }
+.fc.sk-tots { --c1: #2f7bff; --c2: #06194d; --ink: #ffffff; --edge: #8fd8ff; box-shadow: 0 0 18px rgba(80, 160, 255, .75), 0 4px 14px rgba(0, 0, 0, .5), inset 0 0 0 2px rgba(143, 216, 255, .4); }
+.fc.sk-hero { --c1: #ff9d42; --c2: #5e2204; --ink: #fff2de; --edge: #ffd28f; box-shadow: 0 0 16px rgba(255, 150, 60, .65), 0 4px 14px rgba(0, 0, 0, .5), inset 0 0 0 2px rgba(255, 210, 143, .35); }
+.fc.sk-potm { --c1: #ff55a6; --c2: #3b0a47; --ink: #ffffff; --edge: #ffb7dc; box-shadow: 0 0 16px rgba(255, 90, 170, .65), 0 4px 14px rgba(0, 0, 0, .5), inset 0 0 0 2px rgba(255, 183, 220, .35); }
+.fc.sk-toty { --c1: #0f2a8f; --c2: #020822; --ink: #ffe28a; --edge: #f4cb4f; box-shadow: 0 0 24px rgba(244, 203, 79, .8), 0 4px 14px rgba(0, 0, 0, .5), inset 0 0 0 2px rgba(255, 226, 138, .5); }
+.fc.sk-totw::before, .fc.sk-tots::before, .fc.sk-hero::before, .fc.sk-potm::before, .fc.sk-toty::before { content: ''; position: absolute; inset: 0; background: linear-gradient(115deg, transparent 32%, rgba(255, 255, 255, .32) 50%, transparent 68%); background-size: 250% 100%; animation: shine 4.4s linear infinite; pointer-events: none; z-index: 1; }
+.fc.sk-toty::before { background: linear-gradient(115deg, transparent 30%, rgba(255, 226, 138, .45) 50%, transparent 70%); background-size: 250% 100%; animation-duration: 3s; }
+.fc-sk { position: absolute; left: 1.2em; top: 8.9em; font-size: .5em; font-weight: 800; letter-spacing: .08em; opacity: .9; writing-mode: horizontal-tb; }
+@media (prefers-reduced-motion: reduce) { .fc::before { animation: none !important; } }

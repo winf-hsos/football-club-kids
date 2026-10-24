@@ -23,7 +23,7 @@
     'home.help': 'Hilfe', 'home.help.sub': 'Steuerung und Spielregeln',
     'home.soon': 'Bald dabei',
     'soon.career': 'Karriere', 'soon.career.sub': 'Ligen, Pokale und Europa', 'soon.manager': 'Manager', 'soon.manager.sub': 'Transfers, Finanzen, Jugend U6–U19',
-    'soon.cards': 'Karten-Modus', 'soon.cards.sub': 'Packs, Chemie, Transfermarkt', 'soon.tournament': 'WM & EM', 'soon.tournament.sub': 'Turniere mit Nationalteams',
+    'soon.cards': 'Ultimate Team', 'soon.cards.sub': 'Packs, Chemie, Transfermarkt', 'soon.tournament': 'WM & EM', 'soon.tournament.sub': 'Turniere mit Nationalteams',
     'soon.editor': 'Editor', 'soon.editor.sub': 'Eigene Vereine, Spieler, Stadien', 'soon.online': 'Mehrspieler online', 'soon.online.sub': 'Zu zweit per Spielcode',
     'soon.stage': 'Stufe {n}',
     // settings
@@ -111,7 +111,7 @@
     'home.help': 'Help', 'home.help.sub': 'Controls and rules',
     'home.soon': 'Coming soon',
     'soon.career': 'Career', 'soon.career.sub': 'Leagues, cups and Europe', 'soon.manager': 'Manager', 'soon.manager.sub': 'Transfers, finances, youth U6–U19',
-    'soon.cards': 'Card mode', 'soon.cards.sub': 'Packs, chemistry, transfer market', 'soon.tournament': 'World & Euro Cup', 'soon.tournament.sub': 'Tournaments with national teams',
+    'soon.cards': 'Ultimate Team', 'soon.cards.sub': 'Packs, chemistry, transfer market', 'soon.tournament': 'World & Euro Cup', 'soon.tournament.sub': 'Tournaments with national teams',
     'soon.editor': 'Editor', 'soon.editor.sub': 'Your own clubs, players, stadiums', 'soon.online': 'Online multiplayer', 'soon.online.sub': 'Two players with a game code',
     'soon.stage': 'Stage {n}',
     settings: 'Settings', 'set.general': 'General', 'set.lang': 'Language', 'set.profile': 'Profile', 'set.profile.hint': 'Kids: more aim assist, gentler referee, no injuries. Applies to new matches.',

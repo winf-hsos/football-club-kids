@@ -59,8 +59,9 @@ Vereinfachungen: Alle Ligen laufen im gleichen Zeitraum (Aug–Juli); keine Qual
 
 Vereinfachungen: Die Vereine der Welt tauschen untereinander keine Spieler; ihre Kader werden jede Saison neu erzeugt. Transfers des Nutzers wirken nur auf die beteiligten Clubs. Sperren (Gelb/Rot) werden im Karrieremodus nicht über Spiele hinweg gezählt.
 
-## Inhalt Stufe 4 – Karten-Modus (Hauptmenü → Karten-Modus)
-- **Karten**: Generierte Spieler (Vereinsnamen echt, Spieler erfunden) in fünf Seltenheiten: Bronze (45–64), Silber (65–74), Gold (75–82), Elite (83–89), Legende (90+). Jede Karte hat Position, Land, Verein, Liga, Alter und Spielwerte; „Rare“-Karten glänzen.
+## Inhalt Stufe 4 – Ultimate Team (Hauptmenü → Ultimate Team)
+- **Karten**: Generierte Spieler (Vereinsnamen echt, Spieler erfunden) in fünf Seltenheiten: Bronze (45–64), Silber (65–74), Gold (75–82), Elite (83–89), Icon (90+). Jede Karte hat Position, Land, Verein, Liga, Alter und Spielwerte; „Rare“-Karten glänzen.
+- **Spezialkarten**: Ab Gold gibt es seltene Sonderstile mit eigenem Aussehen: Ones to Watch (Gold), Team der Woche, Team der Saison, Held und Spieler des Monats (Elite) sowie Team des Jahres (Icon-Stufe). Sie sind mehr wert und lassen sich in der Sammlung nach Stil filtern. Alle Spieler sind erfunden.
 - **Start**: Starter-Team (21 Bronze-Karten), 3.000 Münzen, 2 Bronze-Packs und ein kostenloses Bronze-Pack pro Tag.
 - **Packs**: Bronze, Silber, Gold, Premium und Legenden-Pack mit angezeigten Chancen und garantierter Mindest-Seltenheit; Aufdeck-Animation. Münzen gibt es nur im Spiel, echtes Geld wird nie gebraucht.
 - **Aufstellung & Chemie**: 7 Formationen auf einem Spielfeld, Karte antippen zum Tauschen (mit Vorschau). Chemie 0–3 pro Spieler aus gleichem Verein, Land und Liga (bis +3 Wertung), falsche Position gibt Abzüge. „Auto-Aufstellung“ sucht die beste Mischung.
