@@ -9,6 +9,8 @@
   FCK.Pro = Pro;
 
   const ATTR = ['pac', 'sho', 'pas', 'dri', 'def', 'phy'];
+  Pro.XP_PER_SP = 50; // experience for one skill point
+  Pro.SP_GAIN = 2; // one point raises one detail value by this much
   Pro.ATTR = ATTR;
   // 31 detail values (+5 for keepers) behind the six headline values; the headline value is their weighted average and is what the match engine uses
   Pro.DET = {
@@ -376,7 +378,7 @@
     // experience
     const xp = played ? 6 + Math.max(0, rating - 5.5) * 5 + goals * 5 + assists * 3 + (rating >= 8.5 ? 8 : 0) + (win ? 2 : 0) : 2;
     p.xp += xp;
-    while (p.xp >= 100) { p.xp -= 100; p.sp++; }
+    while (p.xp >= Pro.XP_PER_SP) { p.xp -= Pro.XP_PER_SP; p.sp++; }
     p.last = { y: e.y, w: e.w, h: e.h, a: e.a, g: e.g, mins, goals, assists, rating, role: ctx.role || null, res: e.res };
     ctx.proLast = p.last;
     Pro.international(c, e.w);
@@ -533,7 +535,7 @@
       ob.done = ok; rep.objs.push({ k: ob.k, n: ob.n, done: ok });
       if (ok) { p.xp += 150; p.trust = clamp(p.trust + 4, 0, 100); }
     });
-    while (p.xp >= 100) { p.xp -= 100; p.sp++; }
+    while (p.xp >= Pro.XP_PER_SP) { p.xp -= Pro.XP_PER_SP; p.sp++; }
     // trophies of the club
     if (sm.pos === 1) { p.trophies.push({ y: sim.year, k: 'league', club: c.clubId }); rep.trophies.push('league'); }
     if (sm.cupWon) { p.trophies.push({ y: sim.year, k: 'cup', club: c.clubId }); rep.trophies.push('cup'); }
@@ -607,7 +609,7 @@
   };
 
   // ---------------------------------------------------------------- spending skill points
-  // one point raises one detail value by 3 (a group name spreads the points over the whole group)
+  // one point raises one detail value by SP_GAIN (a group name spreads the points over the whole group)
   Pro.canSpend = (p, k) => {
     Pro.fix(p);
     if (p.sp <= 0) return false;
@@ -618,7 +620,7 @@
     const p = Pro.fix(c.pro);
     if (!Pro.canSpend(p, k)) return false;
     p.sp--;
-    if (p.d[k] === undefined) Pro.bump(p, k, 1.0); else p.d[k] = Math.min(99, Pro.cap(p), p.d[k] + 3);
+    if (p.d[k] === undefined) Pro.bump(p, k, Pro.SP_GAIN / 3); else p.d[k] = Math.min(99, Pro.cap(p), p.d[k] + Pro.SP_GAIN);
     Pro.sync(p);
     return true;
   };

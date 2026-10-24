@@ -23,8 +23,8 @@ ok(st.d.finish > st.d.mark + 8, 'striker: finishing > marking'); ok(cb.d.mark > 
 const old = P.newPlayer({ name: 'Alt', nation: 'GER', pos: 'CM', age: 20, talent: 'solid', seed: 3 }); const keep = Object.assign({}, old.a);
 delete old.d; delete old.dm; P.fix(old); P.sync(old);
 P.ATTR.forEach((k) => ok(Math.abs(old.a[k] - keep[k]) < 0.5, 'old save keeps ' + k));
-// spending: +3 on one detail, headline moves by weight x 3
+// spending: +2 on one detail, headline moves by weight x 2
 const c = { pro: st }; st.sp = 5; const f0 = st.d.finish, h0 = st.a.sho;
-ok(P.spend(c, 'finish') && Math.abs(st.d.finish - f0 - 3) < 0.01 && Math.abs(st.a.sho - h0 - 0.9) < 0.05 && st.sp === 4, 'spend on a detail');
+ok(P.spend(c, 'finish') && Math.abs(st.d.finish - f0 - P.SP_GAIN) < 0.01 && Math.abs(st.a.sho - h0 - 0.3 * P.SP_GAIN) < 0.05 && st.sp === 4, 'spend on a detail');
 ok(P.spend(c, 'dri') && st.sp === 3, 'spend on a group still works');
 console.log(errs ? 'FAIL' : 'OK'); if (errs) process.exit(1);

@@ -333,7 +333,7 @@
     const cap = P.cap(p);
     const sect = UI.section(T('pro.attrs'));
     sect.appendChild(h('div', { class: 'row tight' }, h('span', { class: 'ci ovr-big', text: Math.round(P.ovr(p)) }), posChip(p.pos), h('span', { class: 'ci', text: T('pro.pot', { n: p.pt }) }), h('span', { class: 'ci', text: T('pro.cap', { n: Math.round(cap) }) }), h('span', { class: 'ci eu', text: T('pro.sp', { n: p.sp }) })));
-    sect.appendChild(h('div', { class: 'xpbar' }, h('i', { style: 'width:' + Math.round(p.xp) + '%' }), h('small', { text: T('pro.xp', { n: Math.round(p.xp) }) })));
+    sect.appendChild(h('div', { class: 'xpbar' }, h('i', { style: 'width:' + Math.round(U.clamp(p.xp / P.XP_PER_SP * 100, 0, 100)) + '%' }), h('small', { text: T('pro.xp', { n: Math.round(p.xp), m: P.XP_PER_SP }) })));
     const keys = FCK.ROLE_OF[p.pos] === 'GK' ? ['gk'].concat(P.ATTR) : P.ATTR;
     P.fix(p);
     const open = openAttrs;
