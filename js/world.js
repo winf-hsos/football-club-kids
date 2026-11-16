@@ -138,6 +138,22 @@
   World.clearSquadCache = function () { sqCache.clear(); };
   World.loadCustom = function () { World.custom = U.store.get('players', {}) || {}; sqCache.clear(); };
   World.setCustom = function (obj) { World.custom = obj; U.store.set('players', obj); sqCache.clear(); };
+  // real player names (FCK.REAL_SQ) for the clubs that have them: listed order = best first within a position group
+  function applyRealNames(squad, club) {
+    const L = FCK.REAL_SQ && !club.custom && !club.mine && World.byId[club.id] && FCK.REAL_SQ[club.name];
+    if (!L) return;
+    const groups = { GK: L[0], DF: L[1], MF: L[2], FW: L[3] };
+    Object.keys(groups).forEach((role) => {
+      const names = groups[role] || [];
+      const ps = squad.filter((p) => p.role === role).sort((a, b) => b.ovr - a.ovr);
+      names.forEach((nm, i) => {
+        const p = ps[i]; if (!p) return;
+        const parts = String(nm).trim().split(/\s+/);
+        const last = parts.length > 1 ? parts.slice(1).join(' ') : parts[0], first = parts.length > 1 ? parts[0] : '';
+        p.name = (first ? first + ' ' : '') + last; p.sname = first ? first[0] + '. ' + last : last; p.last = last; p.real = true;
+      });
+    });
+  }
   World.squad = function (club, seed) {
     const key = club.id + '|' + seed;
     let s = sqCache.get(key);
@@ -146,6 +162,7 @@
       const sd = hash(club.id) ^ (seed >>> 0);
       const rec = club.recs || (World.edited && World.edited[club.id]) || World.custom[club.id];
       s = rec && rec.length ? FCK.makeCustomSquad(club, rec, sd) : FCK.makeFullSquad(club, sd);
+      if (!(rec && rec.length)) applyRealNames(s, club);
       sqCache.set(key, s);
     }
     return s;

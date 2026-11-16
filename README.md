@@ -23,6 +23,8 @@ Stufe 1: spielbares Freundschaftsspiel. Stufe 2: Welt & Karriere (Ligen, Pokale,
 
 > Die Spieler bleiben nicht starr auf ihrer Position: Außenspieler schalten sich über die Flanke mit nach vorn ein, Mittelfeldspieler laufen spät in den Strafraum, ein Stürmer lässt sich zum Aufbau fallen, und beim Verteidigen sichert ein zweiter Spieler hinter dem Ballführer ab. Die Mannschaft bleibt dabei kompakt (Test: `node test/fluid_roles.js`).
 
+> Echte Vereinslogos und Spielernamen: Für rund 680 Vereine (Bundesliga bis Regionalliga, Premier League bis League Two, Spanien, Italien, Frankreich, Niederlande, Portugal, Türkei u. a.) erscheinen die echten Logos überall im Spiel und die Kader haben echte Spielernamen; die Stärken werden weiter aus der Vereinsstärke berechnet.
+
 > In den Aufstellungs-Editoren (Karriere, Manager, Freundschaftsspiel, Wettbewerbe) zeigen die Spielerkreise die Gesamtstärke statt der Rückennummer; Goldrand bei sehr starken Spielern.
 
 > Realistischere Spieler in der 3D-Ansicht: runde, glatt schattierte Körper statt Klötzen, Gesicht mit Augen, Brauen, Nase, Ohren und Mund, Hände bzw. Torwarthandschuhe, Fußballschuhe mit Sohle, Trikot mit Kragen, Ärmelbündchen und Rückennummer, Socken mit Bündchen, Bärte und Frisuren; dazu eine natürlichere Lauf- und Standanimation (Becken und Schultern drehen gegeneinander, Atmen, Kopfbewegung).
