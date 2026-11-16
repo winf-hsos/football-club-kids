@@ -629,7 +629,36 @@
       this.seed = Math.random() * 10; this.used = 0; this.px = p.x; this.py = p.y;
       this.lastSpd = 0;
     }
-    dispose() { this.geo.dispose(); }
+    dispose() { this.geo.dispose(); if (this.decals) this.decals.forEach((d) => { d.geometry.dispose(); }); }
+    // club crest on the chest and the surname above the number on the back (small textured quads attached to the chest bone)
+    addDecals(p, club, shirtCol) {
+      if (this.ref || this.decals) return;
+      this.decals = [];
+      const lumOf = (c) => { const k = col(c); return k.r * 0.299 + k.g * 0.587 + k.b * 0.114; };
+      const bone = this.bones[B.CHEST];
+      // crest
+      try {
+        if (club && FCK.crestDataUrl) {
+          const u = FCK.crestDataUrl(club, 64);
+          if (u) {
+            const im = new Image(), tex = new THREE.Texture(im); tex.anisotropy = 4;
+            im.onload = () => { tex.needsUpdate = true; }; im.src = u;
+            const m = new THREE.Mesh(new THREE.PlaneGeometry(0.1, 0.1), new THREE.MeshBasicMaterial({ map: tex, transparent: true, depthWrite: false, polygonOffset: true, polygonOffsetFactor: -2 }));
+            m.position.set(0.152, 0.33, -0.1); m.rotation.y = Math.PI / 2; bone.add(m); this.decals.push(m);
+          }
+        }
+      } catch (e) { /* no crest */ }
+      // surname on the back
+      const nm = String(p.last || p.sname || '').toUpperCase().slice(0, 12);
+      if (nm) {
+        const cv = document.createElement('canvas'); cv.width = 256; cv.height = 48;
+        const g = cv.getContext('2d'); g.font = '800 34px "Arial Black", Impact, sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle';
+        g.fillStyle = lumOf(shirtCol) > 0.55 ? '#1b2233' : '#ffffff'; g.fillText(nm, 128, 26, 240);
+        const tex = new THREE.CanvasTexture(cv);
+        const m = new THREE.Mesh(new THREE.PlaneGeometry(0.31, 0.062), new THREE.MeshBasicMaterial({ map: tex, transparent: true, depthWrite: false, polygonOffset: true, polygonOffsetFactor: -2 }));
+        m.position.set(-0.168, 0.42, 0); m.rotation.y = -Math.PI / 2; bone.add(m); this.decals.push(m);
+      }
+    }
 
     // procedural pose from the player's sim state; p = { x, y, ang, spd, state, isGK }
     pose(p, dt, t, ctx) {
@@ -1429,6 +1458,7 @@
       let M = this.models.get(key);
       if (!M) {
         M = new PlayerModel(this, p, ref ? REF_KIT : p.team.kit, ref);
+        if (!ref && p.team && p.team.club) M.addDecals(p, p.team.club, p.isGK ? p.team.kit.gk : p.team.kit.shirt);
         M.key = key; this.scene.add(M.group); this.models.set(key, M);
       }
       return M;
@@ -1577,21 +1607,35 @@
 
     // ------------------------------------------------------------ weather + confetti
     // podium + trophy of the cup ceremony (built on first use, shown only while the ceremony runs)
+    // a small studio-like environment (bright sky, warm light strips, dark pitch) so that metal gets real-looking reflections
+    envCube() {
+      if (this._env) return this._env;
+      const mk = (draw) => { const c = document.createElement('canvas'); c.width = c.height = 128; draw(c.getContext('2d')); return c; };
+      const grad = (g, a, b) => { const q = g.createLinearGradient(0, 0, 0, 128); q.addColorStop(0, a); q.addColorStop(1, b); g.fillStyle = q; g.fillRect(0, 0, 128, 128); };
+      const side = (k) => mk((g) => { grad(g, '#cfe3ff', '#2a3a2a'); g.fillStyle = 'rgba(255,244,220,.95)'; for (let i = 0; i < 3; i++) g.fillRect(8 + i * 40 + k * 7, 30, 22, 10); g.fillStyle = 'rgba(20,24,34,.85)'; g.fillRect(0, 60, 128, 22); });
+      const top = mk((g) => { g.fillStyle = '#eaf3ff'; g.fillRect(0, 0, 128, 128); g.fillStyle = '#fff'; g.fillRect(30, 30, 68, 68); });
+      const bot = mk((g) => { g.fillStyle = '#244a2a'; g.fillRect(0, 0, 128, 128); });
+      const t = new THREE.CubeTexture([side(0), side(1), top, bot, side(2), side(3)]); t.needsUpdate = true;
+      this._env = t; return t;
+    }
     buildTrophy(kind) {
-      const gold = new THREE.MeshStandardMaterial({ color: 0xe6b422, metalness: 0.95, roughness: 0.22, emissive: 0x3a2600, emissiveIntensity: 0.35 });
-      const dark = new THREE.MeshStandardMaterial({ color: kind === 'wm' ? 0x1f7a3a : 0x20242e, metalness: 0.4, roughness: 0.5 });
+      const env = this.envCube();
+      const gold = new THREE.MeshStandardMaterial({ color: 0xf0bf3c, metalness: 1, roughness: 0.16, envMap: env, envMapIntensity: 1.5 });
+      const dark = new THREE.MeshStandardMaterial({ color: kind === 'wm' ? 0x14803c : 0x1b1f29, metalness: 0.35, roughness: 0.28, envMap: env, envMapIntensity: 0.9 });
       const g = new THREE.Group();
       const P = (a) => a.map((x) => new THREE.Vector2(x[0], x[1]));
       if (kind === 'wm') {
         // world cup: green malachite base, golden spiral body carrying the globe
-        g.add(new THREE.Mesh(new THREE.LatheGeometry(P([[0, 0], [0.26, 0], [0.26, 0.1], [0.24, 0.12], [0.24, 0.2], [0.26, 0.22], [0.26, 0.3], [0, 0.3]]), 28), dark));
-        g.add(new THREE.Mesh(new THREE.LatheGeometry(P([[0.1, 0.3], [0.2, 0.4], [0.26, 0.55], [0.3, 0.72], [0.27, 0.85], [0.18, 0.95], [0.15, 1.05], [0.1, 1.08]]), 28), gold));
-        const globe = new THREE.Mesh(new THREE.SphereGeometry(0.2, 24, 18), gold); globe.position.y = 1.22; g.add(globe);
-        const ring = new THREE.Mesh(new THREE.TorusGeometry(0.2, 0.012, 8, 32), gold); ring.position.y = 1.22; ring.rotation.x = 1.2; g.add(ring);
+        g.add(new THREE.Mesh(new THREE.LatheGeometry(P([[0, 0], [0.27, 0], [0.27, 0.09], [0.245, 0.11], [0.245, 0.2], [0.27, 0.22], [0.27, 0.3], [0, 0.3]]), 48), dark));
+        [0.12, 0.2].forEach((y) => { g.add(new THREE.Mesh(new THREE.TorusGeometry(0.248, 0.012, 8, 48), gold)).position.y = y; g.children[g.children.length - 1].rotation.x = Math.PI / 2; });
+        g.add(new THREE.Mesh(new THREE.LatheGeometry(P([[0.08, 0.3], [0.12, 0.36], [0.15, 0.46], [0.12, 0.55], [0.12, 0.63], [0.17, 0.73], [0.23, 0.83], [0.25, 0.9], [0.2, 0.96], [0.1, 0.98]]), 56), gold));
+        const globe = new THREE.Mesh(new THREE.SphereGeometry(0.2, 32, 24), gold); globe.position.y = 1.12; g.add(globe);
+        const ring = new THREE.Mesh(new THREE.TorusGeometry(0.205, 0.01, 8, 48), gold); ring.position.y = 1.12; ring.rotation.x = 1.2; g.add(ring);
       } else {
         // cup: marble base, stem, big bowl with the typical handles
-        g.add(new THREE.Mesh(new THREE.CylinderGeometry(0.33, 0.36, 0.16, 28), dark)).position.y = 0.08;
-        g.add(new THREE.Mesh(new THREE.LatheGeometry(P([[0, 0.16], [0.26, 0.16], [0.22, 0.22], [0.09, 0.3], [0.07, 0.55], [0.11, 0.62], [0.2, 0.7], [0.3, 0.86], [0.36, 1.05], [0.37, 1.18], [0.33, 1.2], [0.3, 1.1], [0.2, 0.95], [0.12, 0.85], [0.0, 0.85]]), 32), gold));
+        g.add(new THREE.Mesh(new THREE.CylinderGeometry(0.33, 0.36, 0.16, 48), dark)).position.y = 0.08;
+        g.add(new THREE.Mesh(new THREE.CylinderGeometry(0.29, 0.31, 0.05, 48), gold)).position.y = 0.185;
+        g.add(new THREE.Mesh(new THREE.LatheGeometry(P([[0, 0.2], [0.24, 0.2], [0.2, 0.25], [0.09, 0.32], [0.065, 0.45], [0.075, 0.56], [0.1, 0.62], [0.16, 0.68], [0.24, 0.78], [0.32, 0.92], [0.37, 1.08], [0.375, 1.2], [0.35, 1.23], [0.33, 1.2], [0.3, 1.1], [0.22, 0.97], [0.12, 0.88], [0.0, 0.86]]), 64), gold));
         [-1, 1].forEach((d) => { const h = new THREE.Mesh(new THREE.TorusGeometry(0.26, 0.035, 10, 24, Math.PI * 1.15), gold); h.position.set(d * 0.31, 0.98, 0); h.rotation.set(0, 0, d > 0 ? -0.6 : Math.PI + 0.6 - 1.15 + 1.15); g.add(h); });
       }
       return g;
@@ -1790,10 +1834,11 @@
   FCK.rotInput = (inp) => { const r = FCK.game && FCK.game.r; if (r && r.mode3d && r.inputRot) r.inputRot(inp); };
   FCK.Renderer3D = Renderer3D;
   // standalone player model for other 3D scenes (Ultimate Team pack opening): p = { look, num, isGK, sname }, kit as in a match
-  FCK.R3D_makePlayer = function (p, kit) {
+  FCK.R3D_makePlayer = function (p, kit, club) {
     const r = { matPlayer: new THREE.MeshStandardMaterial({ vertexColors: true, map: texAtlas(), alphaTest: 0.5, skinning: true, roughness: 0.82, metalness: 0 }) };
     const M = new PlayerModel(r, { x: 0, y: 0, ang: 0, num: p.num || 9, isGK: !!p.isGK, sname: p.sname || 'x', look: p.look }, kit, false);
     M.dispose2 = () => { M.dispose(); r.matPlayer.dispose(); };
+    if (club) M.addDecals(p, club, p.isGK ? kit.gk : kit.shirt);
     return M;
   };
   FCK.R3D_B = B;
