@@ -373,6 +373,7 @@
     cfg.clubs = cfg.clubs.map((c) => Object.assign({}, c));
     cfg.clubs[0].stadium = v.name; cfg.clubs[0].cap = v.cap;
     cfg.tourney = { ri: S.ri, fi, me: S.me, opp, key: R.key };
+    if (R.key === 'F' && !f.bronze) { cfg.settings.trophy = S.kind === 'em24' ? 'em' : 'wm'; }
     return cfg;
   };
   Tn.play = function (S) {

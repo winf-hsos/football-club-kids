@@ -27,7 +27,7 @@
       this.fx = team.dir; this.fy = 0; this.ang = team.dir > 0 ? 0 : Math.PI;
       this.stam = 1; this.sprint = false;
       this.state = 'idle'; this.stT = 0; // idle|slide|getup|down|dive|celebrate|hold
-      this.noCtl = 0; this.tackleCd = 0; this.aiT = Math.random() * 0.3; this.runT = 0; this.skillT = 0; this.skillCd = 0; this.skillKind = '';
+      this.noCtl = 0; this.tackleCd = 0; this.aiT = Math.random() * 0.3; this.runT = 0; this.skillT = 0; this.skillCd = 0; this.skillKind = ''; this.sadT = 0;
       this.yellow = 0; this.red = false; this.injured = false; this.limp = false; this.onPitch = true;
       this.ctrl = -1; // human slot index
       this.runPhase = Math.random() * 6; this.spd = 0;
@@ -243,7 +243,7 @@
 
     integrate(p, dt) {
       const m = this;
-      p.noCtl = Math.max(0, p.noCtl - dt); p.tackleCd = Math.max(0, p.tackleCd - dt); if (p.jumpT > 0) p.jumpT -= dt; if (p.skillT > 0) p.skillT -= dt; if (p.skillCd > 0) p.skillCd -= dt;
+      p.noCtl = Math.max(0, p.noCtl - dt); p.tackleCd = Math.max(0, p.tackleCd - dt); if (p.jumpT > 0) p.jumpT -= dt; if (p.skillT > 0) p.skillT -= dt; if (p.skillCd > 0) p.skillCd -= dt; if (p.sadT > 0) p.sadT -= dt;
       let wx = p.wx, wy = p.wy, acc = 26;
       if (p.state === 'slide') {
         p.stT -= dt;

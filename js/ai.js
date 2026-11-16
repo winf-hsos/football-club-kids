@@ -127,7 +127,7 @@
 
   // ---------- main update ----------
   AI.update = function (m, dt) {
-    if (m.mode === 'goal' || m.mode === 'shootout' || m.mode === 'break' || m.mode === 'over') return;
+    if (m.mode === 'goal' || m.mode === 'shootout' || m.mode === 'break' || m.mode === 'over' || m.mode === 'ceremony') return;
     if (m.mode === 'play') {
       m.teams.forEach((t) => {
         t.plan.t -= dt;
