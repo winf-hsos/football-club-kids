@@ -14,6 +14,7 @@
       this.fxState.shake = Math.max(0, this.fxState.shake - dt * 1.4);
       this.fxState.flash = Math.max(0, this.fxState.flash - dt * 2);
       if (this.callFor) { this.callFor.t -= dt; if (this.callFor.t <= 0) this.callFor = null; }
+      if (this.streak) this.stepStreaker(dt);
       this.teams.forEach((t) => { if (t.pressCall > 0) t.pressCall -= dt; if (t.rushCall > 0) t.rushCall -= dt; });
       switch (this.mode) {
         case 'play': this.stepPlay(dt); break;
@@ -820,6 +821,31 @@
       // a final: the winners lift the trophy on a podium before the result is shown
       if (this.set.trophy && this.winner >= 0 && !this.noCeremony) { this.startCeremony(); return; }
       this.emit('end', { result: this.result });
+    },
+
+    // ================= streaker =================
+    stepStreaker(dt) {
+      const S = this.streak;
+      if (S.state === 'wait') {
+        if (this.mode !== 'play' || this.time < S.at) return;
+        S.state = 'run'; S.t = 0; S.x = S.x0; S.y = S.side < 0 ? -3 : W + 3; S.vx = 1.2; S.vy = -S.side * 5.6;
+        S.stew = [0, 1].map((i) => ({ x: S.x0 + (i ? 14 : -14), y: S.y, state: 'chase' }));
+        this.emit('streaker', {}); return;
+      }
+      if (S.state === 'done') return;
+      S.t += dt;
+      if (S.state === 'run') {
+        // zig-zag across the pitch
+        S.vx = Math.sin(S.t * 1.4) * 4.5 + (S.t < 3 ? 1.5 : 0.4); S.vy = -S.side * 5.6 * Math.cos(S.t * 0.35);
+        S.x = U.clamp(S.x + S.vx * dt, 4, L - 4); S.y += S.vy * dt;
+        S.stew.forEach((w) => { const dx = S.x - w.x, dy = S.y - w.y, d = Math.hypot(dx, dy) || 1; const sp = 5.4 + (S.t > 8 ? 1.4 : 0); w.x += (dx / d) * sp * dt; w.y += (dy / d) * sp * dt; });
+        if (S.t > 9 && S.stew.some((w) => Math.hypot(S.x - w.x, S.y - w.y) < 1.5)) { S.state = 'led'; S.t = 0; }
+      } else if (S.state === 'led') {
+        const ty = S.side < 0 ? -6 : W + 6;
+        S.vx = 0; S.vy = (ty - S.y > 0 ? 1 : -1) * 2.4; S.y += S.vy * dt;
+        S.stew.forEach((w, i) => { w.x = S.x + (i ? 1 : -1) * 0.9; w.y = S.y - Math.sign(S.vy) * 0.2; });
+        if (Math.abs(S.y - ty) < 0.5) { S.state = 'done'; }
+      }
     },
 
     // ================= trophy ceremony =================

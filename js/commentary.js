@@ -35,6 +35,7 @@
       penGoal: ['{a} verwandelt sicher!', 'Drin! {a} trifft vom Punkt.'],
       penMiss: ['{a} scheitert! Der Elfmeter ist vergeben!', 'Gehalten! Der Torwart ist der Held!'],
       slide: ['Grätsche von {a} – sauber geklärt!', '{a} wirft sich in den Ball!'],
+      streaker: ['Ein Flitzer im Dino-Kostüm auf dem Rasen!', 'Das Spiel ist kurz unterbrochen – ein kostümierter Fan läuft übers Feld!'],
       skillStepover: ['Übersteiger von {a}!', '{a} tanzt den Gegner aus – Übersteiger!'],
       skillRainbow: ['Rainbow Flick von {a}! Was für ein Trick!', '{a} hebt den Ball über den Kopf – Regenbogen!'],
       skillRoulette: ['{a} dreht sich weg – Roulette!', 'Marseille-Drehung von {a}!'],
@@ -75,6 +76,7 @@
       penGoal: ['{a} converts coolly!', 'In! {a} scores from the spot.'],
       penMiss: ['{a} misses! The penalty is wasted!', 'Saved! The keeper is the hero!'],
       slide: ['Slide tackle by {a} – clean!', '{a} throws himself at it!'],
+      streaker: ['A fan in a dinosaur costume is running across the pitch!', 'A costumed fan has invaded the pitch!'],
       skillStepover: ['Step-over by {a}!', '{a} dances past the defender!'],
       skillRainbow: ['Rainbow flick by {a}! What a trick!', '{a} flicks it over his head!'],
       skillRoulette: ['{a} spins away – roulette!', 'Marseille turn from {a}!'],
@@ -150,6 +152,7 @@
           if (e.scored) this.say('penGoal', { a: nm(e.shooter) }, 2); else this.say('penMiss', { a: nm(e.shooter) }, 2);
           break;
         case 'end': this.say('full', { s: this.sc() }, 3); break;
+        case 'streaker': this.say('streaker', {}, 2); break;
         case 'skill': if (Math.random() < 0.55) this.say('skill' + e.kind.charAt(0).toUpperCase() + e.kind.slice(1), { a: nm(e.by) }, 1); break;
         case 'tackle': if (e.slide && e.ok && Math.random() < 0.35) this.say('slide', { a: nm(e.by) }, 1); break;
         default: break;

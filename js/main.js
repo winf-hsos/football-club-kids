@@ -206,6 +206,7 @@
         case 'extratime': A.play('whistle3'); hud.flash(T('bn.extra'), 'info', 1800); break;
         case 'penaltiesNext': A.play('whistle3'); hud.flash(T('bn.pens'), 'warn', 1800); break;
         case 'end': if (!m.ceremony) A.play('whistle3'); hud.flash(T('bn.full'), 'info', 2200); break;
+        case 'streaker': hud.flash(T('bn.streaker'), 'info', 2400); break;
         case 'ceremony': A.play('whistle3'); A.play('goal'); hud.flash(T('bn.trophy'), 'goal', 3600, e.team !== undefined ? m.teams[e.team].club.name : '', m.teams[e.team]); break;
         case 'restart': if (['corner', 'freekick', 'kickoff'].includes(e.kind) && this.m.mode !== 'shootout' && this.m.time > 2) hud.flash(T('rs.' + e.kind), 'info', 900, ((e.team && e.team.club) ? e.team : this.m.teams[e.team]).club.short); break;
         case 'curl': A.play('ooh'); break;

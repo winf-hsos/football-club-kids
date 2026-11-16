@@ -9,10 +9,10 @@
   const P = FCK.PITCH;
   const L = P.L, W = P.W, GY = P.cy, HG = P.goalW / 2;
   const HAS_THREE = typeof THREE !== 'undefined' && !!THREE && !!THREE.WebGLRenderer && !!FCK.Renderer;
-  const CAMS = ['tv', 'high', 'goal', 'top'];
+  const CAMS = ['fifa', 'tv', 'high', 'goal', 'top'];
   const QUALS = ['low', 'mid', 'high'];
   const SLOT_COLORS = FCK.SLOT_COLORS || ['#3de0ff', '#ff9f3d', '#ff5fa8', '#ffe14d'];
-  if (FCK.DEFAULTS) Object.assign(FCK.DEFAULTS, { gfx3d: '3d', cam3d: 'tv', q3d: (function () { try { return (('ontouchstart' in window) || (navigator.maxTouchPoints > 0)) && window.matchMedia && window.matchMedia('(pointer: coarse)').matches ? 'low' : 'mid'; } catch (e) { return 'mid'; } })() });
+  if (FCK.DEFAULTS) Object.assign(FCK.DEFAULTS, { gfx3d: '3d', cam3d: 'fifa', q3d: (function () { try { return (('ontouchstart' in window) || (navigator.maxTouchPoints > 0)) && window.matchMedia && window.matchMedia('(pointer: coarse)').matches ? 'low' : 'mid'; } catch (e) { return 'mid'; } })() });
   FCK.R3D_CAMS = CAMS; FCK.R3D_QUALS = QUALS;
 
   if (!HAS_THREE) {
@@ -745,6 +745,7 @@
     high: { pr: 2, crowd: 1, shadow: true, rain: 1200, snow: 950, aa: true },
   };
   const CAMP = {
+    fifa: { fov: 34, pitch: 26, k: 1.25 }, // low broadcast view from the stand side, like the FIFA default camera
     tv: { fov: 32, pitch: 38, k: 1.0 },
     high: { fov: 34, pitch: 54, k: 1.3 },
     top: { fov: 36, pitch: 86, k: 1.5 },
@@ -1465,6 +1466,14 @@
         this.placeModel(M, p, dt, t, b, rs, false);
         if (!this.shadowOn) blobFor(p);
         else M.mesh.castShadow = true;
+      }
+      // streaker + stewards
+      const SK = opts.match && opts.match.streak;
+      if (SK && (SK.state === 'run' || SK.state === 'led')) {
+        const DINO = { shirt: '#2ecc71', shirt2: '#1f9e54', shorts: '#2ecc71', socks: '#1f9e54', gk: '#2ecc71', gkShorts: '#1f9e54', pattern: 'stripesV' }, VEST = { shirt: '#fff200', shirt2: '#fff200', shorts: '#16181f', socks: '#16181f', gk: '#fff200', gkShorts: '#16181f', pattern: 'solid' };
+        const mkp = (key, x, y, vx, vy, kit, num) => ({ ti: 's' + key, num, sname: 'x' + key, isGK: false, look: { skin: '#e8b998', hair: '#2b2b2b', hairStyle: key === 'd' ? 'mohawk' : 'short', beard: false }, team: { kit }, x, y, ang: Math.atan2(vy, vx), spd: Math.hypot(vx, vy), state: 'idle' });
+        const list = [mkp('d', SK.x, SK.y, SK.vx || 0.1, SK.vy || 0.1, DINO, 0)].concat(SK.stew.map((w, i) => mkp('s' + i, w.x, w.y, SK.x - w.x, SK.y - w.y, VEST, 0)));
+        list.forEach((q, i) => { const M = this.model(q, false); M.used = fid; this.placeModel(M, q, dt, t, b, null, false); if (!this.shadowOn) blobFor(q); });
       }
       if (view.ref) {
         const r = view.ref, M = this.model(r, true);
