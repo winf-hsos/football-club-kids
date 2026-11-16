@@ -689,9 +689,9 @@
       // targets
       let tLie = 0, tDrop = 0, rate = 9;
       if (st === 'slide') { tLie = 1.22; tDrop = 0.62; rate = 16; }
-      else if (st === 'dive') { tLie = -1.32; tDrop = 0.5; rate = 14; }
-      else if (st === 'down') { tLie = 1.45; tDrop = 0.7; rate = 12; }
-      else if (st === 'getup') { tLie = 0.45; tDrop = 0.3; rate = 7; }
+      else if (st === 'dive') { tLie = -1.32; tDrop = 0.5; rate = 9; }
+      else if (st === 'down') { tLie = 1.45; tDrop = 0.7; rate = 9; }
+      else if (st === 'getup') { tLie = 0.45; tDrop = 0.3; rate = 5.5; }
       else rate = 7;
       this.lie = damp(this.lie, tLie, rate, dt); this.drop = damp(this.drop, tDrop, rate, dt);
       const lying = Math.min(1, Math.abs(this.lie));
@@ -735,7 +735,8 @@
       const bounce = Math.abs(s) * 0.05 * run * freeze + (this.celeb > 0.02 ? Math.abs(Math.sin(t * 9 + this.seed)) * 0.28 * this.celeb : 0);
       const hip = bn[B.HIPS];
       const jmp = p.jumpT > 0 ? Math.sin(Math.min(1, (0.45 - p.jumpT) / 0.45) * Math.PI) * 0.4 : 0;
-      hip.position.y = BONE_POS[0][1] + bounce + jmp - this.drop - crouch * 0.2;
+      const air = st === 'dive' && p.stT > 0 ? Math.sin(clamp(1 - p.stT / 0.65, 0, 1) * Math.PI) * 0.45 : 0; // the keeper leaves the ground in an arc
+      hip.position.y = BONE_POS[0][1] + bounce + jmp + air - this.drop - crouch * 0.2;
       hip.rotation.set(0, -Math.sin(ph) * 0.1 * run * freeze, this.lie); // pelvis counter-rotates against the shoulders
       // torso
       const ch = bn[B.CHEST];
@@ -744,6 +745,9 @@
       const tgtLook = clamp(ctx.lookYaw || 0, -1.0, 1.0) * (1 - lying * 0.8);
       this.look = damp(this.look, tgtLook, 8, dt);
       bn[B.HEAD].rotation.set(0, -this.look * 0.85 - Math.sin(ph) * 0.1 * run * freeze + Math.sin(t * 0.7 + this.seed) * 0.09 * (1 - run) * freeze, -lean * 0.6 + (this.lie < 0 ? 0.9 * Math.min(1, -this.lie) : 0));
+      // smooth every limb angle towards its target so that state changes (run -> dive -> getup, slide, celebrate) blend instead of snapping
+      const SM = this.sm || (this.sm = {}), kr = this.kick >= 0 ? 70 : 26, sw = (k, v, r) => { const o = SM[k]; return (SM[k] = o === undefined || !(dt > 0) ? v : damp(o, v, r, dt)); };
+      thL = sw('thL', thL, kr); thR = sw('thR', thR, kr); knL = sw('knL', knL, kr); knR = sw('knR', knR, kr);
       // legs
       bn[B.THIGH_L].rotation.set(0, 0, thL); bn[B.SHIN_L].rotation.set(0, 0, -knL);
       bn[B.THIGH_R].rotation.set(0, 0, thR); bn[B.SHIN_R].rotation.set(0, 0, -knR);
@@ -788,6 +792,7 @@
           ch.rotation.z += -0.18 * q; aL = 1.1; aR = 1.2; fL = fR = 0.7;
         }
       }
+      { const ar = 15; aL = sw('aL', aL, ar); aR = sw('aR', aR, ar); fL = sw('fL', fL, ar); fR = sw('fR', fR, ar); spL = sw('spL', spL, ar); spR = sw('spR', spR, ar); }
       bn[B.ARM_L].rotation.set(spL * Math.cos(aL), 0, aL); bn[B.FORE_L].rotation.set(0, 0, fL);
       bn[B.ARM_R].rotation.set(-spR * Math.cos(aR), 0, aR); bn[B.FORE_R].rotation.set(0, 0, fR);
     }
