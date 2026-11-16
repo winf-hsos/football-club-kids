@@ -543,7 +543,9 @@
     const A = isGK ? kit.gk : kit.shirt, Bc = isGK ? kit.gk : (kit.shirt2 || kit.shirt);
     const shorts = isGK ? kit.gkShorts : kit.shorts, socks = isGK ? kit.gk : kit.socks;
     const pattern = isGK || ref ? 'solid' : (kit.pattern || 'solid');
-    const skin = look.skin, skinD = shade(skin, 0.82), trim = shade(A, 0.62);
+    // warm up the skin a little (flat greys look dead under the stadium light) and derive shadow / lip / blush tones
+    const skin = (() => { const k = col(look.skin), l = k.r * 0.3 + k.g * 0.59 + k.b * 0.11; return '#' + new THREE.Color(Math.min(1, l + (k.r - l) * 1.5 + 0.05), Math.max(0, l + (k.g - l) * 1.1 + 0.02), Math.max(0, l + (k.b - l) * 0.7)).getHexString(); })();
+    const skinD = shade(skin, 0.82), trim = shade(A, 0.62), lip = mixCol(skin, '#b0494a', 0.45).getStyle(), socket = shade(skin, 0.7);
     const sleeveCol = kit.pattern === 'sleeves' && !isGK ? Bc : A;
     const glove = '#e9edf5';
     const R = (y, rx, rz, cx, cz) => ({ y, rx, rz, cx: cx || 0, cz: cz || 0 });
@@ -556,7 +558,9 @@
     const chest = [R(0.98, 0.135, 0.205), R(1.08, 0.138, 0.225), R(1.2, 0.142, 0.25), R(1.32, 0.146, 0.275), R(1.42, 0.14, 0.285), R(1.48, 0.12, 0.26), R(1.515, 0.075, 0.1)];
     gb.tube(chest, N, (i, j) => torsoColor(pattern, A, Bc, j, Math.min(2, Math.floor(i * 3 / (chest.length - 1))), N), 'top');
     // collar and neck
-    gb.tube([R(1.49, 0.075, 0.085), R(1.525, 0.07, 0.078)], 10, trim, null);
+    gb.tube([R(1.49, 0.078, 0.09), R(1.527, 0.072, 0.08)], 10, trim, null);
+    gb.sphere(0.07, 1.47, 0, 0.03, 0.045, 0.05, 8, 6, skin); // V-neck opening (skin of the chest)
+    gb.tube([R(0.74, 0.141, 0.201), R(0.77, 0.142, 0.203)], 14, shade(shorts, 0.7), null); // shorts hem
     gb.tube([R(1.51, 0.052, 0.058), R(1.6, 0.05, 0.055)], 10, skin, 'top');
     // shirt details: shoulder trim, chest crest, number at the back (decal quad, atlas uv)
     if (num >= 0 && num < 100 && !ref) {
@@ -575,13 +579,16 @@
     [-1, 1].forEach((d) => {
       gb.sphere(-0.01, hy - 0.02, d * 0.178, 0.04, 0.055, 0.02, 8, 6, skinD); // ears
       const ez = d * 0.07;
+      gb.sphere(0.15, hy + 0.03, ez, 0.018, 0.03, 0.04, 8, 6, shade(skin, 0.85)); // eye socket (soft shadow)
       gb.sphere(0.168, hy + 0.025, ez, 0.022, 0.026, 0.034, 8, 6, '#f6f6f6'); // eye white
       gb.sphere(0.186, hy + 0.025, ez, 0.012, 0.018, 0.018, 6, 5, look.f && look.f.eye ? look.f.eye : '#3b2a1a'); // iris
       gb.sphere(0.193, hy + 0.025, ez, 0.006, 0.01, 0.01, 6, 4, '#0c0f16'); // pupil
       gb.bar([0.176, hy + 0.075, ez - d * 0.032], [0.18, hy + 0.082, ez + d * 0.03], 0.0095, shade(look.hair, 0.8)); // brow
     });
     gb.sphere(0.2, hy - 0.025, 0, 0.026, 0.04, 0.022, 8, 6, shade(skin, 0.94)); // nose
-    gb.bar([0.168, hy - 0.092, -0.035], [0.17, hy - 0.092, 0.035], 0.006, shade(skin, 0.55)); // mouth
+    gb.bar([0.168, hy - 0.092, -0.035], [0.17, hy - 0.092, 0.035], 0.005, shade(skin, 0.5)); // mouth line
+    gb.bar([0.17, hy - 0.083, -0.03], [0.172, hy - 0.083, 0.03], 0.007, lip); gb.bar([0.169, hy - 0.101, -0.026], [0.171, hy - 0.101, 0.026], 0.008, lip); // lips
+    [-1, 1].forEach((d) => gb.sphere(0.198, hy - 0.048, d * 0.016, 0.01, 0.008, 0.01, 5, 4, shade(skin, 0.6))); // nostrils
     if (look.beard) {
       const bs = look.beardStyle || 'full', bcol = look.beardCol || look.hair;
       if (bs === 'full') gb.sphere(0.06, hy - 0.115, 0, 0.14, 0.085, 0.13, 12, 7, bcol, 3, 7);
