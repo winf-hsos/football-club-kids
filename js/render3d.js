@@ -23,7 +23,7 @@
   const PM = 7; // metres of grass drawn around the pitch lines
   const AD_OFF = 3.5; // ad boards: distance from the lines
   const SO = 8.5; // stands: distance of the first row from the lines
-  const ROWS = 20, ROW_D = 0.85, ROW_H = 0.6, ROW_H0 = 1.1;
+  const ROWS = 30, ROW_D = 0.85, ROW_H = 0.6, ROW_H0 = 1.1;
   const SC = 0.93; // player scale: the model is ~2 m tall at scale 1, so about 1.85 m on a 105 m pitch
   const BALL_R = 0.15; // slightly bigger than a real ball (0.11) so it stays visible
   const HEMI = Math.PI / 2;
@@ -481,6 +481,7 @@
     [0, 0.47, -0.31], [0, -0.3, 0], [0, 0.47, 0.31], [0, -0.3, 0],
     [0, -0.03, -0.11], [0, -0.46, 0], [0, -0.03, 0.11], [0, -0.46, 0],
   ];
+  let CARRY_SP = -0.3; FCK.R3D_setCarry = (v) => { CARRY_SP = v; }; // spread of the arms while carrying the trophy (hands meet in front of the body)
   const BOOTS = ['#151515', '#151515', '#151515', '#f2f2f2', '#ff6a1a', '#2dd1ff', '#ffd23c'];
 
   function torsoColor(pattern, A, Bc, j, k, N) {
@@ -624,6 +625,10 @@
       const skel = new THREE.Skeleton(bones);
       mesh.bind(skel, mesh.matrixWorld);
       this.group = group; this.mesh = mesh; this.bones = bones;
+      // hand anchors (for carrying the trophy): bone-local offsets of the palms
+      this.handL = new THREE.Object3D(); this.handL.position.set(0.005, -0.32, 0); bones[B.FORE_L].add(this.handL);
+      this.handR = new THREE.Object3D(); this.handR.position.set(0.005, -0.32, 0); bones[B.FORE_R].add(this.handR);
+      this.carry = 0; this.carryLift = 0;
       // animation state
       this.ph = Math.random() * 6; this.lie = 0; this.drop = 0; this.celeb = 0; this.holdA = 0; this.thrw = 0; this.look = 0; this.kick = -1; this.lean = 0; this.gk = !!p.isGK;
       this.seed = Math.random() * 10; this.used = 0; this.px = p.x; this.py = p.y;
@@ -736,7 +741,12 @@
       if (kickW > 0) { spL = lerp(spL, 0.65, kickW); spR = lerp(spR, 0.65, kickW); aL = lerp(aL, 0.1, kickW); aR = lerp(aR, -0.2, kickW); }
       if (this.holdA > 0.01) { aL = lerp(aL, 1.15, this.holdA); aR = lerp(aR, 1.15, this.holdA); fL = lerp(fL, 1.3, this.holdA); fR = lerp(fR, 1.3, this.holdA); spL = lerp(spL, 0.05, this.holdA); spR = lerp(spR, 0.05, this.holdA); }
       if (this.thrw > 0.01) { aL = lerp(aL, 2.85, this.thrw); aR = lerp(aR, 2.85, this.thrw); fL = lerp(fL, 0.45, this.thrw); fR = lerp(fR, 0.45, this.thrw); spL = lerp(spL, 0.18, this.thrw); spR = lerp(spR, 0.18, this.thrw); }
-      if (this.celeb > 0.01) {
+      if (this.carry > 0.01) {
+        // holding the trophy with both hands: first in front of the chest, then lifted above the head
+        const cl = this.carryLift, cA = lerp(1.3, 2.55, cl), cF = lerp(1.25, 0.45, cl), cS = CARRY_SP;
+        aL = lerp(aL, cA, this.carry); aR = lerp(aR, cA, this.carry); fL = lerp(fL, cF, this.carry); fR = lerp(fR, cF, this.carry); spL = lerp(spL, cS, this.carry); spR = lerp(spR, cS, this.carry);
+      }
+      if (this.celeb > 0.01 && this.carry < 0.5) {
         const pump = Math.sin(t * 12 + this.seed) * 0.25;
         aL = lerp(aL, 2.7 + pump, this.celeb); aR = lerp(aR, 2.7 - pump, this.celeb); fL = lerp(fL, 0.2, this.celeb); fR = lerp(fR, 0.2, this.celeb); spL = lerp(spL, 0.5, this.celeb); spR = lerp(spR, 0.5, this.celeb);
       }
@@ -1125,7 +1135,7 @@
       const rnd = U.makeRng(4242), slots = seatSlots();
       let total = 0; slots.forEach((s) => { total += s.length; });
       const att = (m.crowd && m.crowd.att) || 20000, cap = (m.crowd && m.crowd.cap) || att;
-      const target = clamp(att / 8, 1500, 8500) * cfg.crowd;
+      const target = clamp(att / 6, 2500, 15000) * cfg.crowd;
       const fill = Math.min(0.95, target / total) * (0.55 + 0.45 * clamp(att / cap, 0.3, 1));
       const cA = m.teams[0].kit.shirt, cB = m.teams[1].kit.shirt;
       const pal = [cA, cA, cA, cA, cB, '#e8edf7', '#f2c14e', '#7aa2ff', '#ff7a7a', '#2a3350'];
@@ -1660,7 +1670,7 @@
       const C = this.cer; if (!C) return;
       C.grp.visible = on;
       if (on && this.ball) this.ball.visible = false;
-      if (!on) { if (C.trophy) C.trophy.visible = false; return; }
+      if (!on) { if (C.trophy) C.trophy.visible = false; if (this.carryM) { this.carryM.carry = 0; this.carryM = null; } return; }
       const cer = mm.ceremony, cap = cer.cap, team = mm.teams[cer.team];
       if (C.kind !== cer.kind) { if (C.trophy) C.grp.parent.remove(C.trophy); C.trophy = this.buildTrophy(cer.kind); C.kind = cer.kind; this.add(C.trophy); }
       C.cloth.color.set(team.kit.shirt);
@@ -1668,8 +1678,15 @@
       C.lift = Math.min(1, (C.lift || 0) + ((mm.modeT || 0) > 5 ? dt * 0.55 : 0));
       const lf = smooth(C.lift);
       C.trophy.visible = true;
-      C.trophy.position.set(cap.x + 0.12, (cap.elev || 0) + 1.2 + lf * 1.05 + Math.sin(this.t * 3) * 0.03 * lf, cap.y);
-      C.trophy.rotation.y += dt * 1.0; C.trophy.scale.setScalar(0.78);
+      // real size (cup ~0.68 m, world cup ~0.36 m) and held in both hands of the captain
+      const sc = cer.kind === 'wm' ? 0.3 : 0.55; C.trophy.scale.setScalar(sc);
+      const M = this.model(cap, false); this.carryM = M; M.carry = 1; M.carryLift = lf;
+      if (M.handL && M.group.visible !== undefined) {
+        M.group.updateMatrixWorld(true);
+        const a = M.handL.getWorldPosition(this._hv1 || (this._hv1 = new THREE.Vector3())), b2 = M.handR.getWorldPosition(this._hv2 || (this._hv2 = new THREE.Vector3()));
+        C.trophy.position.set((a.x + b2.x) / 2, (a.y + b2.y) / 2 - 0.3 * sc, (a.z + b2.z) / 2);
+      } else C.trophy.position.set(cap.x, (cap.elev || 0) + 1.2, cap.y);
+      C.trophy.rotation.y = 0;
       this.roar = 1;
       C.next -= dt;
       if (C.next <= 0 && (mm.modeT || 0) > 3.5) { C.next = 1.1; this.celebrate(Math.random() < 0.5 ? 20 : 85, GY, team.kit.shirt, team.kit.shirt2 || team.kit.shirt); }

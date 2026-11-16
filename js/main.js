@@ -125,6 +125,8 @@
       this.com.kickoff();
       this.acc = 0; this.last = performance.now();
       this.prevVz = 0;
+      // 3D intro (street with fans, players in the tunnel, walk-out) before the whistle; any key skips
+      if (FCK.Intro && !cfg.noIntro && FCK.Intro.available() && FCK.Intro.play({ home: t0.club, away: t1.club, kits: [t0.kit, t1.kit], stadium: t0.club.stadium }, () => { this.paused = false; this.last = performance.now(); this.acc = 0; })) this.paused = true;
     }
 
     endMatch() {

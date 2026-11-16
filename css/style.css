@@ -657,3 +657,9 @@ details.adv.big .grid2 { margin-top: 6px; }
 .fc.sk-ice { --c1: #c8f0ff; --c2: #3a7fb5; --ink: #0b2a44; --edge: #ffffff; box-shadow: 0 0 18px rgba(170, 230, 255, .8), 0 4px 14px rgba(0, 0, 0, .5), inset 0 0 0 2px rgba(255, 255, 255, .55); }
 .fc.sk-tott { --c1: #16264f; --c2: #05070f; --ink: #9ed0ff; --edge: #e8f4ff; box-shadow: 0 0 22px rgba(150, 210, 255, .8), 0 4px 14px rgba(0, 0, 0, .5), inset 0 0 0 2px rgba(232, 244, 255, .5); }
 .fc.sk-rttf::before, .fc.sk-sun::before, .fc.sk-fs::before, .fc.sk-cent::before, .fc.sk-ice::before, .fc.sk-tott::before { content: ''; position: absolute; inset: 0; background: linear-gradient(115deg, transparent 32%, rgba(255, 255, 255, .32) 50%, transparent 68%); background-size: 250% 100%; animation: shine 4.4s linear infinite; pointer-events: none; z-index: 1; }
+
+.intro3d { position: fixed; inset: 0; z-index: 70; background: #0d1220; transition: opacity .3s; } .intro3d.out { opacity: 0; pointer-events: none; }
+.in-cv { position: absolute; inset: 0; width: 100%; height: 100%; display: block; cursor: pointer; }
+.in-title { position: absolute; left: 0; right: 0; bottom: 16%; text-align: center; opacity: 0; transform: translateY(12px); transition: opacity .5s, transform .5s; text-shadow: 0 2px 12px rgba(0, 0, 0, .9); pointer-events: none; }
+.in-title.show { opacity: 1; transform: none; } .in-title b { display: block; font-size: 1.9rem; text-transform: uppercase; letter-spacing: .05em; } .in-title small { font-size: 1rem; opacity: .85; }
+.in-skip { position: absolute; right: var(--gut-r, 12px); top: var(--gut-t, 12px); background: rgba(255, 255, 255, .12); color: var(--text); border: 1px solid var(--line2); border-radius: 999px; padding: 6px 14px; font-size: .8rem; cursor: pointer; }

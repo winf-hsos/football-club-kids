@@ -2,6 +2,7 @@
 (function (FCK) {
   'use strict';
   const de = {
+    'intro.skip': 'Überspringen', 'set.intro3d': 'Einlaufszenen vor dem Spiel (Straße, Tunnel)',
     'bn.streaker': '🦖 FLITZER!',
     'bn.trophy': 'POKALSIEGER!',
     "nt.cont.UEFA": "Europameisterschaft", "nt.cont.CONMEBOL": "Copa América", "nt.cont.CAF": "Afrika-Cup", "nt.cont.AFC": "Asienmeisterschaft", "nt.cont.CONCACAF": "Gold Cup", "nt.cont.OFC": "Ozeanienmeisterschaft", "nt.cont.res": "Ergebnis: {p}. Ziel war: {g}. Turniersieger: {c}.", 
@@ -14,6 +15,7 @@
     'home.t.play': 'Spielen', 'home.t.tour': 'Turniere', 'home.t.more': 'Mehr', 'home.kick': 'Anstoß',
   };
   const en = {
+    'intro.skip': 'Skip', 'set.intro3d': 'Pre-match scenes (street, tunnel)',
     'bn.streaker': '🦖 STREAKER!',
     'bn.trophy': 'CHAMPIONS!',
     "nt.cont.UEFA": "European Championship", "nt.cont.CONMEBOL": "Copa América", "nt.cont.CAF": "Africa Cup of Nations", "nt.cont.AFC": "Asian Cup", "nt.cont.CONCACAF": "Gold Cup", "nt.cont.OFC": "Oceania Cup", "nt.cont.res": "Result: {p}. The goal was: {g}. Winner: {c}.", 
