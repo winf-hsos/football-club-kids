@@ -25,6 +25,8 @@ Stufe 1: spielbares Freundschaftsspiel. Stufe 2: Welt & Karriere (Ligen, Pokale,
 
 > In den Aufstellungs-Editoren (Karriere, Manager, Freundschaftsspiel, Wettbewerbe) zeigen die Spielerkreise die Gesamtstärke statt der Rückennummer; Goldrand bei sehr starken Spielern.
 
+> Realistischere Spieler in der 3D-Ansicht: runde, glatt schattierte Körper statt Klötzen, Gesicht mit Augen, Brauen, Nase, Ohren und Mund, Hände bzw. Torwarthandschuhe, Fußballschuhe mit Sohle, Trikot mit Kragen, Ärmelbündchen und Rückennummer, Socken mit Bündchen, Bärte und Frisuren; dazu eine natürlichere Lauf- und Standanimation (Becken und Schultern drehen gegeneinander, Atmen, Kopfbewegung).
+
 > Kopfbälle: Feldspieler köpfen hohe Bälle (Flanken, lange Bälle, Befreiungsschläge). Vor dem Tor geht der Kopfball aufs Tor, in der eigenen Hälfte wird weit geklärt, sonst wird der Ball weitergeleitet. Wer köpft, hängt von Physis und Abwehr ab; mit Richtungseingabe lenkt man den Kopfball selbst (Test: `node test/headers.js`).
 
 > Unten rechts im Hauptmenü steht der Button „♥ Spenden“. Im Dialog wählst du einen Betrag (1/2/5/10 € oder frei), spendest über PayPal und schickst deinen Wunsch per E-Mail. Je höher die Spende, desto höher die Priorität des Wunsches. Im Hauptmenü (nie im Spiel) erscheint alle 15 Minuten eine Erinnerung mit „Später“ und „Nicht mehr anzeigen“. Das Spiel bleibt kostenlos und ohne Werbung.
