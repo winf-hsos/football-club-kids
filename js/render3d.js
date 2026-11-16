@@ -51,9 +51,12 @@
   const ATLAS_N = 16; // 16 x 16 cells of 64 px: numbers 0..99, cell 255 = opaque white
   const WU = (ATLAS_N - 0.5) / ATLAS_N, WV = 1 - (ATLAS_N - 0.5) / ATLAS_N;
   class GB {
-    constructor(skinned) { this.pos = []; this.col = []; this.uv = []; this.si = []; this.skinned = !!skinned; this.bone = 0; }
-    vert(p, c, u, v) {
-      this.pos.push(p[0], p[1], p[2]); this.col.push(c.r, c.g, c.b);
+    constructor(skinned) { this.pos = []; this.col = []; this.uv = []; this.si = []; this.nrm = []; this.skinned = !!skinned; this.bone = 0; }
+    vert(p, c, u, v, n) {
+      // cheap ambient occlusion: surfaces facing down are a little darker
+      const ao = n ? 0.8 + 0.2 * Math.min(1, Math.max(0, (n[1] + 1) / 2)) : 1;
+      this.pos.push(p[0], p[1], p[2]); this.col.push(c.r * ao, c.g * ao, c.b * ao);
+      if (n) this.nrm.push(n[0], n[1], n[2]); else this.nrm.push(0, 0, 0); // zero = flat shading (computed in build)
       if (this.skinned) { this.uv.push(u === undefined ? WU : u, v === undefined ? WV : v); this.si.push(this.bone); }
     }
     tri(a, b, c, k) { k = col(k); this.vert(a, k); this.vert(b, k); this.vert(c, k); }
@@ -98,14 +101,45 @@
       for (let i = 0; i < 4; i++) { const j = (i + 1) % 4; this.quadN(A[i], A[j], B[j], B[i], k, (A[i][0] + A[j][0]) / 2 - a[0], (A[i][1] + A[j][1]) / 2 - a[1], (A[i][2] + A[j][2]) / 2 - a[2]); }
       this.quadN(A[0], A[1], A[2], A[3], k, -ux, -uy, -uz); this.quadN(B[0], B[1], B[2], B[3], k, ux, uy, uz);
     }
-    // ellipsoid; rows i0..i1 of hSeg (top to bottom), theta from 0 (= +x) around y
+    // ellipsoid (smooth shaded); rows i0..i1 of hSeg (top to bottom), theta from 0 (= +x) around y
     sphere(cx, cy, cz, rx, ry, rz, wSeg, hSeg, k, i0, i1) {
       i0 = i0 || 0; i1 = i1 === undefined ? hSeg : i1;
+      const kc = col(k);
       const pt = (i, j) => { const ph = (i / hSeg) * Math.PI, th = (j / wSeg) * Math.PI * 2; return [cx + rx * Math.sin(ph) * Math.cos(th), cy + ry * Math.cos(ph), cz + rz * Math.sin(ph) * Math.sin(th)]; };
+      const nm = (p) => { const x = (p[0] - cx) / (rx * rx), y = (p[1] - cy) / (ry * ry), z = (p[2] - cz) / (rz * rz), l = Math.sqrt(x * x + y * y + z * z) || 1; return [x / l, y / l, z / l]; };
+      const v3 = (p) => this.vert(p, kc, undefined, undefined, nm(p));
       for (let i = i0; i < i1; i++) for (let j = 0; j < wSeg; j++) {
         const a = pt(i, j), b = pt(i, j + 1), c = pt(i + 1, j + 1), d = pt(i + 1, j);
-        if (i === 0) this.tri(a, c, d, k); else if (i === hSeg - 1) this.tri(a, b, c, k); else this.quad(a, b, c, d, k);
+        if (i === 0) { v3(a); v3(c); v3(d); } else if (i === hSeg - 1) { v3(a); v3(b); v3(c); } else { v3(a); v3(b); v3(c); v3(a); v3(c); v3(d); }
       }
+    }
+    // smooth tube along y: rings = [{ y, rx, rz, cx, cz }], colour per band/sector via colorFn(i, j) or a single colour; caps: 'top' | 'bottom' | 'both'
+    tube(rings, segs, k, caps) {
+      const n = rings.length, P = [];
+      for (let i = 0; i < n; i++) {
+        const r = rings[i]; P.push([]);
+        for (let j = 0; j < segs; j++) { const th = (j / segs) * Math.PI * 2; P[i].push([(r.cx || 0) + r.rx * Math.cos(th), r.y, (r.cz || 0) + r.rz * Math.sin(th)]); }
+      }
+      const N = P.map((row, i) => row.map((p, j) => {
+        const a = P[i][(j + 1) % segs], b = P[i][(j - 1 + segs) % segs], up = P[Math.min(i + 1, n - 1)][j], dn = P[Math.max(i - 1, 0)][j];
+        const du = [a[0] - b[0], a[1] - b[1], a[2] - b[2]], dv = [up[0] - dn[0], up[1] - dn[1], up[2] - dn[2]];
+        let nx = dv[1] * du[2] - dv[2] * du[1], ny = dv[2] * du[0] - dv[0] * du[2], nz = dv[0] * du[1] - dv[1] * du[0];
+        const l = Math.sqrt(nx * nx + ny * ny + nz * nz);
+        if (l < 1e-9) { nx = p[0] - (rings[i].cx || 0); ny = 0; nz = p[2] - (rings[i].cz || 0); const l2 = Math.sqrt(nx * nx + nz * nz) || 1; return [nx / l2, 0, nz / l2]; }
+        return [nx / l, ny / l, nz / l];
+      }));
+      const colAt = (i, j) => col(typeof k === 'function' ? k(i, j) : k);
+      for (let i = 0; i < n - 1; i++) for (let j = 0; j < segs; j++) {
+        const j2 = (j + 1) % segs, c = colAt(i, j);
+        const a = [i, j], b = [i, j2], cc = [i + 1, j2], d = [i + 1, j];
+        [a, d, cc, a, cc, b].forEach((q) => this.vert(P[q[0]][q[1]], c, undefined, undefined, N[q[0]][q[1]]));
+      }
+      const cap = (i, up) => {
+        const r = rings[i], c = colAt(Math.min(i, n - 2), 0), ctr = [r.cx || 0, r.y, r.cz || 0], nn = [0, up ? 1 : -1, 0];
+        for (let j = 0; j < segs; j++) { const j2 = (j + 1) % segs; const o = up ? [ctr, P[i][j2], P[i][j]] : [ctr, P[i][j], P[i][j2]]; o.forEach((p) => this.vert(p, c, undefined, undefined, nn)); }
+      };
+      if (caps === 'top' || caps === 'both') cap(n - 1, true);
+      if (caps === 'bottom' || caps === 'both') cap(0, false);
     }
     build() {
       const g = new THREE.BufferGeometry();
@@ -119,6 +153,9 @@
         g.setAttribute('skinWeight', new THREE.Float32BufferAttribute(wt, 4));
       }
       g.computeVertexNormals();
+      // pieces built with explicit (smooth) normals keep them; flat pieces (zero normal) keep the computed face normal
+      const na = g.getAttribute('normal').array;
+      for (let i = 0; i < this.nrm.length; i += 3) if (this.nrm[i] !== 0 || this.nrm[i + 1] !== 0 || this.nrm[i + 2] !== 0) { na[i] = this.nrm[i]; na[i + 1] = this.nrm[i + 1]; na[i + 2] = this.nrm[i + 2]; }
       return g;
     }
   }
@@ -457,11 +494,11 @@
     const hair = look.hair, st = look.hairStyle;
     const cx = 0.0, cy = 1.78, rx = 0.19, ry = 0.21, rz = 0.185;
     if (st === 'bald') return;
-    if (st === 'buzz' || st === 'fade') { gb.sphere(cx - 0.01, cy + 0.005, 0, rx * 1.04, ry * 1.03, rz * 1.04, 8, 6, hair, 0, 3); return; }
+    if (st === 'buzz' || st === 'fade') { gb.sphere(cx - 0.015, cy + 0.01, 0, rx * 1.035, ry * 1.03, rz * 1.04, 14, 11, hair, 0, 4); return; }
     if (st === 'mohawk') { gb.box(cx - 0.14, cy + 0.17, -0.035, cx + 0.12, cy + 0.3, 0.035, hair); return; }
     // cap with a hairline over the forehead: skip the front-most column by pushing the cap back
-    gb.sphere(cx - 0.035, cy + 0.02, 0, rx * 1.1, ry * 1.08, rz * 1.12, 8, 6, hair, 0, 3);
-    gb.box(cx - 0.2, cy - 0.12, -0.15, cx - 0.1, cy + 0.12, 0.15, hair);
+    gb.sphere(cx - 0.03, cy + 0.015, 0, rx * 1.07, ry * 1.07, rz * 1.1, 14, 11, hair, 0, 5);
+    gb.sphere(cx - 0.085, cy - 0.04, 0, 0.1, 0.15, 0.158, 10, 8, hair); // back of the head
     if (st === 'long') gb.box(cx - 0.22, cy - 0.36, -0.17, cx - 0.1, cy + 0.08, 0.17, hair);
     if (st === 'curly') { gb.sphere(cx - 0.04, cy + 0.08, 0, rx * 1.28, ry * 1.1, rz * 1.3, 8, 6, hair, 0, 4); }
     if (st === 'bun') gb.sphere(cx - 0.17, cy + 0.17, 0, 0.09, 0.09, 0.09, 6, 4, hair);
@@ -479,62 +516,80 @@
     const gkSleeve = isGK;
     const A = isGK ? kit.gk : kit.shirt, Bc = isGK ? kit.gk : (kit.shirt2 || kit.shirt);
     const shorts = isGK ? kit.gkShorts : kit.shorts, socks = isGK ? kit.gk : kit.socks;
-    const pattern = isGK || ref ? (ref ? 'solid' : 'solid') : (kit.pattern || 'solid');
-    const skin = look.skin;
+    const pattern = isGK || ref ? 'solid' : (kit.pattern || 'solid');
+    const skin = look.skin, skinD = shade(skin, 0.82), trim = shade(A, 0.62);
     const sleeveCol = kit.pattern === 'sleeves' && !isGK ? Bc : A;
-    // hips: pelvis
+    const glove = '#e9edf5';
+    const R = (y, rx, rz, cx, cz) => ({ y, rx, rz, cx: cx || 0, cz: cz || 0 });
+    // ---- pelvis / shorts
     gb.bone = B.HIPS;
-    gb.taper(0, 0, 0.78, 1.02, 0.135, 0.205, 0.125, 0.19, shorts);
-    // chest: patterned lathe, N sectors x 3 bands
+    gb.tube([R(0.74, 0.14, 0.2), R(0.84, 0.15, 0.215), R(0.94, 0.145, 0.205), R(1.02, 0.13, 0.19)], 14, shorts, 'both');
+    // ---- chest: smooth shirt with the same pattern bands
     gb.bone = B.CHEST;
-    const N = 16, ring = [[0.98, 0.205, 0.13], [1.15, 0.235, 0.135], [1.33, 0.27, 0.14], [1.5, 0.3, 0.13]];
-    const rp = (k, j) => { const th = (j / N) * Math.PI * 2; return [ring[k][2] * Math.cos(th), ring[k][0], ring[k][1] * Math.sin(th)]; };
-    for (let k = 0; k < 3; k++) for (let j = 0; j < N; j++) {
-      const c = torsoColor(pattern, A, Bc, j, k, N);
-      gb.quad(rp(k, j), rp(k, j + 1), rp(k + 1, j + 1), rp(k + 1, j), c);
-    }
-    // shoulders cap
-    for (let j = 0; j < N; j++) { const th0 = (j / N) * Math.PI * 2, th1 = ((j + 1) / N) * Math.PI * 2; gb.tri([0, 1.52, 0], [ring[3][2] * Math.cos(th1), 1.5, ring[3][1] * Math.sin(th1)], [ring[3][2] * Math.cos(th0), 1.5, ring[3][1] * Math.sin(th0)], A); }
-    gb.box(-0.05, 1.5, -0.06, 0.06, 1.6, 0.06, skin); // neck
-    // back number (decal quad with atlas uv)
+    const N = 16;
+    const chest = [R(0.98, 0.135, 0.205), R(1.08, 0.138, 0.225), R(1.2, 0.142, 0.25), R(1.32, 0.146, 0.275), R(1.42, 0.14, 0.285), R(1.48, 0.12, 0.26), R(1.515, 0.075, 0.1)];
+    gb.tube(chest, N, (i, j) => torsoColor(pattern, A, Bc, j, Math.min(2, Math.floor(i * 3 / (chest.length - 1))), N), 'top');
+    // collar and neck
+    gb.tube([R(1.49, 0.075, 0.085), R(1.525, 0.07, 0.078)], 10, trim, null);
+    gb.tube([R(1.51, 0.052, 0.058), R(1.6, 0.05, 0.055)], 10, skin, 'top');
+    // shirt details: shoulder trim, chest crest, number at the back (decal quad, atlas uv)
     if (num >= 0 && num < 100 && !ref) {
       const cell = num, c0 = cell % ATLAS_N, r0 = Math.floor(cell / ATLAS_N), u0 = c0 / ATLAS_N, u1 = (c0 + 1) / ATLAS_N, v1 = 1 - r0 / ATLAS_N, v0 = 1 - (r0 + 1) / ATLAS_N;
       const nc = col(A).r * 0.299 + col(A).g * 0.587 + col(A).b * 0.114 > 0.55 ? col('#1b2233') : col('#ffffff');
-      const x = -0.1425, hw = 0.13, y0 = 1.08, y1 = 1.4;
-      // slightly above the lathe back (lathe depth ~0.135 at those heights)
-      const xs = -0.15;
-      gb.vert([xs, y0, -hw], nc, u0, v0); gb.vert([xs, y0, hw], nc, u1, v0); gb.vert([xs, y1, hw], nc, u1, v1);
-      gb.vert([xs, y0, -hw], nc, u0, v0); gb.vert([xs, y1, hw], nc, u1, v1); gb.vert([xs, y1, -hw], nc, u0, v1);
+      const hw = 0.12, y0 = 1.1, y1 = 1.4, xs = -0.162;
+      const nb = [-1, 0, 0];
+      gb.vert([xs, y0, -hw], nc, u0, v0, nb); gb.vert([xs, y0, hw], nc, u1, v0, nb); gb.vert([xs, y1, hw], nc, u1, v1, nb);
+      gb.vert([xs, y0, -hw], nc, u0, v0, nb); gb.vert([xs, y1, hw], nc, u1, v1, nb); gb.vert([xs, y1, -hw], nc, u0, v1, nb);
     }
-    // head
+    // ---- head: skull, jaw, ears, nose, eyes, brows, mouth
     gb.bone = B.HEAD;
-    gb.sphere(0.0, 1.78, 0, 0.19, 0.21, 0.185, 8, 6, skin);
-    gb.box(0.165, 1.72, -0.085, 0.2, 1.79, -0.035, '#1b1b22'); gb.box(0.165, 1.72, 0.035, 0.2, 1.79, 0.085, '#1b1b22'); // eyes -> shows facing
+    const hy = 1.78;
+    gb.sphere(0.0, hy, 0, 0.19, 0.215, 0.175, 14, 11, skin);
+    gb.sphere(0.04, hy - 0.1, 0, 0.14, 0.12, 0.135, 12, 8, skin); // jaw / chin
+    [-1, 1].forEach((d) => {
+      gb.sphere(-0.01, hy - 0.02, d * 0.178, 0.04, 0.055, 0.02, 8, 6, skinD); // ears
+      const ez = d * 0.07;
+      gb.sphere(0.168, hy + 0.025, ez, 0.022, 0.026, 0.034, 8, 6, '#f6f6f6'); // eye white
+      gb.sphere(0.186, hy + 0.025, ez, 0.012, 0.018, 0.018, 6, 5, look.f && look.f.eye ? look.f.eye : '#3b2a1a'); // iris
+      gb.sphere(0.193, hy + 0.025, ez, 0.006, 0.01, 0.01, 6, 4, '#0c0f16'); // pupil
+      gb.bar([0.176, hy + 0.075, ez - d * 0.032], [0.18, hy + 0.082, ez + d * 0.03], 0.0095, shade(look.hair, 0.8)); // brow
+    });
+    gb.sphere(0.2, hy - 0.025, 0, 0.026, 0.04, 0.022, 8, 6, shade(skin, 0.94)); // nose
+    gb.bar([0.168, hy - 0.092, -0.035], [0.17, hy - 0.092, 0.035], 0.006, shade(skin, 0.55)); // mouth
     if (look.beard) {
       const bs = look.beardStyle || 'full', bcol = look.beardCol || look.hair;
-      if (bs === 'full') gb.box(0.07, 1.6, -0.11, 0.19, 1.72, 0.11, bcol);
-      else if (bs === 'stubble') gb.box(0.07, 1.62, -0.1, 0.17, 1.7, 0.1, mixCol(look.skin, bcol, 0.45));
-      else if (bs === 'goatee') gb.box(0.1, 1.6, -0.04, 0.19, 1.7, 0.04, bcol);
-      else if (bs === 'mustache') gb.box(0.15, 1.72, -0.08, 0.2, 1.75, 0.08, bcol);
+      if (bs === 'full') gb.sphere(0.06, hy - 0.115, 0, 0.14, 0.085, 0.13, 12, 7, bcol, 3, 7);
+      else if (bs === 'stubble') gb.sphere(0.055, hy - 0.115, 0, 0.14, 0.085, 0.13, 12, 7, mixCol(look.skin, bcol, 0.4), 3, 7);
+      else if (bs === 'goatee') { gb.sphere(0.11, hy - 0.15, 0, 0.05, 0.05, 0.045, 8, 6, bcol); gb.bar([0.185, hy - 0.07, -0.05], [0.188, hy - 0.07, 0.05], 0.009, bcol); }
+      else if (bs === 'mustache') gb.bar([0.186, hy - 0.07, -0.055], [0.19, hy - 0.07, 0.055], 0.012, bcol);
     }
     addHair(gb, look);
-    // arms
+    // ---- arms: shoulder, sleeve, forearm, hand
     [[B.ARM_L, B.FORE_L, -1], [B.ARM_R, B.FORE_R, 1]].forEach((a) => {
       const z = a[2] * 0.31;
       gb.bone = a[0];
-      gb.taper(0, z, 1.17, 1.49, 0.062, 0.062, 0.09, 0.085, sleeveCol);
+      gb.sphere(0, 1.47, z, 0.075, 0.07, 0.075, 10, 8, sleeveCol);
+      gb.tube([R(1.17, 0.052, 0.052, 0, z), R(1.3, 0.062, 0.062, 0, z), R(1.43, 0.072, 0.072, 0, z), R(1.48, 0.07, 0.07, 0, z)], 10, sleeveCol, 'top');
+      gb.tube([R(1.165, 0.054, 0.054, 0, z), R(1.185, 0.054, 0.054, 0, z)], 10, trim, null); // cuff
       gb.bone = a[1];
-      if (gkSleeve) { gb.taper(0, z, 0.93, 1.17, 0.052, 0.052, 0.062, 0.062, A); gb.box(-0.055, 0.82, z - 0.062, 0.07, 0.94, z + 0.062, '#e9edf5'); } else { gb.taper(0, z, 0.9, 1.17, 0.048, 0.048, 0.058, 0.058, skin); gb.box(-0.045, 0.84, z - 0.05, 0.05, 0.92, z + 0.05, skin); }
+      if (gkSleeve) gb.tube([R(0.9, 0.046, 0.046, 0, z), R(1.0, 0.054, 0.054, 0, z), R(1.17, 0.052, 0.052, 0, z)], 10, A, null);
+      else gb.tube([R(0.9, 0.044, 0.044, 0, z), R(1.0, 0.054, 0.054, 0, z), R(1.17, 0.05, 0.05, 0, z)], 10, skin, null);
+      gb.sphere(0.005, 0.85, z, gkSleeve ? 0.065 : 0.048, 0.062, gkSleeve ? 0.06 : 0.04, 9, 7, gkSleeve ? glove : skin); // hand / glove
     });
-    // legs
+    // ---- legs: thigh (shorts then skin), knee, calf with sock, boot
     [[B.THIGH_L, B.SHIN_L, -1], [B.THIGH_R, B.SHIN_R, 1]].forEach((l) => {
       const z = l[2] * 0.11;
       gb.bone = l[0];
-      gb.taper(0, z, 0.64, 1.0, 0.1, 0.1, 0.115, 0.115, shorts);
-      gb.taper(0, z, 0.46, 0.64, 0.085, 0.085, 0.095, 0.095, skin);
+      gb.tube([R(0.6, 0.075, 0.075, 0, z), R(0.72, 0.092, 0.092, 0, z), R(0.86, 0.106, 0.106, 0, z), R(1.0, 0.115, 0.115, 0, z)], 12, (i) => (i >= 1 ? shorts : skin), 'top');
+      gb.tube([R(0.45, 0.07, 0.07, 0, z), R(0.52, 0.076, 0.076, 0, z), R(0.62, 0.078, 0.078, 0, z)], 12, skin, null); // lower thigh to the knee
       gb.bone = l[1];
-      gb.taper(0, z, 0.1, 0.46, 0.065, 0.065, 0.085, 0.085, socks);
-      gb.box(-0.08, 0.0, z - 0.06, 0.2, 0.1, z + 0.06, bootCol);
+      gb.sphere(0.006, 0.47, z, 0.07, 0.065, 0.068, 10, 7, skin); // knee
+      gb.tube([R(0.1, 0.05, 0.05, 0.01, z), R(0.17, 0.056, 0.054, 0.005, z), R(0.3, 0.078, 0.07, -0.008, z), R(0.38, 0.072, 0.068, 0, z), R(0.46, 0.066, 0.064, 0, z)], 12, socks, null);
+      gb.tube([R(0.42, 0.069, 0.066, 0, z), R(0.455, 0.068, 0.066, 0, z)], 12, trim, null); // sock top
+      // boot: toe box, heel, sole
+      gb.sphere(0.07, 0.055, z, 0.15, 0.058, 0.066, 10, 6, bootCol);
+      gb.sphere(-0.045, 0.06, z, 0.065, 0.062, 0.058, 8, 6, bootCol);
+      gb.box(-0.085, 0.0, z - 0.054, 0.2, 0.018, z + 0.054, '#202228');
     });
     return gb.build();
   }
@@ -622,14 +677,14 @@
       const hip = bn[B.HIPS];
       const jmp = p.jumpT > 0 ? Math.sin(Math.min(1, (0.45 - p.jumpT) / 0.45) * Math.PI) * 0.4 : 0;
       hip.position.y = BONE_POS[0][1] + bounce + jmp - this.drop - crouch * 0.2;
-      hip.rotation.set(0, 0, this.lie);
+      hip.rotation.set(0, -Math.sin(ph) * 0.1 * run * freeze, this.lie); // pelvis counter-rotates against the shoulders
       // torso
       const ch = bn[B.CHEST];
-      ch.rotation.set(0, Math.sin(ph) * 0.12 * run * freeze, lean + this.thrw * 0.18 - this.holdA * 0.05);
+      ch.rotation.set(0, Math.sin(ph) * 0.16 * run * freeze, lean + this.thrw * 0.18 - this.holdA * 0.05 + Math.sin(t * 1.9 + this.seed) * 0.014 * (1 - run) * freeze); // breathing when standing
       // head looks at the ball (limited)
       const tgtLook = clamp(ctx.lookYaw || 0, -1.0, 1.0) * (1 - lying * 0.8);
       this.look = damp(this.look, tgtLook, 8, dt);
-      bn[B.HEAD].rotation.set(0, -this.look * 0.85 - Math.sin(ph) * 0.1 * run * freeze, -lean * 0.6 + (this.lie < 0 ? 0.9 * Math.min(1, -this.lie) : 0));
+      bn[B.HEAD].rotation.set(0, -this.look * 0.85 - Math.sin(ph) * 0.1 * run * freeze + Math.sin(t * 0.7 + this.seed) * 0.09 * (1 - run) * freeze, -lean * 0.6 + (this.lie < 0 ? 0.9 * Math.min(1, -this.lie) : 0));
       // legs
       bn[B.THIGH_L].rotation.set(0, 0, thL); bn[B.SHIN_L].rotation.set(0, 0, -knL);
       bn[B.THIGH_R].rotation.set(0, 0, thR); bn[B.SHIN_R].rotation.set(0, 0, -knR);
@@ -646,6 +701,22 @@
       if (this.celeb > 0.01) {
         const pump = Math.sin(t * 12 + this.seed) * 0.25;
         aL = lerp(aL, 2.7 + pump, this.celeb); aR = lerp(aR, 2.7 - pump, this.celeb); fL = lerp(fL, 0.2, this.celeb); fR = lerp(fR, 0.2, this.celeb); spL = lerp(spL, 0.5, this.celeb); spR = lerp(spR, 0.5, this.celeb);
+      }
+      // skill moves (step-over, roulette, rainbow flick) override the legs / hips for their duration
+      if (p.skillT > 0 && p.skillKind) {
+        const dur = p.skillKind === 'rainbow' ? 0.7 : p.skillKind === 'roulette' ? 0.62 : 0.55, u = clamp(1 - p.skillT / dur, 0, 1);
+        if (p.skillKind === 'stepover') {
+          const s1 = Math.sin(u * Math.PI * 4);
+          bn[B.THIGH_R].rotation.set(0, 0, 0.7 + 0.5 * s1); bn[B.SHIN_R].rotation.set(0, 0, -(0.9 + 0.3 * Math.abs(s1)));
+          bn[B.THIGH_L].rotation.set(0, 0, 0.3 - 0.4 * s1); bn[B.SHIN_L].rotation.set(0, 0, -0.5);
+          hip.rotation.y += Math.sin(u * Math.PI * 4) * 0.25; aL = 0.6; aR = 0.5; fL = fR = 1.0;
+        } else if (p.skillKind === 'roulette') {
+          hip.rotation.y += u * Math.PI * 2; bn[B.THIGH_R].rotation.set(0, 0, 0.5); bn[B.SHIN_R].rotation.set(0, 0, -0.9); aL = 0.9; aR = 0.9; fL = fR = 0.9;
+        } else {
+          const q = u < 0.4 ? u / 0.4 : 1 - (u - 0.4) / 0.6; // heel flick: leg back, then up over the ball
+          bn[B.THIGH_R].rotation.set(0, 0, -1.0 * q + (u > 0.4 ? 1.1 * (1 - q) : 0)); bn[B.SHIN_R].rotation.set(0, 0, -(0.6 + 1.2 * q));
+          ch.rotation.z += -0.18 * q; aL = 1.1; aR = 1.2; fL = fR = 0.7;
+        }
       }
       bn[B.ARM_L].rotation.set(spL * Math.cos(aL), 0, aL); bn[B.FORE_L].rotation.set(0, 0, fL);
       bn[B.ARM_R].rotation.set(-spR * Math.cos(aR), 0, aR); bn[B.FORE_R].rotation.set(0, 0, fR);
@@ -716,7 +787,7 @@
       } catch (e) { this.gpu = ''; }
       this.software = /swiftshader|llvmpipe|software|softpipe/i.test(this.gpu || '');
       cv3.addEventListener('webglcontextlost', (e) => { e.preventDefault(); this.contextLost(); });
-      this.matPlayer = new THREE.MeshLambertMaterial({ vertexColors: true, map: texAtlas(), alphaTest: 0.5, skinning: true });
+      this.matPlayer = new THREE.MeshStandardMaterial({ vertexColors: true, map: texAtlas(), alphaTest: 0.5, skinning: true, roughness: 0.82, metalness: 0 });
       this.camera = new THREE.PerspectiveCamera(30, 16 / 9, 0.8, 900);
       // camera button (touch + mouse), shown while a 3D match is on screen
       const btn = document.createElement('button'); btn.id = 'cam3d'; btn.type = 'button'; btn.hidden = true;
@@ -1597,7 +1668,7 @@
   FCK.Renderer3D = Renderer3D;
   // standalone player model for other 3D scenes (Ultimate Team pack opening): p = { look, num, isGK, sname }, kit as in a match
   FCK.R3D_makePlayer = function (p, kit) {
-    const r = { matPlayer: new THREE.MeshLambertMaterial({ vertexColors: true, map: texAtlas(), alphaTest: 0.5, skinning: true }) };
+    const r = { matPlayer: new THREE.MeshStandardMaterial({ vertexColors: true, map: texAtlas(), alphaTest: 0.5, skinning: true, roughness: 0.82, metalness: 0 }) };
     const M = new PlayerModel(r, { x: 0, y: 0, ang: 0, num: p.num || 9, isGK: !!p.isGK, sname: p.sname || 'x', look: p.look }, kit, false);
     M.dispose2 = () => { M.dispose(); r.matPlayer.dispose(); };
     return M;

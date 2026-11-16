@@ -5,6 +5,22 @@
   const T = (k, v) => FCK.T(k, v);
 
   // ---------- DOM helpers ----------
+  // text with flag emoji -> text nodes + flag images (emoji flags are not drawn on Windows)
+  function textNodes(str, tag) {
+    const F = FCK.Flag;
+    if (!F || tag === 'option' || tag === 'title' || !F.RE.test(str)) { if (F) F.RE.lastIndex = 0; return null; }
+    F.RE.lastIndex = 0;
+    const frag = document.createDocumentFragment();
+    let last = 0, m;
+    while ((m = F.RE.exec(str))) {
+      if (m.index > last) frag.appendChild(document.createTextNode(str.slice(last, m.index)));
+      const code = F.fromEmoji(m[0]);
+      if (code && F.has(code)) { const img = F.img(code, 15); img.title = ''; frag.appendChild(img); } else frag.appendChild(document.createTextNode(m[0]));
+      last = m.index + m[0].length;
+    }
+    if (last < str.length) frag.appendChild(document.createTextNode(str.slice(last)));
+    return frag;
+  }
   function h(tag, props, ...kids) {
     const el = document.createElement(tag);
     if (props) {
@@ -12,7 +28,7 @@
         const v = props[k];
         if (v === undefined || v === null || v === false) continue;
         if (k === 'class') el.className = v;
-        else if (k === 'text') el.textContent = v;
+        else if (k === 'text') { const f = textNodes(String(v), tag); if (f) el.appendChild(f); else el.textContent = v; }
         else if (k === 'html') el.innerHTML = v;
         else if (k.startsWith('on')) el.addEventListener(k.slice(2).toLowerCase(), v);
         else if (k === 'style' && typeof v === 'object') { for (const sk in v) { if (sk.startsWith('--')) el.style.setProperty(sk, v[sk]); else el.style[sk] = v[sk]; } }
@@ -22,7 +38,8 @@
     const add = (c) => {
       if (c === null || c === undefined || c === false) return;
       if (Array.isArray(c)) c.forEach(add);
-      else el.appendChild(c.nodeType ? c : document.createTextNode(String(c)));
+      else if (c.nodeType) el.appendChild(c);
+      else { const f = textNodes(String(c), tag); el.appendChild(f || document.createTextNode(String(c))); }
     };
     kids.forEach(add);
     return el;
@@ -266,15 +283,15 @@
       const grid = h('div', { class: 'grid2' });
       grid.appendChild(ctl(T('help.kb1'), [
         k('W A S D', T('help.move')), k('Shift', T('help.sprint')),
-        k('Q', acts[0] + ' / ' + T('help.switch')), k('E', acts[1] + ' (' + T('help.hold') + ')'), k('R', acts[2]), k('F', acts[3] + ' (' + T('help.hold') + ')'), k('Esc / P', T('help.pause'))]));
+        k('Q', acts[0] + ' / ' + T('help.switch')), k('E', acts[1] + ' (' + T('help.hold') + ')'), k('R', acts[2]), k('F', acts[3] + ' (' + T('help.hold') + ')'), k('T', T('help.skill')), k('Esc / P', T('help.pause'))]));
       grid.appendChild(ctl(T('help.kb2'), [
         k('← ↑ ↓ →', T('help.move')), k('Shift ⇧ (' + T('help.right') + ')', T('help.sprint')),
-        k(',', acts[0]), k('.', acts[1]), k('-  (/)', acts[2]), k('Ö  (;)', acts[3])]));
-      grid.appendChild(ctl(T('help.solo'), [k('WASD / ←↑↓→', T('help.move')), k('Shift', T('help.sprint')), k('Q / Space', acts[0]), k('E / X', acts[1]), k('R / C', acts[2]), k('F / V', acts[3])]));
+        k(',', acts[0]), k('.', acts[1]), k('-  (/)', acts[2]), k('Ö  (;)', acts[3]), k('Ä  (\')', T('help.skill'))]));
+      grid.appendChild(ctl(T('help.solo'), [k('WASD / ←↑↓→', T('help.move')), k('Shift', T('help.sprint')), k('Q / Space', acts[0]), k('E / X', acts[1]), k('T / G', T('help.skill')), k('R / C', acts[2]), k('F / V', acts[3])]));
       grid.appendChild(ctl(T('help.pad'), [
-        k('L-Stick / D-Pad', T('help.move')), k('LB RB LT RT', T('help.sprint')), k('A / ✕', acts[0] + ' / ' + T('help.switch')), k('B / ○', acts[1]), k('Y / △', acts[2]), k('X / □', acts[3]), k('Start / Back', T('help.pause'))]));
+        k('L-Stick / D-Pad', T('help.move')), k('LB RB LT RT', T('help.sprint')), k('A / ✕', acts[0] + ' / ' + T('help.switch')), k('B / ○', acts[1]), k('Y / △', acts[2]), k('X / □', acts[3]), k(T('help.stickclick'), T('help.skill')), k('Start / Back', T('help.pause'))]));
       if (FCK.PadNav) grid.appendChild(FCK.PadNav.helpSection());
-      grid.appendChild(ctl(T('help.touch'), [k(T('help.touch.stick'), T('help.move')), k('A', acts[0]), k('B', acts[1]), k('C', acts[2]), k('D', acts[3]), k('»', T('help.sprint'))]));
+      grid.appendChild(ctl(T('help.touch'), [k(T('help.touch.stick'), T('help.move')), k('A', acts[0]), k('B', acts[1]), k('C', acts[2]), k('D', acts[3]), k('★', T('help.skill')), k('»', T('help.sprint'))]));
       grid.appendChild(h('section', { class: 'card sect' }, h('h3', { text: T('help.actions') }),
         h('dl', { class: 'dl' }, ...acts.flatMap((a, i) => [h('dt', { text: a }), h('dd', { text: actsDef[i] })]))));
       el.appendChild(grid);

@@ -412,7 +412,7 @@
         UI.btn(T('du.back'), () => { FCK.game.kind = 'idle'; UI.stack = ['home']; UI.show('duel', null, true); }, 'primary xl')));
     } else if (m.careerCtx) {
       el.appendChild(h('div', { class: 'row center sticky-actions' },
-        UI.btn(T('career.continue'), () => { FCK.game.kind = 'idle'; UI.stack = ['home']; UI.show('career', null, true); }, 'primary xl')));
+        UI.btn(T('career.continue'), () => { FCK.game.kind = 'idle'; UI.stack = ['home']; UI.show(FCK.Career && FCK.Career.cur && FCK.Career.cur.pro ? 'proHub' : 'career', null, true); }, 'primary xl')));
     } else {
     el.appendChild(h('div', { class: 'row center sticky-actions' },
       UI.btn('↻ ' + T('res.rematch'), () => FCK.rematch(), 'primary'),

@@ -144,7 +144,7 @@
       this.paused = true; FCK.pauseMenu(this); FCK.Audio.ambience(0.1, this.m.weather, true);
     }
     resume() { UI.closeModal(); this.paused = false; this.acc = 0; this.last = performance.now(); this.input.clearEdges(); this.redrawTactics = null; }
-    quit() { const hk = this.cfg && this.cfg.hook; if (hk && hk.quit) { this.endMatch(); UI.stack = []; UI.cur = null; hk.quit(); return; } const cr = this.cfg && this.cfg.career, cd = this.cfg && this.cfg.cards, tn = this.cfg && this.cfg.tourney, du = this.cfg && this.cfg.duel; this.endMatch(); UI.stack = []; UI.cur = null; if (cr && FCK.Career && FCK.Career.cur) { UI.stack = ['home']; UI.show('career'); } else if (cd && FCK.Cards) { UI.stack = ['home']; UI.show('cards'); } else if (tn && FCK.Tourney && FCK.Tourney.S) { UI.stack = ['home', 'tourney']; UI.show('tourneyHub'); } else if (du && FCK.Duel) { UI.stack = ['home']; UI.show('duel'); } else UI.show('home'); }
+    quit() { const hk = this.cfg && this.cfg.hook; if (hk && hk.quit) { this.endMatch(); UI.stack = []; UI.cur = null; hk.quit(); return; } const cr = this.cfg && this.cfg.career, cd = this.cfg && this.cfg.cards, tn = this.cfg && this.cfg.tourney, du = this.cfg && this.cfg.duel; this.endMatch(); UI.stack = []; UI.cur = null; if (cr && FCK.Career && FCK.Career.cur) { UI.stack = ['home']; UI.show(FCK.Career.cur.pro ? 'proHub' : 'career'); } else if (cd && FCK.Cards) { UI.stack = ['home']; UI.show('cards'); } else if (tn && FCK.Tourney && FCK.Tourney.S) { UI.stack = ['home', 'tourney']; UI.show('tourneyHub'); } else if (du && FCK.Duel) { UI.stack = ['home']; UI.show('duel'); } else UI.show('home'); }
 
     // ----- substitutions -----
     queueSub(team, outP, inData) {

@@ -185,6 +185,7 @@ body:not(.in-match) #hud .sb { display: none; }
 .tb-c { width: 64px; height: 64px; right: 14px; bottom: 104px; border-color: var(--yellow); }
 .tb-d { width: 64px; height: 64px; right: 94px; bottom: 140px; border-color: var(--magenta); }
 .tb-s { width: 56px; height: 56px; right: 192px; bottom: 8px; font-size: 1.5rem; }
+.tb-e { width: 54px; height: 54px; right: 188px; bottom: 74px; font-size: 1.3rem; border-color: #ffd34d; }
 body.kids .tb-a, body.kids .tb-b { width: 86px; height: 86px; }
 body.touch-on #hud .ticker { bottom: auto; top: calc(var(--gut-t) + 98px); }
 body.touch-on #hud .hint-bar { bottom: auto; top: calc(var(--gut-t) + 138px); }
@@ -647,3 +648,4 @@ details.adv.big .grid2 { margin-top: 6px; }
 .pfx-n { font-size: .75rem; opacity: .7; letter-spacing: .12em; } .pfx-name { display: block; font-size: 1.7rem; text-transform: uppercase; letter-spacing: .04em; } .pfx-sub { font-size: .95rem; opacity: .85; }
 @media (max-width: 700px) { .pfx-info { left: 0; width: 100%; bottom: calc(var(--gut-b, 10px) + 76px); } .pfx-name { font-size: 1.3rem; } }
 .lp-chip .lp-ovr b { font-size: 1.02em; letter-spacing: -.02em; } .lp-chip .lp-ovr.elite { box-shadow: 0 0 0 2px #f5c542, 0 2px 6px rgba(0,0,0,.45); } .lp-chip .lp-ovr.gold { box-shadow: 0 0 0 2px #d8b040, 0 2px 6px rgba(0,0,0,.45); }
+.flagimg { height: 1em; width: auto; vertical-align: -.14em; border-radius: 2px; margin: 0 .12em; }

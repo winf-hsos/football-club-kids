@@ -1,4 +1,4 @@
-/* FCK - crest.js : generated crests, kits, shirts (all own artwork, no club logos) */
+/* FCK - crest.js : generated crests, kits, shirts; real club logos (FCK.CLUB_LOGOS) where available */
 (function (FCK) {
   'use strict';
 
@@ -188,6 +188,9 @@
     return c;
   };
   FCK.crestDataUrl = function (club, size) {
+    // real club logos for clubs of the world (own, edited-new and card-mode clubs keep their generated crest)
+    const logo = FCK.CLUB_LOGOS && !club.custom && !club.mine && FCK.World && FCK.World.byId && FCK.World.byId[club.id] && FCK.CLUB_LOGOS[club.name];
+    if (logo) return 'data:image/png;base64,' + logo;
     const c = FCK.crestCanvas(club, size);
     return c ? c.toDataURL() : '';
   };
