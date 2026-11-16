@@ -26,7 +26,7 @@ Stufe 1: spielbares Freundschaftsspiel. Stufe 2: Welt & Karriere (Ligen, Pokale,
 
 > **Nationaltrainer-Karriere** (Karriere → „Nationaltrainer“): Du übernimmst eines von 194 Ländern und spielst WM (2026, 2030, …) und EM (2028, 2032, …); Nationen außerhalb Europas spielen stattdessen ihre Kontinentalmeisterschaft (Copa América, Afrika-Cup, Asienmeisterschaft, Gold Cup, Ozeanienmeisterschaft – simuliert). Der Verband setzt je nach Stärke ein Ziel (Gruppenphase überstehen bis Halbfinale); Erfolg erhöht das Vertrauen, Misserfolg oder verpasste Qualifikation senkt es – bei 0 wirst du entlassen und kannst ein anderes Land übernehmen. Test: `node test/ntcareer.js`.
 
-> Echte Vereinslogos und Spielernamen: Für rund 680 Vereine (Bundesliga bis Regionalliga, Premier League bis League Two, Spanien, Italien, Frankreich, Niederlande, Portugal, Türkei u. a.) erscheinen die echten Logos überall im Spiel und die Kader haben echte Spielernamen; die Stärken werden weiter aus der Vereinsstärke berechnet.
+> Echte Vereinslogos und Spielernamen: Für rund 1.450 Vereine erscheinen die echten Logos (u. a. Bundesliga bis Regionalliga, Premier League bis League Two, Spanien, Italien, Frankreich, Niederlande, Portugal, Türkei u. a.) überall im Spiel; für rund 680 Vereine haben die Kader und die Ultimate-Team-Karten echte Spielernamen; die Stärken werden weiter aus der Vereinsstärke berechnet.
 
 > In den Aufstellungs-Editoren (Karriere, Manager, Freundschaftsspiel, Wettbewerbe) zeigen die Spielerkreise die Gesamtstärke statt der Rückennummer; Goldrand bei sehr starken Spielern.
 
