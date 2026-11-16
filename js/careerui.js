@@ -89,6 +89,8 @@
     };
     if (auto) menu.appendChild(item(T('career.continue'), auto.club.name + ' · ' + C.seasonLabel(auto.year) + ' · ' + auto.name, () => { if (C.loadAuto()) { C.tab = 'home'; UI.show(C.cur.pro ? 'proHub' : 'career'); } else UI.toast(T('career.loadfail')); }, 'primary'));
     menu.appendChild(item(T('career.new'), T('career.new.sub'), () => UI.show('careerNew'), auto ? '' : 'primary'));
+    const ntc = FCK.NTCareer && FCK.NTCareer.load();
+    if (FCK.NTCareer) menu.appendChild(item(ntc ? T('nt.menu.cont', { n: FCK.Tourney.natName(ntc.nat) }) : T('nt.menu'), T('nt.menu.sub'), () => UI.show(ntc ? 'ntHub' : 'ntNew')));
     menu.appendChild(item(T('career.slots'), T('career.slots.sub'), () => UI.show('careerSaves')));
     menu.appendChild(item(T('career.import'), T('career.import.sub'), () => importDialog()));
     menu.appendChild(item(T('imp.title'), FCK.Import.count() ? T('imp.active', { n: FCK.Import.count() }) : T('imp.sub'), () => playersDialog()));

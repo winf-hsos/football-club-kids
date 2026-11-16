@@ -197,7 +197,8 @@
       const king = Tn.topScorers(S, 1)[0];
       if (king) ch.appendChild(h('div', { class: 'pod' }, h('span', { text: '👟 ' + T('tn.king') }), h('b', { text: king.n + ' (' + nm(king.id) + ') · ' + king.g })));
       if (S.me) ch.appendChild(h('p', { class: 'ok', text: T('tn.you') + ': ' + placeLabel(S, S.me) }));
-      ch.appendChild(h('div', { class: 'row center' }, UI.btn(T('tn.again'), () => { Tn.clear(); UI.stack = ['home']; UI.show('tourney', null, true); }, 'primary')));
+      if (S.ntc) ch.appendChild(h('div', { class: 'row center' }, UI.btn(T('nt.back'), () => { UI.stack = ['home']; UI.show('ntHub', null, true); }, 'primary')));
+      else ch.appendChild(h('div', { class: 'row center' }, UI.btn(T('tn.again'), () => { Tn.clear(); UI.stack = ['home']; UI.show('tourney', null, true); }, 'primary')));
       body.appendChild(ch);
     } else {
       const mine = Tn.myFixture(S);

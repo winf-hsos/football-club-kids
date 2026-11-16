@@ -24,6 +24,8 @@ Stufe 1: spielbares Freundschaftsspiel. Stufe 2: Welt & Karriere (Ligen, Pokale,
 
 > Die Spieler bleiben nicht starr auf ihrer Position: Außenspieler schalten sich über die Flanke mit nach vorn ein, Mittelfeldspieler laufen spät in den Strafraum, ein Stürmer lässt sich zum Aufbau fallen, und beim Verteidigen sichert ein zweiter Spieler hinter dem Ballführer ab. Die Mannschaft bleibt dabei kompakt (Test: `node test/fluid_roles.js`).
 
+> **Nationaltrainer-Karriere** (Karriere → „Nationaltrainer“): Du übernimmst eines von 194 Ländern und spielst WM (2026, 2030, …) und EM (2028, 2032, …); Nationen außerhalb Europas spielen stattdessen ihre Kontinentalmeisterschaft (Copa América, Afrika-Cup, Asienmeisterschaft, Gold Cup, Ozeanienmeisterschaft – simuliert). Der Verband setzt je nach Stärke ein Ziel (Gruppenphase überstehen bis Halbfinale); Erfolg erhöht das Vertrauen, Misserfolg oder verpasste Qualifikation senkt es – bei 0 wirst du entlassen und kannst ein anderes Land übernehmen. Test: `node test/ntcareer.js`.
+
 > Echte Vereinslogos und Spielernamen: Für rund 680 Vereine (Bundesliga bis Regionalliga, Premier League bis League Two, Spanien, Italien, Frankreich, Niederlande, Portugal, Türkei u. a.) erscheinen die echten Logos überall im Spiel und die Kader haben echte Spielernamen; die Stärken werden weiter aus der Vereinsstärke berechnet.
 
 > In den Aufstellungs-Editoren (Karriere, Manager, Freundschaftsspiel, Wettbewerbe) zeigen die Spielerkreise die Gesamtstärke statt der Rückennummer; Goldrand bei sehr starken Spielern.
@@ -31,6 +33,8 @@ Stufe 1: spielbares Freundschaftsspiel. Stufe 2: Welt & Karriere (Ligen, Pokale,
 > Realistischere Spieler in der 3D-Ansicht: runde, glatt schattierte Körper statt Klötzen, Gesicht mit Augen, Brauen, Nase, Ohren und Mund, Hände bzw. Torwarthandschuhe, Fußballschuhe mit Sohle, Trikot mit Kragen, Ärmelbündchen und Rückennummer, Socken mit Bündchen, Bärte und Frisuren; dazu eine natürlichere Lauf- und Standanimation (Becken und Schultern drehen gegeneinander, Atmen, Kopfbewegung).
 
 > Tricks mit dem Ball: Trick-Taste = Übersteiger (Gegner werden ausgetanzt, kurzer Antritt), mit Sprint = Rainbow Flick (Ball über Kopf und Gegner), Stick seitlich = Roulette (Drehung). Gegner im Weg werden oft aus dem Tritt gebracht, Tackles gegen dich sind kurz erschwert. Die CPU benutzt Tricks selbst (Dribbler öfter). Test: `node test/skills.js`.
+
+> Die Fans im Stadion sind lebendiger: Haare, Arme (bei Toren und Chancen reißen sie die Arme hoch) und Schals, die bei Jubel geschwenkt werden.
 
 > Kopfbälle: Feldspieler köpfen hohe Bälle (Flanken, lange Bälle, Befreiungsschläge). Vor dem Tor geht der Kopfball aufs Tor, in der eigenen Hälfte wird weit geklärt, sonst wird der Ball weitergeleitet. Wer köpft, hängt von Physis und Abwehr ab; mit Richtungseingabe lenkt man den Kopfball selbst (Test: `node test/headers.js`).
 
@@ -72,7 +76,7 @@ Vereinfachungen: Die Vereine der Welt tauschen untereinander keine Spieler; ihre
 
 ## Inhalt Stufe 4 – Ultimate Team (Hauptmenü → Ultimate Team)
 - **Karten**: Generierte Spieler (Vereinsnamen echt, Spieler erfunden) in fünf Seltenheiten: Bronze (45–64), Silber (65–74), Gold (75–82), Elite (83–89), Icon (90+). Jede Karte hat Position, Land, Verein, Liga, Alter und Spielwerte; „Rare“-Karten glänzen.
-- **Spezialkarten**: Ab Gold gibt es seltene Sonderstile mit eigenem Aussehen: Ones to Watch (Gold), Team der Woche, Team der Saison, Held und Spieler des Monats (Elite) sowie Team des Jahres (Icon-Stufe). Sie sind mehr wert und lassen sich in der Sammlung nach Stil filtern. Alle Spieler sind erfunden.
+- **Spezialkarten**: Ab Gold gibt es seltene Sonderstile mit eigenem Aussehen: Ones to Watch (Gold), Team der Woche, Team der Saison, Held und Spieler des Monats (Elite) sowie Team des Jahres und Team des Turniers (Icon-Stufe); dazu Road to the Final, Sommer-Edition, Zukunftsstar, Hundertschaft und Winter-Edition. Sie sind mehr wert und lassen sich in der Sammlung nach Stil filtern. Alle Spieler sind erfunden.
 - **Start**: Starter-Team (21 Bronze-Karten), 3.000 Münzen, 2 Bronze-Packs und ein kostenloses Bronze-Pack pro Tag.
 - **3D-Pack-Öffnung**: Beim Öffnen schwebt das Pack im Raum (mit three.js). Tippen (oder Enter/Leertaste) lässt es wackeln, aufreißen und in einem Lichtblitz die Karten ausfächern. Dann wird eine Karte nach der anderen enthüllt: Der Spieler läuft in 3D vor seine Karte und feiert – je besser die Karte, desto größer die Show (lässig mit Hand in der Hüfte, Zeigen und Winken, Ballkunststücke, Drehsprung mit Druckwelle, bei Icon- und Spezialkarten sogar Salto mit Lichtshow und Kamerafahrt). „Weiter“ springt zur nächsten Karte, „Überspringen“ oder Esc beendet die Animation; ohne WebGL oder bei „Bewegung reduzieren“ entfällt sie. Danach siehst du alle Karten in der Übersicht.
 - **Packs**: Bronze, Silber, Gold, Premium und Legenden-Pack mit angezeigten Chancen und garantierter Mindest-Seltenheit; Aufdeck-Animation. Münzen gibt es nur im Spiel, echtes Geld wird nie gebraucht.
