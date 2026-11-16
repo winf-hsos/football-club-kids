@@ -205,7 +205,8 @@
         case 'halftime': A.play('whistle3'); hud.flash(e.et ? T('bn.etHalf') : T('bn.half'), 'info', 1800); break;
         case 'extratime': A.play('whistle3'); hud.flash(T('bn.extra'), 'info', 1800); break;
         case 'penaltiesNext': A.play('whistle3'); hud.flash(T('bn.pens'), 'warn', 1800); break;
-        case 'end': A.play('whistle3'); hud.flash(T('bn.full'), 'info', 2200); break;
+        case 'end': if (!m.ceremony) A.play('whistle3'); hud.flash(T('bn.full'), 'info', 2200); break;
+        case 'ceremony': A.play('whistle3'); A.play('goal'); hud.flash(T('bn.trophy'), 'goal', 3600, e.team !== undefined ? m.teams[e.team].club.name : '', m.teams[e.team]); break;
         case 'restart': if (['corner', 'freekick', 'kickoff'].includes(e.kind) && this.m.mode !== 'shootout' && this.m.time > 2) hud.flash(T('rs.' + e.kind), 'info', 900, ((e.team && e.team.club) ? e.team : this.m.teams[e.team]).club.short); break;
         case 'curl': A.play('ooh'); break;
         case 'restartReady': if (e.restart && (e.restart.type === 'kickoff' || e.restart.type === 'penalty')) A.play('whistle'); break;
@@ -335,6 +336,7 @@
       let n = 0;
       while (this.acc >= STEP && n < 6 * ff) {
         for (let i = 0; i < m.slots.length; i++) { m.slots[i].input = this.input.consume(i); if (FCK.rotInput) FCK.rotInput(m.slots[i].input); }
+        if (m.mode === 'ceremony' && m.modeT > 4 && m.slots.some((s) => s.input && (s.input.pressed.some(Boolean) || s.input.pause))) m.modeT = 15; // any button skips the ceremony
         m.update(STEP);
         this.acc -= STEP; n++;
         if (m.mode === 'goalwait' && !this.replay) break;

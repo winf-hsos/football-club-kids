@@ -163,7 +163,7 @@
     squads.forEach((sq, k) => { const cid = k === 0 ? f.h : f.a; sq.lineup.concat(sq.bench).forEach((p) => { p.cid = cid; }); });
     const lv = FCK.LEVELS[c.level] || FCK.LEVELS.pro;
     const settings = Object.assign({}, FCK.DEFAULT_MATCH, FCK.setup.match, lv, {
-      level: c.level, halfMins: c.halfMins, knockout: info.knockout, aggLead: info.aggLead || 0,
+      level: c.level, halfMins: c.halfMins, knockout: info.knockout, aggLead: info.aggLead || 0, trophy: !!f.neutral,
       weather: rng.pick(['clear', 'clear', 'clear', 'cloudy', 'cloudy', 'rain', 'rain', 'fog', 'snow'].slice(0, sim.pos.w > 14 && sim.pos.w < 34 ? 9 : 7)),
       tod: info.comp === 'E' || f.neutral ? 'night' : rng.pick(['day', 'day', 'evening']),
       homeFormation: hf, awayFormation: af, homeStyle: hs, awayStyle: as,

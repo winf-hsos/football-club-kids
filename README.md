@@ -36,6 +36,10 @@ Stufe 1: spielbares Freundschaftsspiel. Stufe 2: Welt & Karriere (Ligen, Pokale,
 
 > Die Fans im Stadion sind lebendiger: Haare, Arme (bei Toren und Chancen reißen sie die Arme hoch) und Schals, die bei Jubel geschwenkt werden.
 
+> **Jubel und Pokalfeier:** Nach einem Tor jubelt der Torschütze auf eine von vier Arten (Lauf zur Eckfahne mit ausgebreiteten Armen, Kniegleiter, Drehung, Zeigefinger zum Himmel), die Mitspieler laufen hin und jubeln mit, die Gegner stehen mit den Händen in den Hüften da, und die Kamera umkreist den Torschützen. Nach einem **Finale** (Pokalfinale, WM-/EM-Finale) stellen sich alle Spieler des Siegers – auch die Ersatzspieler – auf ein dreistufiges Podest, der Kapitän hebt den Pokal (Pokal oder WM-Pokal) in die Luft, es regnet Konfetti, bevor das Ergebnis kommt (jede Taste überspringt). Tests: `node test/goal_cel.js`, `node test/ceremony.js`.
+
+> **Größere Stadien, echte Proportionen:** Die Tribünen haben 20 statt 9 Reihen mit Dach und mehr Fans, die Spieler sind in Echtgröße (ca. 1,85 m auf dem 105-m-Platz) und der Ball ist kleiner.
+
 > Kopfbälle: Feldspieler köpfen hohe Bälle (Flanken, lange Bälle, Befreiungsschläge). Vor dem Tor geht der Kopfball aufs Tor, in der eigenen Hälfte wird weit geklärt, sonst wird der Ball weitergeleitet. Wer köpft, hängt von Physis und Abwehr ab; mit Richtungseingabe lenkt man den Kopfball selbst (Test: `node test/headers.js`).
 
 > Unten rechts im Hauptmenü steht der Button „♥ Spenden“. Im Dialog wählst du einen Betrag (1/2/5/10 € oder frei), spendest über PayPal und schickst deinen Wunsch per E-Mail. Je höher die Spende, desto höher die Priorität des Wunsches. Im Hauptmenü (nie im Spiel) erscheint alle 15 Minuten eine Erinnerung mit „Später“ und „Nicht mehr anzeigen“. Das Spiel bleibt kostenlos und ohne Werbung.

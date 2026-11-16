@@ -23,9 +23,9 @@
   const PM = 7; // metres of grass drawn around the pitch lines
   const AD_OFF = 3.5; // ad boards: distance from the lines
   const SO = 8.5; // stands: distance of the first row from the lines
-  const ROWS = 9, ROW_D = 0.85, ROW_H = 0.55, ROW_H0 = 1.1;
-  const SC = 1.12; // player scale (slightly chunky for readability)
-  const BALL_R = 0.28;
+  const ROWS = 20, ROW_D = 0.85, ROW_H = 0.6, ROW_H0 = 1.1;
+  const SC = 0.93; // player scale: the model is ~2 m tall at scale 1, so about 1.85 m on a 105 m pitch
+  const BALL_R = 0.15; // slightly bigger than a real ball (0.11) so it stays visible
   const HEMI = Math.PI / 2;
 
   // ---------------------------------------------------------------- small helpers
@@ -444,6 +444,15 @@
       const inward = [(L / 2 - (a[0] + b[0]) / 2), 0, (GY - (a[1] + b[1]) / 2)];
       gbs[s].quadN([a[0], 0, a[1]], [b[0], 0, b[1]], [b[0], hW + 2.4, b[1]], [a[0], hW + 2.4, a[1]], wall, inward[0], 0, inward[2]);
     }
+    // roof ring: a dark canopy slanting inwards over the upper rows (both faces)
+    const RP = ringPts(oW - 0.2), RI2 = ringPts(oW - 9.5), roofCol = snow ? '#c9d2dc' : '#242a38', roofUnder = '#161b26';
+    for (let s = 0; s < 4; s++) {
+      const a = RP[s], b = RP[(s + 1) % 4], c = RI2[(s + 1) % 4], d = RI2[s];
+      const y0 = hW + 3.4, y1 = hW + 2.2;
+      gbs[s].quadN([a[0], y0, a[1]], [b[0], y0, b[1]], [c[0], y1, c[1]], [d[0], y1, d[1]], roofCol, 0, 1, 0);
+      gbs[s].quadN([a[0], y0 - 0.05, a[1]], [b[0], y0 - 0.05, b[1]], [c[0], y1 - 0.05, c[1]], [d[0], y1 - 0.05, d[1]], roofUnder, 0, -1, 0);
+      gbs[s].quadN([d[0], y1 - 0.05, d[1]], [c[0], y1 - 0.05, c[1]], [c[0], y1 + 0.35, c[1]], [d[0], y1 + 0.35, d[1]], '#323a4c', (L / 2 - (d[0] + c[0]) / 2), 0, (GY - (d[1] + c[1]) / 2));
+    }
     return gbs.map((g) => g.build());
   }
 
@@ -701,6 +710,12 @@
       if (this.celeb > 0.01) {
         const pump = Math.sin(t * 12 + this.seed) * 0.25;
         aL = lerp(aL, 2.7 + pump, this.celeb); aR = lerp(aR, 2.7 - pump, this.celeb); fL = lerp(fL, 0.2, this.celeb); fR = lerp(fR, 0.2, this.celeb); spL = lerp(spL, 0.5, this.celeb); spR = lerp(spR, 0.5, this.celeb);
+      }
+      // dejected after a goal against: head down, hands on the hips
+      if (p.sadT > 0 && st !== 'celebrate') {
+        const q = clamp(p.sadT / 0.4, 0, 1);
+        aL = lerp(aL, 0.85, q); aR = lerp(aR, 0.85, q); fL = lerp(fL, 1.7, q); fR = lerp(fR, 1.7, q); spL = lerp(spL, 0.75, q); spR = lerp(spR, 0.75, q);
+        ch.rotation.z += 0.28 * q; bn[B.HEAD].rotation.z += 0.45 * q;
       }
       // skill moves (step-over, roulette, rainbow flick) override the legs / hips for their duration
       if (p.skillT > 0 && p.skillKind) {
@@ -1080,7 +1095,7 @@
       const rnd = U.makeRng(4242), slots = seatSlots();
       let total = 0; slots.forEach((s) => { total += s.length; });
       const att = (m.crowd && m.crowd.att) || 20000, cap = (m.crowd && m.crowd.cap) || att;
-      const target = clamp(att / 15, 800, 5200) * cfg.crowd;
+      const target = clamp(att / 8, 1500, 8500) * cfg.crowd;
       const fill = Math.min(0.95, target / total) * (0.55 + 0.45 * clamp(att / cap, 0.3, 1));
       const cA = m.teams[0].kit.shirt, cB = m.teams[1].kit.shirt;
       const pal = [cA, cA, cA, cA, cB, '#e8edf7', '#f2c14e', '#7aa2ff', '#ff7a7a', '#2a3350'];
@@ -1152,8 +1167,9 @@
 
     buildFloods(env, tod) {
       const gb = new GB(), cols = [];
-      const spots = [[-22, -22], [L + 22, -22], [L + 22, W + 22], [-22, W + 22]];
-      spots.forEach((s) => { gb.box(s[0] - 0.5, 0, s[1] - 0.5, s[0] + 0.5, 34, s[1] + 0.5, '#6b7280'); });
+      const fo = SO + ROWS * ROW_D + 3; // outside the bigger stands
+      const spots = [[-fo, -fo], [L + fo, -fo], [L + fo, W + fo], [-fo, W + fo]];
+      spots.forEach((s) => { gb.box(s[0] - 0.6, 0, s[1] - 0.6, s[0] + 0.6, 40, s[1] + 0.6, '#6b7280'); });
       this.add(new THREE.Mesh(gb.build(), new THREE.MeshLambertMaterial({ vertexColors: true })));
       const lampTex = this.track(canvasTex(128, 64, (g) => {
         g.fillStyle = '#2a2f3a'; g.fillRect(0, 0, 128, 64);
@@ -1237,6 +1253,7 @@
       const b = view.ball, mm = opts.match;
       const fr = { x: b.x, y: b.y, zm: this.srcLive ? 1 : 0.82, lead: 1 };
       if (!mm) return fr;
+      if (mm.mode === 'ceremony') { fr.x = L / 2; fr.y = GY; fr.zm = 0.5; fr.lead = 0; return fr; }
       const rs = mm.restart;
       if ((mm.mode === 'goal' || mm.mode === 'goalwait') && mm.lastGoal && mm.lastGoal.scorer) {
         const sc = mm.lastGoal.scorer; fr.x = sc.x; fr.y = sc.y; fr.zm = 0.7; fr.lead = 0;
@@ -1266,6 +1283,7 @@
       this.updateCamera(view, dt, opts);
       this.updateBall(view, dt);
       this.updateModels(view, dt, opts);
+      this.updateCeremony(view, dt, opts);
       this.updateDecals(view, dt, opts);
       this.updateParticles(view, dt);
       this.uT.value = this.t; this.uA.value = 0.012 + this.mood * 0.05 + this.roar * 0.42; this.uR.value = Math.min(1, this.roar * 1.4 + this.mood * 0.12);
@@ -1320,6 +1338,20 @@
         cam.x += (tx - cam.x) * k; cam.y += (ty - cam.y) * k;
         look = new THREE.Vector3(cam.x, 0, cam.y);
         pos = new THREE.Vector3(cam.x, Math.sin(pitch) * d, cam.y + Math.cos(pitch) * d);
+      }
+      // trophy ceremony: low camera in front of the podium, slowly drifting
+      if (this.srcLive && opts.match && opts.match.mode === 'ceremony') {
+        const t = opts.match.modeT || 0, e = smooth(clamp(t / 1.5, 0, 1));
+        const cp = new THREE.Vector3(L / 2 + Math.sin(t * 0.18) * 7, 5.2 + Math.min(1.2, t * 0.1), GY + 25 - Math.min(3, t * 0.3)), cl = new THREE.Vector3(L / 2, 1.8, GY - 1.2);
+        pos.lerp(cp, e); look.lerp(cl, e); fov = lerp(fov, 40, e);
+      }
+      // goal close-up: orbit around the scorer while the team celebrates (blends in and out)
+      const mmc = opts.match;
+      if (this.srcLive && mmc && mmc.mode === 'goal' && mmc.lastGoal && mmc.lastGoal.scorer && mode !== 'goal') {
+        const sc = mmc.lastGoal.scorer, t = mmc.modeT || 0, ang = 0.7 + t * 0.4, R = 7.5;
+        const e = smooth(clamp(t / 0.6, 0, 1)) * (1 - smooth(clamp((t - 3.3) / 0.9, 0, 1)));
+        const cp = new THREE.Vector3(sc.x + Math.cos(ang) * R, 2.3, sc.y + Math.sin(ang) * R * 0.8), cl = new THREE.Vector3(sc.x, 1.3, sc.y);
+        pos.lerp(cp, e); look.lerp(cl, e); fov = lerp(fov, 36, e);
       }
       if (this.debugCam) { pos.set(...this.debugCam.pos); look.set(...this.debugCam.look); fov = this.debugCam.fov || 40; }
       else if (this.camBlend < 1 && this.camFrom) {
@@ -1449,7 +1481,7 @@
 
     placeModel(M, p, dt, t, b, rs, isRef) {
       const g = M.group;
-      g.position.set(p.x, 0, p.y);
+      g.position.set(p.x, p.elev || 0, p.y);
       g.rotation.y = -(p.ang || 0);
       const dxb = b.x - p.x, dyb = b.y - p.y;
       const db = Math.sqrt(dxb * dxb + dyb * dyb);
@@ -1535,6 +1567,60 @@
     }
 
     // ------------------------------------------------------------ weather + confetti
+    // podium + trophy of the cup ceremony (built on first use, shown only while the ceremony runs)
+    buildTrophy(kind) {
+      const gold = new THREE.MeshStandardMaterial({ color: 0xe6b422, metalness: 0.95, roughness: 0.22, emissive: 0x3a2600, emissiveIntensity: 0.35 });
+      const dark = new THREE.MeshStandardMaterial({ color: kind === 'wm' ? 0x1f7a3a : 0x20242e, metalness: 0.4, roughness: 0.5 });
+      const g = new THREE.Group();
+      const P = (a) => a.map((x) => new THREE.Vector2(x[0], x[1]));
+      if (kind === 'wm') {
+        // world cup: green malachite base, golden spiral body carrying the globe
+        g.add(new THREE.Mesh(new THREE.LatheGeometry(P([[0, 0], [0.26, 0], [0.26, 0.1], [0.24, 0.12], [0.24, 0.2], [0.26, 0.22], [0.26, 0.3], [0, 0.3]]), 28), dark));
+        g.add(new THREE.Mesh(new THREE.LatheGeometry(P([[0.1, 0.3], [0.2, 0.4], [0.26, 0.55], [0.3, 0.72], [0.27, 0.85], [0.18, 0.95], [0.15, 1.05], [0.1, 1.08]]), 28), gold));
+        const globe = new THREE.Mesh(new THREE.SphereGeometry(0.2, 24, 18), gold); globe.position.y = 1.22; g.add(globe);
+        const ring = new THREE.Mesh(new THREE.TorusGeometry(0.2, 0.012, 8, 32), gold); ring.position.y = 1.22; ring.rotation.x = 1.2; g.add(ring);
+      } else {
+        // cup: marble base, stem, big bowl with the typical handles
+        g.add(new THREE.Mesh(new THREE.CylinderGeometry(0.33, 0.36, 0.16, 28), dark)).position.y = 0.08;
+        g.add(new THREE.Mesh(new THREE.LatheGeometry(P([[0, 0.16], [0.26, 0.16], [0.22, 0.22], [0.09, 0.3], [0.07, 0.55], [0.11, 0.62], [0.2, 0.7], [0.3, 0.86], [0.36, 1.05], [0.37, 1.18], [0.33, 1.2], [0.3, 1.1], [0.2, 0.95], [0.12, 0.85], [0.0, 0.85]]), 32), gold));
+        [-1, 1].forEach((d) => { const h = new THREE.Mesh(new THREE.TorusGeometry(0.26, 0.035, 10, 24, Math.PI * 1.15), gold); h.position.set(d * 0.31, 0.98, 0); h.rotation.set(0, 0, d > 0 ? -0.6 : Math.PI + 0.6 - 1.15 + 1.15); g.add(h); });
+      }
+      return g;
+    }
+    updateCeremony(view, dt, opts) {
+      const mm = opts.match, on = !!(this.srcLive && mm && mm.mode === 'ceremony' && mm.ceremony);
+      if (!this.cer) {
+        if (!on) return;
+        const grp = new THREE.Group();
+        const stone = new THREE.MeshStandardMaterial({ color: 0x8e95a3, roughness: 0.8 }), cloth = new THREE.MeshStandardMaterial({ color: 0xd4162a, roughness: 0.9 });
+        // three terraces (all winners stand on them), team-coloured cloth on the front of every step
+        [0, 1, 2].forEach((k) => {
+          const hgt = 0.45 + k * 0.45;
+          const box = new THREE.Mesh(new THREE.BoxGeometry(21, hgt, 2.3), stone); box.position.set(0, hgt / 2, 0.9 - k * 2.1 - 0.9);
+          const front = new THREE.Mesh(new THREE.BoxGeometry(21, 0.28, 0.05), cloth); front.position.set(0, hgt - 0.2, 0.9 - k * 2.1 + 0.27);
+          grp.add(box, front);
+        });
+        const rug = new THREE.Mesh(new THREE.BoxGeometry(22, 0.03, 8), cloth); rug.position.set(0, 0.015, -2.6); grp.add(rug);
+        this.add(grp); this.cer = { grp, cloth, trophy: null, kind: null, next: 0 };
+        grp.visible = false;
+      }
+      const C = this.cer; if (!C) return;
+      C.grp.visible = on;
+      if (on && this.ball) this.ball.visible = false;
+      if (!on) { if (C.trophy) C.trophy.visible = false; return; }
+      const cer = mm.ceremony, cap = cer.cap, team = mm.teams[cer.team];
+      if (C.kind !== cer.kind) { if (C.trophy) C.grp.parent.remove(C.trophy); C.trophy = this.buildTrophy(cer.kind); C.kind = cer.kind; this.add(C.trophy); }
+      C.cloth.color.set(team.kit.shirt);
+      C.grp.position.set(L / 2, 0, GY + 0.9);
+      C.lift = Math.min(1, (C.lift || 0) + ((mm.modeT || 0) > 5 ? dt * 0.55 : 0));
+      const lf = smooth(C.lift);
+      C.trophy.visible = true;
+      C.trophy.position.set(cap.x + 0.12, (cap.elev || 0) + 1.2 + lf * 1.05 + Math.sin(this.t * 3) * 0.03 * lf, cap.y);
+      C.trophy.rotation.y += dt * 1.0; C.trophy.scale.setScalar(0.78);
+      this.roar = 1;
+      C.next -= dt;
+      if (C.next <= 0 && (mm.modeT || 0) > 3.5) { C.next = 1.1; this.celebrate(Math.random() < 0.5 ? 20 : 85, GY, team.kit.shirt, team.kit.shirt2 || team.kit.shirt); }
+    }
     celebrate(x, y, c1, c2) {
       if (!this.particles) { this.roar = 1; this.flash = 0.8; return; }
       if (this.mode3d && this.confP) {

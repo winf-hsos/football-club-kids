@@ -23,6 +23,7 @@
         case 'break': this.stepBreak(dt); break;
         case 'goalwait': this.stepIdle(dt); break;
         case 'shootout': this.stepShootout(dt); break;
+        case 'ceremony': this.stepCeremony(dt); break;
         default: break;
       }
       this.recAcc = (this.recAcc || 0) + dt;
@@ -66,19 +67,27 @@
       this.players.forEach((p) => { this.stop(p); });
       if (g && g.scorer) {
         const sc = g.scorer;
+        // one of several celebrations per goal: run to the corner (arms wide), knee slide, spin on the spot, point to the sky
+        if (!g.cel) g.cel = ['run', 'knee', 'spin', 'sky'][this.rng.int(0, 3)];
+        const cx = sc.x < L / 2 ? 3 : L - 3, cy = sc.y < GY ? 3 : W - 3;
+        if (this.modeT < 0.2 && sc.state !== 'celebrate' && sc.state !== 'slide') { sc.state = 'celebrate'; sc.stT = 3.2; g.corner = { x: cx, y: cy }; }
+        const run = g.cel === 'run' || g.cel === 'knee';
+        if (run && this.modeT < 2.0) this.moveTo(sc, cx, cy, 0.85);
+        else if (g.cel === 'knee' && this.modeT >= 2.0 && this.modeT < 2.1 && sc.state !== 'slide') { sc.state = 'slide'; sc.stT = 0.7; sc.vx = (cx - sc.x) * 0.4; sc.vy = (cy - sc.y) * 0.4; }
+        else if (this.modeT >= 2.0 && sc.state === 'idle') { sc.state = 'celebrate'; sc.stT = 1.8; }
+        // the team runs to the scorer and celebrates together (hugs, arms up); the others jog over
         this.teams[g.team].players.forEach((p) => {
-          if (p === sc || p.state === 'celebrate') return;
-          if (this.modeT < 3.2) this.moveTo(p, sc.x + (p.id % 3) * 0.9 - 0.9, sc.y + ((p.id >> 1) % 3) * 0.9 - 0.9, 0.55);
+          if (p === sc) return;
+          const tx = run && this.modeT < 2.0 ? sc.x : (g.corner ? Math.min(Math.max(sc.x, g.corner.x - 8), g.corner.x + 8) : sc.x), ty = sc.y;
+          const d = Math.hypot(sc.x - p.x, sc.y - p.y);
+          if (d > 4.2 && this.modeT < 4.4) this.moveTo(p, tx + (p.id % 3) * 0.9 - 0.9, ty + ((p.id >> 1) % 3) * 0.9 - 0.9, p.isGK ? 0.35 : 0.95);
+          else if (d <= 4.2 && p.state === 'idle') { p.state = 'celebrate'; p.stT = 1.5 + (p.id % 3) * 0.2; }
         });
-        if (this.modeT < 0.2 && sc.state !== 'celebrate') { sc.state = 'celebrate'; sc.stT = 2.5; }
-        if (this.modeT < 3.0 && sc.state === 'celebrate') {
-          // scorer runs towards the nearest corner flag
-          const cx = sc.x < L / 2 ? 2 : L - 2, cy = sc.y < GY ? 2 : W - 2;
-          this.moveTo(sc, cx, cy, 0.7);
-        }
+        // the opponents stand dejected (hands on hips, head down)
+        this.teams[1 - g.team].players.forEach((p) => { p.sadT = 3.4; });
       }
       this.simCommon(dt, false);
-      if (this.modeT > 4.2) {
+      if (this.modeT > 5.2) {
         if (this.autoProceed) this.proceed();
         else { this.mode = 'goalwait'; this.emit('goalwait', { goal: this.lastGoal }); }
       }
@@ -808,7 +817,62 @@
       const s0 = this.teams[0].score, s1 = this.teams[1].score;
       this.winner = this.shootout && this.shootout.winner >= 0 ? this.shootout.winner : (s0 + (this.set.aggLead || 0) > s1 ? 0 : s1 > s0 + (this.set.aggLead || 0) ? 1 : -1);
       this.computeResult();
+      // a final: the winners lift the trophy on a podium before the result is shown
+      if (this.set.trophy && this.winner >= 0 && !this.noCeremony) { this.startCeremony(); return; }
       this.emit('end', { result: this.result });
+    },
+
+    // ================= trophy ceremony =================
+    startCeremony() {
+      const w = this.teams[this.winner], l = this.teams[1 - this.winner];
+      this.mode = 'ceremony'; this.modeT = 0; this.restart = null;
+      // substitutes and staff of the winners run onto the pitch as well
+      let k = 0;
+      w.bench.slice().forEach((d) => { const np = new FCK.Player(this, w, d, 30 + k); np.pos = d.pos || 'CM'; np.x = 10 + (k % 9) * 10; np.y = -2.5; np.onPitch = true; w.players.push(np); w.all.push(np); k++; });
+      w.subbed.forEach((p) => { if (!p.onPitch) { p.onPitch = true; p.x = 10 + (k % 9) * 10; p.y = -2.5; p.state = 'idle'; p.vx = p.vy = 0; if (w.players.indexOf(p) < 0) w.players.push(p); k++; } });
+      this.rebuild();
+      const field = w.players.filter((p) => p.onPitch && !p.isGK).sort((a, b) => b.ovr - a.ovr);
+      this.capt = field[0] || w.players[0];
+      this.ceremony = { team: this.winner, cap: this.capt, kind: this.set.trophy };
+      this.players.forEach((p) => { p.ctrl = -1; });
+      this.emit('whistle', { kind: 'final' });
+      this.emit('ceremony', { team: this.winner, cap: this.capt, kind: this.set.trophy });
+    },
+    stepCeremony(dt) {
+      this.modeT += dt;
+      const C = this.ceremony, cx = L / 2, cy = GY, w = this.teams[C.team], l = this.teams[1 - C.team];
+      this.players.forEach((p) => { this.stop(p); });
+      // everybody of the winners stands on the podium: three terraces, the captain in the middle of the front row
+      if (!C.slots) {
+        const ps = w.players.filter((p) => p !== C.cap);
+        const rows = [[C.cap], [], []]; const cap = [7, 7, 99];
+        ps.forEach((p) => { const r = rows[0].length < cap[0] ? 0 : rows[1].length < cap[1] ? 1 : 2; rows[r].push(p); });
+        const slots = new Map();
+        rows.forEach((row, r) => {
+          // captain in the centre of row 0
+          const arr = r === 0 ? row.slice(1) : row, n = row.length;
+          const order = r === 0 ? [row[0]].concat(arr) : arr;
+          order.forEach((p, i) => {
+            const off = r === 0 ? (i === 0 ? 0 : (i % 2 ? 1 : -1) * Math.ceil(i / 2)) : i - (n - 1) / 2;
+            slots.set(p, { x: cx + off * 2.3, y: cy + 0.9 - r * 2.1, elev: 0.45 + r * 0.45 });
+          });
+        });
+        C.slots = slots;
+      }
+      w.players.forEach((p) => {
+        const sl = C.slots.get(p); if (!sl) return;
+        const d = Math.hypot(p.x - sl.x, p.y - sl.y);
+        if (d > 0.7) this.moveTo(p, sl.x, sl.y, 0.95);
+        if (d < 2.2) p.elev = Math.min(sl.elev, (p.elev || 0) + dt * 1.6);
+        if (d <= 0.9 && p.state === 'idle') { p.state = 'celebrate'; p.stT = 99; }
+        if (d <= 0.9) p.ang = Math.PI / 2;
+      });
+      l.players.forEach((p) => { p.sadT = 2; if (this.modeT > 4.5 && p.onPitch) this.moveTo(p, p.x, -3, 0.35); });
+      this.simCommon(dt, false);
+      if (this.modeT > 15) {
+        this.players.forEach((p) => { p.elev = 0; });
+        this.mode = 'over'; this.emit('end', { result: this.result });
+      }
     },
 
     // ================= penalty shootout =================
