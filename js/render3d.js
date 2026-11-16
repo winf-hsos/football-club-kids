@@ -607,7 +607,11 @@
       gb.bone = a[1];
       if (gkSleeve) gb.tube([R(0.9, 0.046, 0.046, 0, z), R(1.0, 0.054, 0.054, 0, z), R(1.17, 0.052, 0.052, 0, z)], 10, A, null);
       else gb.tube([R(0.9, 0.044, 0.044, 0, z), R(1.0, 0.054, 0.054, 0, z), R(1.17, 0.05, 0.05, 0, z)], 10, skin, null);
-      gb.sphere(0.005, 0.85, z, gkSleeve ? 0.065 : 0.048, 0.062, gkSleeve ? 0.06 : 0.04, 9, 7, gkSleeve ? glove : skin); // hand / glove
+      gb.sphere(0.005, 0.85, z, gkSleeve ? 0.085 : 0.048, gkSleeve ? 0.085 : 0.062, gkSleeve ? 0.078 : 0.04, 10, 8, gkSleeve ? glove : skin); // hand / glove (big keeper gloves)
+      if (gkSleeve) {
+        gb.tube([R(0.93, 0.056, 0.056, 0, z), R(0.97, 0.058, 0.058, 0, z)], 10, '#1b1f29', null); // glove wrist band
+        [-0.03, 0, 0.03].forEach((d) => gb.bar([0.05, 0.8, z + d - 0.0], [0.07, 0.76, z + d], 0.012, '#c9d0dc')); // finger ridges
+      }
     });
     // ---- legs: thigh (shorts then skin), knee, calf with sock, boot
     [[B.THIGH_L, B.SHIN_L, -1], [B.THIGH_R, B.SHIN_R, 1]].forEach((l) => {
@@ -716,7 +720,7 @@
       let knL = (0.1 + (0.2 + 0.95 * run) * Math.max(0, c)) * (spd < 0.35 ? 0.2 : 1) * freeze, knR = (0.1 + (0.2 + 0.95 * run) * Math.max(0, -c)) * (spd < 0.35 ? 0.2 : 1) * freeze;
       // idle keeper crouch
       let crouch = 0;
-      if (this.gk && st !== 'slide' && st !== 'dive' && st !== 'down' && spd < 3) crouch = 0.14;
+      if (this.gk && st !== 'slide' && st !== 'dive' && st !== 'down' && spd < 3) crouch = 0.2 + Math.sin(t * 2.2 + this.seed) * 0.015;
       thL += crouch * 1.1; thR += crouch * 1.1; knL += crouch * 2; knR += crouch * 2;
       // slide: lead leg out, trailing leg bent; dive: legs trail
       if (st === 'slide') { thR += 0.25; knR += 0.2; thL -= 0.35; knL += 1.1; }
@@ -762,9 +766,9 @@
       const swing = 0.3 + 0.75 * run, elbow = 0.3 + 0.95 * run;
       let aL = -s * swing * freeze, aR = s * swing * freeze, fL = elbow * freeze, fR = elbow * freeze, spL = 0.1 + 0.04 * Math.sin(t * 1.7 + this.seed), spR = spL;
       if (st === 'slide') { aL = 2.5; aR = 2.2; fL = 0.2; fR = 0.2; spL = 0.7; spR = 0.7; }
-      if (st === 'dive') { aL = 2.95; aR = 2.95; fL = 0.1; fR = 0.1; spL = 0.18; spR = 0.18; }
+      if (st === 'dive') { const du = clamp(1 - (p.stT || 0) / 0.65, 0, 1), rch = smooth(clamp(du / 0.3, 0, 1)); aL = lerp(1.2, 3.05, rch); aR = lerp(1.2, 3.05, rch); fL = lerp(0.9, 0.05, rch); fR = lerp(0.9, 0.05, rch); spL = lerp(0.9, 0.12, rch); spR = lerp(0.9, 0.12, rch); } // arms stretch out towards the ball
       if (st === 'down') { aL = 0.4 + Math.sin(t * 2 + this.seed) * 0.2; aR = -0.3; fL = 0.5; fR = 0.3; spL = 0.7; spR = 0.7; }
-      if (this.gk && lying < 0.2 && spd < 3.5) { aL = lerp(aL, 0.5, 0.8); aR = lerp(aR, 0.5, 0.8); fL = 0.9; fR = 0.9; spL = 0.5; spR = 0.5; }
+      if (this.gk && lying < 0.2 && spd < 3.5) { const sway = Math.sin(t * 2.2 + this.seed) * 0.08; aL = 0.55 + sway; aR = 0.55 - sway; fL = 1.1; fR = 1.1; spL = 0.95; spR = 0.95; } // ready stance: wide arms, bent elbows, hands forward
       if (kickW > 0) { spL = lerp(spL, 0.65, kickW); spR = lerp(spR, 0.65, kickW); aL = lerp(aL, 0.1, kickW); aR = lerp(aR, -0.2, kickW); }
       if (this.holdA > 0.01) { aL = lerp(aL, 1.15, this.holdA); aR = lerp(aR, 1.15, this.holdA); fL = lerp(fL, 1.3, this.holdA); fR = lerp(fR, 1.3, this.holdA); spL = lerp(spL, 0.05, this.holdA); spR = lerp(spR, 0.05, this.holdA); }
       if (this.thrw > 0.01) { aL = lerp(aL, 2.85, this.thrw); aR = lerp(aR, 2.85, this.thrw); fL = lerp(fL, 0.45, this.thrw); fR = lerp(fR, 0.45, this.thrw); spL = lerp(spL, 0.18, this.thrw); spR = lerp(spR, 0.18, this.thrw); }
