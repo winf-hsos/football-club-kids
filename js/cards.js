@@ -88,7 +88,14 @@
     const club = clubNear(rng, o - 3 + rng.gauss() * 6);
     const nt = natOf(FCK.pickNameGroup(club, rng, 0.55, 0.4));
     const dn = FCK.drawName(nt, rng);
-    const n = (dn.first ? dn.first + ' ' : '') + dn.last;
+    let n = (dn.first ? dn.first + ' ' : '') + dn.last;
+    // real player names of the club (FCK.REAL_SQ): better cards take names from the front of the list
+    const RL = FCK.REAL_SQ && FCK.REAL_SQ[club.name];
+    if (RL) {
+      const gi = { GK: 0, DF: 1, MF: 2, FW: 3 }[ROLE[pos]] || 2;
+      const list = RL[gi] && RL[gi].length ? RL[gi] : RL.find((l) => l && l.length);
+      if (list && list.length) n = list[Math.min(list.length - 1, Math.floor(list.length * Math.pow(rng.next(), 1.2 + (92 - o) / 38)))];
+    }
     const rare = r >= 3 ? 1 : (rng.chance(0.12) ? 1 : 0);
     const card = { id: 0, n, nt, cl: club.id, pos, o, r: Cards.rarOf(o), rare, ag: opt.ag || U.clamp(Math.round(25 + rng.gauss() * 4.5), 17, 38), sd: rng.int(1, 4e9), gl: 0, ap: 0 };
     const sk = Cards.rollStyle(card);

@@ -3,7 +3,7 @@ globalThis.window = { localStorage: null };
 globalThis.FCK = {};
 const fs = require('fs'), path = require('path');
 const load = (f) => { (0, eval)(fs.readFileSync(path.join(__dirname, '..', 'js', f + '.js'), 'utf8')); };
-['util', 'data', 'squad', 'natdata', 'names', 'crest', 'i18n', 'i18n_career', 'worlddata', 'world', 'season', 'sim', 'rules', 'ai', 'cards'].forEach(load);
+['util', 'data', 'squad', 'natdata', 'names', 'crest', 'i18n', 'i18n_career', 'worlddata', 'realsquads', 'world', 'season', 'sim', 'rules', 'ai', 'cards'].forEach(load);
 FCK.settings = { lang: 'de', profile: 'normal' };
 FCK.setup = { match: Object.assign({}, FCK.DEFAULT_MATCH) };
 FCK.presetSlots = () => [];
@@ -21,6 +21,12 @@ for (let i = 0; i < 6000; i++) {
 }
 console.log(JSON.stringify(cnt), JSON.stringify(tot));
 ['3totw', '3tots', '3hero', '3potm', '2otw', '4toty', '3fs', '3cent', '3ice', '2rttf', '2sun', '4tott'].forEach((k) => ok((cnt[k] || 0) > 20, 'style appears: ' + k));
+// real player names appear on the cards
+const realNames = new Set(); Object.values(FCK.REAL_SQ).forEach((L) => L.forEach((g) => g.forEach((x) => realNames.add(x))));
+let real = 0, tot2 = 0; const rng2 = U.makeRng(77);
+for (let i = 0; i < 1500; i++) { const c = C.gen(S, rng2, {}); tot2++; if (realNames.has(c.n)) real++; }
+console.log('cards with real player names', real + '/' + tot2);
+ok(real / tot2 > 0.4, 'many cards carry real names');
 const a = { o: 85, r: 3, rare: 1, sd: 5 }, b = Object.assign({}, a, { sk: 'totw' });
 ok(C.value(b) > C.value(a), 'special cards are worth more');
 console.log(errs ? 'FAIL' : 'OK'); if (errs) process.exit(1);

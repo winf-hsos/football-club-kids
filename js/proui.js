@@ -116,7 +116,9 @@
     if (!C.cur || !C.cur.pro) { const a = C.loadAuto('pro'); if (!a) return FCK.Screens.proMenu(); }
     const c = C.cur, p = c.pro, sim = c.sim;
     const el = h('div', { class: 'page hub pro-hub' });
-    const tab = ['home', 'player', 'table', 'fixtures', 'comps', 'career', 'world', 'menu'].includes(C.tab) ? C.tab : 'home';
+    // league, schedule, competitions and world are one tab with sub-chips (old tab keys still work)
+    if (['table', 'fixtures', 'comps', 'world'].includes(C.tab)) { leagueSub = C.tab; C.tab = 'league'; }
+    const tab = ['home', 'player', 'league', 'career', 'menu'].includes(C.tab) ? C.tab : 'home';
     const g = W.groups[sim.gid[c.idx]], club = W.clubs[c.idx];
     const tb = sim.leagues[g.gid].table(), row = tb.find((r) => r.idx === c.idx);
     el.appendChild(h('header', { class: 'hub-head card' },
@@ -124,11 +126,11 @@
       avatar(p.look, 52),
       h('div', { class: 'hh-t' }, h('b', { class: 'big', text: p.name }), h('div', { class: 'muted', text: club.name + ' · ' + CU().flagOf(g.cc) + ' ' + g.lname + ' · ' + C.seasonLabel(sim.year) })),
       h('div', { class: 'hh-r' }, h('span', { class: 'ci ovr-big', text: Math.round(P.ovr(p)) }), posChip(p.pos), h('span', { class: 'ci', text: T('t.pos', { n: row ? row.pos : '-' }) }), p.sp ? h('span', { class: 'ci eu', text: '+' + p.sp + ' ' + T('pro.sp.short') }) : null)));
-    const tabs = [['home', 'tab.home'], ['player', 'pro.tab.player'], ['table', 'tab.table'], ['fixtures', 'tab.fixtures'], ['comps', 'tab.comps'], ['career', 'pro.tab.career'], ['world', 'tab.world'], ['menu', 'tab.menu']];
+    const tabs = [['home', 'tab.home'], ['player', 'pro.tab.player'], ['league', 'pro.tab.league'], ['career', 'pro.tab.career'], ['menu', 'tab.menu']];
     el.appendChild(UI.chips(tabs.map((x) => ({ v: x[0], l: T(x[1]) })), tab, (v) => { C.tab = v; refresh(); }, 'tabs'));
     const body = h('div', { class: 'hub-body' });
     el.appendChild(body);
-    ({ home: tabHome, player: tabPlayer, table: (b) => CU().tabTable(b, c), fixtures: (b) => CU().tabFixtures(b, c), comps: (b) => CU().tabComps(b, c), career: tabCareer, world: (b) => CU().tabWorld(b, c), menu: tabMenu }[tab] || tabHome)(body, c);
+    ({ home: tabHome, player: tabPlayer, league: tabLeague, career: tabCareer, menu: tabMenu }[tab] || tabHome)(body, c);
     setTimeout(() => { if (p.pending === 'offers' && !UI.modalOpen && UI.cur === 'proHub') offersDialog(c); }, 40);
     return el;
   };
@@ -300,11 +302,14 @@
   // ----- player tab -----
   // ----- the 30 abilities -----
   let abGrp = 'mine';
+  let abOpen = false;
   function abilitiesSection(c) {
     const A = FCK.Abilities, p = c.pro;
     p.ab = p.ab || [];
     const sect = UI.section(T('ab.title'));
-    sect.appendChild(h('div', { class: 'row tight' }, h('span', { class: 'ci', text: T('ab.count', { n: p.ab.length, t: A.count }) }), h('span', { class: 'ci eu', text: T('pro.sp', { n: p.sp }) })));
+    sect.appendChild(h('div', { class: 'row tight' }, h('span', { class: 'ci', text: T('ab.count', { n: p.ab.length, t: A.count }) }), h('span', { class: 'ci eu', text: T('pro.sp', { n: p.sp }) }),
+      UI.btn(abOpen ? '▴' : '▾', () => { abOpen = !abOpen; refresh(); }, 'ghost sm round')));
+    if (!abOpen) return sect;
     const items = [{ v: 'mine', l: T('ab.mine') + ' (' + p.ab.length + ')' }].concat(A.GROUPS.map((g) => ({ v: g, l: T('ab.g.' + g) })));
     sect.appendChild(UI.chips(items, abGrp, (v) => { abGrp = v; refresh(); }, 'scroll'));
     const list = A.LIST.filter((a) => (abGrp === 'mine' ? A.has(p, a.id) : a.grp === abGrp));
@@ -426,6 +431,14 @@
     card.appendChild(h('p', { class: 'center big ok', text: T('pro.legacy.' + lg.tier) + ' · ' + lg.score + ' ' + T('pro.legacy.pts') }));
     card.appendChild(h('div', { class: 'row center' }, UI.btn(T('pro.new'), () => { UI.stack = ['home']; UI.show('proNew'); }, 'primary'), UI.btn(T('career.tohome'), () => { UI.stack = []; UI.show('home', null, true); }, 'ghost')));
     return card;
+  }
+
+  // ----- league tab: table / fixtures / competitions / world -----
+  let leagueSub = 'table';
+  function tabLeague(body, c) {
+    const subs = [['table', 'tab.table'], ['fixtures', 'tab.fixtures'], ['comps', 'tab.comps'], ['world', 'tab.world']];
+    body.appendChild(UI.chips(subs.map((x) => ({ v: x[0], l: T(x[1]) })), leagueSub, (v) => { leagueSub = v; refresh(); }, 'scroll'));
+    ({ table: (b) => CU().tabTable(b, c), fixtures: (b) => CU().tabFixtures(b, c), comps: (b) => CU().tabComps(b, c), world: (b) => CU().tabWorld(b, c) }[leagueSub] || ((b) => CU().tabTable(b, c)))(body);
   }
 
   // ----- menu tab -----
