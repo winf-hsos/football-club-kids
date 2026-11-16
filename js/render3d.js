@@ -292,7 +292,7 @@
 
   // pitch + surroundings texture, covers x in [-PM, L+PM], y in [-PM, W+PM]
   function makeGrassTexture(weather, pst) {
-    return canvasTex(2048, 1024, (g, cw, ch) => {
+    return canvasTex(3072, 1536, (g, cw, ch) => {
       const sx = cw / (L + 2 * PM), sy = ch / (W + 2 * PM);
       const X = (x) => (x + PM) * sx, Y = (y) => (y + PM) * sy;
       const gr = GRASS3[weather] || GRASS3.clear;
@@ -312,11 +312,26 @@
       } else {
         for (let i = 0; i < nS; i++) { g.fillStyle = gr[i % 2]; g.fillRect(X(i * sw), Y(0), sw * sx + 1, W * sy); }
       }
-      const rnd = U.makeRng(77);
-      for (let i = 0; i < 16000; i++) {
-        const x = rnd.range(-PM, L + PM), y = rnd.range(-PM, W + PM);
-        g.fillStyle = rnd.chance(0.5) ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.05)';
-        g.fillRect(X(x), Y(y), 2 + rnd.next() * 4, 1.5);
+      const rnd = U.makeRng(77), snowy = weather === 'snow';
+      // mowing nap: every stripe is a little lighter on one edge and darker on the other (the light catches the bent blades)
+      if (gs === 'stripes' || gs === 'wide' || gs === 'stripesV') {
+        for (let i = 0; i < nS; i++) { const q = g.createLinearGradient(X(i * sw), 0, X((i + 1) * sw), 0); q.addColorStop(0, 'rgba(255,255,230,0.07)'); q.addColorStop(0.5, 'rgba(0,0,0,0)'); q.addColorStop(1, 'rgba(0,20,0,0.09)'); g.fillStyle = q; g.fillRect(X(i * sw), Y(0), sw * sx + 1, W * sy); }
+      }
+      // large soft colour patches (uneven growth, watering)
+      for (let i = 0; i < 90; i++) { const x = rnd.range(-PM, L + PM), y = rnd.range(-PM, W + PM), r = rnd.range(4, 14) * sx; const q = g.createRadialGradient(X(x), Y(y), 0, X(x), Y(y), r); const lt = rnd.chance(0.5); q.addColorStop(0, lt ? 'rgba(200,255,150,0.05)' : 'rgba(0,30,0,0.06)'); q.addColorStop(1, 'rgba(0,0,0,0)'); g.fillStyle = q; g.fillRect(X(x) - r, Y(y) - r, r * 2, r * 2); }
+      // individual blades: thousands of short strokes in several greens
+      const bl = snowy ? ['rgba(255,255,255,0.35)', 'rgba(190,210,205,0.3)'] : ['rgba(20,90,30,0.32)', 'rgba(110,190,70,0.26)', 'rgba(15,60,20,0.3)', 'rgba(150,215,100,0.2)'];
+      g.lineWidth = 1;
+      for (let i = 0; i < 90000; i++) {
+        const x = X(rnd.range(-PM, L + PM)), y = Y(rnd.range(-PM, W + PM)), l = 2 + rnd.next() * 3.5, a = -Math.PI / 2 + rnd.range(-0.5, 0.5);
+        g.strokeStyle = bl[(rnd.next() * bl.length) | 0]; g.beginPath(); g.moveTo(x, y); g.lineTo(x + Math.cos(a) * l, y + Math.sin(a) * l); g.stroke();
+      }
+      if (!snowy) {
+        // worn patches in the goalmouths, around the penalty spots and the centre spot (dry, brownish)
+        const worn = (x, y, rx, ry, a) => { g.save(); g.translate(X(x), Y(y)); g.scale(rx * sx, ry * sy); const q = g.createRadialGradient(0, 0, 0, 0, 0, 1); q.addColorStop(0, 'rgba(120,100,50,' + a + ')'); q.addColorStop(0.6, 'rgba(110,110,50,' + a * 0.4 + ')'); q.addColorStop(1, 'rgba(0,0,0,0)'); g.fillStyle = q; g.beginPath(); g.arc(0, 0, 1, 0, 7); g.fill(); g.restore(); };
+        worn(4, GY, 6, 7, 0.4); worn(L - 4, GY, 6, 7, 0.4); worn(P.penSpot, GY, 1.6, 1.4, 0.35); worn(L - P.penSpot, GY, 1.6, 1.4, 0.35); worn(L / 2, GY, 1.8, 1.8, 0.22);
+        worn(L * 0.25, GY, 9, 14, 0.1); worn(L * 0.75, GY, 9, 14, 0.1); worn(L / 2, 6, 14, 5, 0.1); worn(L / 2, W - 6, 14, 5, 0.1);
+        for (let i = 0; i < 220; i++) { const x = rnd.range(0, L), y = rnd.range(0, W); g.fillStyle = 'rgba(90,70,35,0.05)'; g.beginPath(); g.ellipse(X(x), Y(y), rnd.range(2, 7), rnd.range(1.5, 4), rnd.next() * 3, 0, 7); g.fill(); }
       }
       if (weather === 'rain' || weather === 'storm') { g.fillStyle = 'rgba(10,30,60,0.12)'; g.fillRect(0, 0, cw, ch); }
     }, { anisotropy: 4 });

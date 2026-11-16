@@ -128,3 +128,4 @@ Vereinfachungen: Die Karten-Spieler sind generiert; Preise, Chancen und Wertunge
 - **Controller:** **L** wechselt den Spieler (Sprint bleibt auf R / Trigger).
 - Größere Stadien (40 Reihen; die Tribünen füllen sich im Verhältnis zur Vereinskapazität, bis zu 80.000 Plätzen, mit bis zu 24.000 sichtbaren Fans).
 - **Tore:** runde weiße Pfosten, feineres Netz, das bei jedem Treffer von der Einschlagstelle aus wackelt.
+- **Rasen:** Mähstreifen mit Lichtschimmer, einzelne Halme, ungleichmäßige Farbflecken und abgenutzte Stellen vor den Toren und an den Elfmeterpunkten.
