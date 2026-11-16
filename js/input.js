@@ -6,27 +6,27 @@
   // devices: 'kb1' | 'kb2' | 'pad0'..'pad3' | 'touch'
   const KB1 = {
     left: ['KeyA'], right: ['KeyD'], up: ['KeyW'], down: ['KeyS'], sprint: ['ShiftLeft'],
-    a: [['KeyQ'], ['KeyE'], ['KeyR'], ['KeyF']],
+    a: [['KeyQ'], ['KeyE'], ['KeyR'], ['KeyF'], ['KeyT']],
   };
   const KB2 = {
     left: ['ArrowLeft'], right: ['ArrowRight'], up: ['ArrowUp'], down: ['ArrowDown'], sprint: ['ShiftRight'],
-    a: [['Comma'], ['Period'], ['Slash'], ['Semicolon']],
+    a: [['Comma'], ['Period'], ['Slash'], ['Semicolon'], ['Quote']],
   };
   // single keyboard player gets both layouts + comfortable extras
   const KB_SOLO = {
     left: ['KeyA', 'ArrowLeft'], right: ['KeyD', 'ArrowRight'], up: ['KeyW', 'ArrowUp'], down: ['KeyS', 'ArrowDown'],
     sprint: ['ShiftLeft', 'ShiftRight'],
-    a: [['KeyQ', 'Space', 'Comma'], ['KeyE', 'KeyX', 'Period'], ['KeyR', 'KeyC', 'Slash'], ['KeyF', 'KeyV', 'Semicolon']],
+    a: [['KeyQ', 'Space', 'Comma'], ['KeyE', 'KeyX', 'Period'], ['KeyR', 'KeyC', 'Slash'], ['KeyF', 'KeyV', 'Semicolon'], ['KeyT', 'KeyG', 'Quote']],
   };
 
-  class Pad { constructor() { this.held = [false, false, false, false]; } }
+  class Pad { constructor() { this.held = [false, false, false, false, false]; } }
 
   class Input {
     constructor() {
       this.keys = new Set();
       this.slots = []; // [{dev, held[], prevHeld[], pressedL[], releasedL[], dx, dy, sprint, pause}]
       this.pauseLatch = false;
-      this.touch = { dx: 0, dy: 0, sprint: false, held: [false, false, false, false] };
+      this.touch = { dx: 0, dy: 0, sprint: false, held: [false, false, false, false, false] };
       this.lastDevice = null;
       this.anyPress = false;
       this.onPause = null;
@@ -59,8 +59,8 @@
         if (s.dev === 'kb1') map = kbCount === 1 ? KB_SOLO : KB1;
         else if (s.dev === 'kb2') map = KB2;
         return {
-          dev: s.dev, map, held: [false, false, false, false], prev: [false, false, false, false],
-          pl: [false, false, false, false], rl: [false, false, false, false], dx: 0, dy: 0, sprint: false,
+          dev: s.dev, map, held: [false, false, false, false, false], prev: [false, false, false, false, false],
+          pl: [false, false, false, false, false], rl: [false, false, false, false, false], dx: 0, dy: 0, sprint: false,
         };
       });
       this.pauseLatch = false;
@@ -74,7 +74,7 @@
         const gp = s.dev && s.dev.startsWith('pad') ? this.getPad(parseInt(s.dev.slice(3), 10)) : null;
         if (!gp) return;
         const bp = (k) => !!(gp.buttons[k] && (gp.buttons[k].pressed || gp.buttons[k].value > 0.5));
-        s.prev = [bp(0), bp(1), bp(3), bp(2)]; this.padPrevStart[i] = bp(9) || bp(8);
+        s.prev = [bp(0), bp(1), bp(3), bp(2), bp(10) || bp(11)]; this.padPrevStart[i] = bp(9) || bp(8);
       });
       this.pauseLatch = false;
     }
@@ -101,7 +101,7 @@
       for (let i = 0; i < this.slots.length; i++) {
         const s = this.slots[i];
         let dx = 0, dy = 0, sprint = false;
-        const h = [false, false, false, false];
+        const h = [false, false, false, false, false];
         if (s.map) {
           const m = s.map;
           if (this.keyDown(m.left)) dx -= 1;
@@ -109,7 +109,7 @@
           if (this.keyDown(m.up)) dy -= 1;
           if (this.keyDown(m.down)) dy += 1;
           sprint = this.keyDown(m.sprint);
-          for (let k = 0; k < 4; k++) h[k] = this.keyDown(m.a[k]);
+          for (let k = 0; k < 5; k++) h[k] = this.keyDown(m.a[k] || []);
           if (dx && dy) { dx *= 0.7071; dy *= 0.7071; }
         } else if (s.dev && s.dev.startsWith('pad')) {
           const gp = this.getPad(parseInt(s.dev.slice(3), 10));
@@ -122,16 +122,16 @@
             if (bp(14)) ax = -1; if (bp(15)) ax = 1; if (bp(12)) ay = -1; if (bp(13)) ay = 1;
             dx = ax; dy = ay;
             sprint = bp(7) || bp(5) || bp(6) || bp(4);
-            h[0] = bp(0); h[1] = bp(1); h[2] = bp(3); h[3] = bp(2);
+            h[0] = bp(0); h[1] = bp(1); h[2] = bp(3); h[3] = bp(2); h[4] = bp(10) || bp(11); // stick click = skill move
             const st = bp(9) || bp(8); // Start or Back pauses
             if (st && !this.padPrevStart[i]) this.pauseLatch = true;
             this.padPrevStart[i] = st;
           }
         } else if (s.dev === 'touch') {
           dx = this.touch.dx; dy = this.touch.dy; sprint = this.touch.sprint;
-          for (let k = 0; k < 4; k++) h[k] = this.touch.held[k];
+          for (let k = 0; k < 5; k++) h[k] = this.touch.held[k];
         }
-        for (let k = 0; k < 4; k++) {
+        for (let k = 0; k < 5; k++) {
           if (h[k] && !s.prev[k]) s.pl[k] = true;
           if (!h[k] && s.prev[k]) s.rl[k] = true;
           s.prev[k] = h[k];
@@ -147,7 +147,7 @@
         dx: s.dx, dy: s.dy, sprint: s.sprint, held: s.held.slice(),
         pressed: s.pl.slice(), released: s.rl.slice(), pause: false,
       };
-      s.pl = [false, false, false, false]; s.rl = [false, false, false, false];
+      s.pl = [false, false, false, false, false]; s.rl = [false, false, false, false, false];
       return out;
     }
 
@@ -162,7 +162,7 @@
       }
       return r;
     }
-    clearEdges() { this.slots.forEach((s) => { s.pl = [false, false, false, false]; s.rl = [false, false, false, false]; }); this.anyPress = false; }
+    clearEdges() { this.slots.forEach((s) => { s.pl = [false, false, false, false, false]; s.rl = [false, false, false, false, false]; }); this.anyPress = false; }
   }
 
   // ---------------- touch overlay ----------------
@@ -176,7 +176,7 @@
       base.appendChild(knob); stickZone.appendChild(base);
       root.appendChild(stickZone);
       const btns = document.createElement('div'); btns.className = 'tz-btns';
-      const names = [['A', 'tb-a'], ['B', 'tb-b'], ['C', 'tb-c'], ['D', 'tb-d']];
+      const names = [['A', 'tb-a'], ['B', 'tb-b'], ['C', 'tb-c'], ['D', 'tb-d'], ['★', 'tb-e']];
       this.btnEls = names.map((n, i) => {
         const b = document.createElement('button'); b.className = 'tb ' + n[1]; b.textContent = n[0]; b.dataset.k = i; b.setAttribute('aria-label', 'Aktion ' + n[0]);
         btns.appendChild(b); return b;
@@ -224,7 +224,7 @@
       sp.addEventListener('pointerup', spUp); sp.addEventListener('pointercancel', spUp); sp.addEventListener('lostpointercapture', spUp);
       root.addEventListener('contextmenu', (e) => e.preventDefault());
     }
-    show(v) { this.root.classList.toggle('show', !!v); this.on = !!v; if (!v) { const t = this.input.touch; t.dx = t.dy = 0; t.sprint = false; t.held = [false, false, false, false]; } }
+    show(v) { this.root.classList.toggle('show', !!v); this.on = !!v; if (!v) { const t = this.input.touch; t.dx = t.dy = 0; t.sprint = false; t.held = [false, false, false, false, false]; } }
     setLabels(arr) { this.btnEls.forEach((b, i) => { if (arr[i] !== undefined) b.textContent = arr[i]; }); }
   }
 

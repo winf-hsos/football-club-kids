@@ -320,6 +320,15 @@
     const distG = Math.abs(gx - p.x);
     const press = m.pressure(p);
     p.holdT += dt;
+    // skill moves against a closing defender (better dribblers do it more often, kids mode keeps it rare)
+    if (p.skillCd <= 0 && p.state === 'idle' && !p.isGK) {
+      let nd = 99, near = null;
+      m.teams[1 - team.idx].players.forEach((o) => { if (!o.onPitch || o.isGK) return; const d = U.dist(o, p); if (d < nd) { nd = d; near = o; } });
+      if (near && nd > 1.6 && nd < 3.4 && (near.x - p.x) * team.dir > -0.5 && m.rng.chance(dt * (0.1 + p.a.dri / 400) * (m.diff.aggr + 0.4))) {
+        const open = distG > 9 && m.rng.chance(0.3);
+        m.skillMove(p, open && p.spd > 4.5 ? 'rainbow' : m.rng.chance(0.4) ? 'roulette' : 'stepover', [team.dir, near.y > p.y ? -0.7 : 0.7]);
+      }
+    }
     // continuous dribble movement
     if (p.aiT > 0) {
       if (p.dribble) {

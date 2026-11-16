@@ -266,15 +266,15 @@
       const grid = h('div', { class: 'grid2' });
       grid.appendChild(ctl(T('help.kb1'), [
         k('W A S D', T('help.move')), k('Shift', T('help.sprint')),
-        k('Q', acts[0] + ' / ' + T('help.switch')), k('E', acts[1] + ' (' + T('help.hold') + ')'), k('R', acts[2]), k('F', acts[3] + ' (' + T('help.hold') + ')'), k('Esc / P', T('help.pause'))]));
+        k('Q', acts[0] + ' / ' + T('help.switch')), k('E', acts[1] + ' (' + T('help.hold') + ')'), k('R', acts[2]), k('F', acts[3] + ' (' + T('help.hold') + ')'), k('T', T('help.skill')), k('Esc / P', T('help.pause'))]));
       grid.appendChild(ctl(T('help.kb2'), [
         k('← ↑ ↓ →', T('help.move')), k('Shift ⇧ (' + T('help.right') + ')', T('help.sprint')),
-        k(',', acts[0]), k('.', acts[1]), k('-  (/)', acts[2]), k('Ö  (;)', acts[3])]));
-      grid.appendChild(ctl(T('help.solo'), [k('WASD / ←↑↓→', T('help.move')), k('Shift', T('help.sprint')), k('Q / Space', acts[0]), k('E / X', acts[1]), k('R / C', acts[2]), k('F / V', acts[3])]));
+        k(',', acts[0]), k('.', acts[1]), k('-  (/)', acts[2]), k('Ö  (;)', acts[3]), k('Ä  (\')', T('help.skill'))]));
+      grid.appendChild(ctl(T('help.solo'), [k('WASD / ←↑↓→', T('help.move')), k('Shift', T('help.sprint')), k('Q / Space', acts[0]), k('E / X', acts[1]), k('T / G', T('help.skill')), k('R / C', acts[2]), k('F / V', acts[3])]));
       grid.appendChild(ctl(T('help.pad'), [
-        k('L-Stick / D-Pad', T('help.move')), k('LB RB LT RT', T('help.sprint')), k('A / ✕', acts[0] + ' / ' + T('help.switch')), k('B / ○', acts[1]), k('Y / △', acts[2]), k('X / □', acts[3]), k('Start / Back', T('help.pause'))]));
+        k('L-Stick / D-Pad', T('help.move')), k('LB RB LT RT', T('help.sprint')), k('A / ✕', acts[0] + ' / ' + T('help.switch')), k('B / ○', acts[1]), k('Y / △', acts[2]), k('X / □', acts[3]), k(T('help.stickclick'), T('help.skill')), k('Start / Back', T('help.pause'))]));
       if (FCK.PadNav) grid.appendChild(FCK.PadNav.helpSection());
-      grid.appendChild(ctl(T('help.touch'), [k(T('help.touch.stick'), T('help.move')), k('A', acts[0]), k('B', acts[1]), k('C', acts[2]), k('D', acts[3]), k('»', T('help.sprint'))]));
+      grid.appendChild(ctl(T('help.touch'), [k(T('help.touch.stick'), T('help.move')), k('A', acts[0]), k('B', acts[1]), k('C', acts[2]), k('D', acts[3]), k('★', T('help.skill')), k('»', T('help.sprint'))]));
       grid.appendChild(h('section', { class: 'card sect' }, h('h3', { text: T('help.actions') }),
         h('dl', { class: 'dl' }, ...acts.flatMap((a, i) => [h('dt', { text: a }), h('dd', { text: actsDef[i] })]))));
       el.appendChild(grid);

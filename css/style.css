@@ -185,6 +185,7 @@ body:not(.in-match) #hud .sb { display: none; }
 .tb-c { width: 64px; height: 64px; right: 14px; bottom: 104px; border-color: var(--yellow); }
 .tb-d { width: 64px; height: 64px; right: 94px; bottom: 140px; border-color: var(--magenta); }
 .tb-s { width: 56px; height: 56px; right: 192px; bottom: 8px; font-size: 1.5rem; }
+.tb-e { width: 54px; height: 54px; right: 188px; bottom: 74px; font-size: 1.3rem; border-color: #ffd34d; }
 body.kids .tb-a, body.kids .tb-b { width: 86px; height: 86px; }
 body.touch-on #hud .ticker { bottom: auto; top: calc(var(--gut-t) + 98px); }
 body.touch-on #hud .hint-bar { bottom: auto; top: calc(var(--gut-t) + 138px); }

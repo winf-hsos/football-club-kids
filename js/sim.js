@@ -27,7 +27,7 @@
       this.fx = team.dir; this.fy = 0; this.ang = team.dir > 0 ? 0 : Math.PI;
       this.stam = 1; this.sprint = false;
       this.state = 'idle'; this.stT = 0; // idle|slide|getup|down|dive|celebrate|hold
-      this.noCtl = 0; this.tackleCd = 0; this.aiT = Math.random() * 0.3; this.runT = 0;
+      this.noCtl = 0; this.tackleCd = 0; this.aiT = Math.random() * 0.3; this.runT = 0; this.skillT = 0; this.skillCd = 0; this.skillKind = '';
       this.yellow = 0; this.red = false; this.injured = false; this.limp = false; this.onPitch = true;
       this.ctrl = -1; // human slot index
       this.runPhase = Math.random() * 6; this.spd = 0;
@@ -43,6 +43,7 @@
       s *= m.surf.spd * (0.82 + 0.18 * Math.pow(Math.max(this.stam, 0.05), 0.7));
       if (this.limp) s *= 0.7;
       if (this.isGK) s *= 0.85;
+      if (this.skillT > 0 && this.skillKind !== 'rainbow') s *= 1.18; // skill moves leave the defender behind
       if (this.abx) { s *= this.abx.speed || 1; if (this.abx.carry && m.ball.owner === this) s *= this.abx.carry; if (this.abx.pressSpd && m.ball.owner && m.ball.owner.ti !== this.ti) s *= this.abx.pressSpd; }
       if (!this.ctrlHuman) s *= this.team.tempoMul;
       return s;
@@ -242,7 +243,7 @@
 
     integrate(p, dt) {
       const m = this;
-      p.noCtl = Math.max(0, p.noCtl - dt); p.tackleCd = Math.max(0, p.tackleCd - dt); if (p.jumpT > 0) p.jumpT -= dt;
+      p.noCtl = Math.max(0, p.noCtl - dt); p.tackleCd = Math.max(0, p.tackleCd - dt); if (p.jumpT > 0) p.jumpT -= dt; if (p.skillT > 0) p.skillT -= dt; if (p.skillCd > 0) p.skillCd -= dt;
       let wx = p.wx, wy = p.wy, acc = 26;
       if (p.state === 'slide') {
         p.stT -= dt;
@@ -694,7 +695,7 @@
     }
 
     // ---------- human control ----------
-    inputFor(s) { return s.input || { dx: 0, dy: 0, sprint: false, held: [false, false, false, false], pressed: [false, false, false, false], released: [false, false, false, false], pause: false }; }
+    inputFor(s) { return s.input || { dx: 0, dy: 0, sprint: false, held: [false, false, false, false, false], pressed: [false, false, false, false, false], released: [false, false, false, false, false], pause: false }; }
 
     assignHumans(dt) {
       const b = this.ball;
@@ -826,6 +827,10 @@
       if (taking) { this.humanTake(s, p, inp, hasDir); return; }
       if (b.owner === p && this.mode === 'play') {
         const d = hasDir ? [dirx, diry] : [p.fx, p.fy];
+        if (pr[4]) { // skill move: sideways stick = roulette, sprint = rainbow flick, otherwise step-over
+          const lat = Math.abs(d[0] * p.fy - d[1] * p.fx);
+          this.skillMove(p, hasDir && lat > 0.7 ? 'roulette' : inp.sprint ? 'rainbow' : 'stepover', hasDir ? [dirx, diry] : [p.fx, p.fy]);
+        }
         if (pr[0]) { // short pass
           const t = this.pickTarget(p, d[0], d[1], 'pass');
           if (t) { this.passTo(p, t, 'pass'); this.afterPassSwitch(s, t); }
@@ -971,7 +976,7 @@
       let target = null;
       if (o && o.ti !== p.ti && U.dist(o, p) < 1.55) target = o;
       if (target) {
-        const win = U.clamp(0.36 + (p.a.def - target.a.dri) / 190 + (p.ctrlHuman ? 0.05 : m.diff.aggr * 0.08) - (target.spd > 6 ? 0.08 : 0) + (p.abx ? p.abx.tackleWin || 0 : 0) - (target.abx ? Math.min(0.25, target.abx.shield || 0) : 0), 0.1, 0.78);
+        const win = U.clamp(0.36 + (p.a.def - target.a.dri) / 190 + (p.ctrlHuman ? 0.05 : m.diff.aggr * 0.08) - (target.spd > 6 ? 0.08 : 0) - (target.skillT > 0 ? 0.3 : 0) + (p.abx ? p.abx.tackleWin || 0 : 0) - (target.abx ? Math.min(0.25, target.abx.shield || 0) : 0), 0.1, 0.78);
         p.team.stats.tackles++; p.st.tackles++;
         const behind = (target.fx * (target.x - p.x) + target.fy * (target.y - p.y)) > 0.3 && (target.fx * p.fx + target.fy * p.fy) > 0.5;
         if (m.rng.next() < win) {
@@ -1013,7 +1018,7 @@
             p.slideHit = true;
             const hasBall = b.owner === q;
             const behind = (q.fx * p.fx + q.fy * p.fy) > 0.45;
-            const winP = U.clamp(0.4 + (p.a.def - q.a.dri) / 150 + (p.ctrlHuman ? 0.04 : 0) + (p.abx ? (p.abx.slideWin || 0) + (p.abx.tackleWin || 0) * 0.5 : 0) - (q.abx ? Math.min(0.25, (q.abx.shield || 0) + (q.abx.slideShield || 0)) : 0), 0.1, 0.85);
+            const winP = U.clamp(0.4 + (p.a.def - q.a.dri) / 150 - (q.skillT > 0 ? 0.3 : 0) + (p.ctrlHuman ? 0.04 : 0) + (p.abx ? (p.abx.slideWin || 0) + (p.abx.tackleWin || 0) * 0.5 : 0) - (q.abx ? Math.min(0.25, (q.abx.shield || 0) + (q.abx.slideShield || 0)) : 0), 0.1, 0.85);
             p.team.stats.tackles++; p.st.tackles++;
             if (hasBall && this.rng.next() < winP) {
               p.team.stats.tackleWon++; p.st.tackleWon++;
@@ -1076,6 +1081,39 @@
         this.dispossess(target, k, 4 + this.rng.range(0, 3));
         if (this.rng.chance(0.18 * (0.5 + this.ref.strict))) this.callFoul(k, target, this.rng.range(0.2, 0.6));
       }
+    }
+    // skill moves with the ball: 'stepover' (shield + burst), 'rainbow' (flick over the head and the defender), 'roulette' (spin away sideways)
+    skillMove(p, kind, dir) {
+      const b = this.ball;
+      if (b.owner !== p || this.mode !== 'play' || p.skillCd > 0 || p.state !== 'idle' || p.isGK) return false;
+      let [nx, ny] = U.norm(dir[0], dir[1]);
+      if (nx === 0 && ny === 0) { nx = p.fx; ny = p.fy; }
+      const skill = p.a.dri / 100;
+      p.skillKind = kind; p.skillCd = 1.25; p.stam = Math.max(0, p.stam - 0.04);
+      p.skillT = kind === 'rainbow' ? 0.7 : kind === 'roulette' ? 0.62 : 0.55;
+      // defenders in front get wrong-footed (the better the dribbler the more of them)
+      const opp = this.teams[1 - p.ti].players;
+      for (let i = 0; i < opp.length; i++) {
+        const o = opp[i];
+        if (!o.onPitch || o.isGK || o.state === 'down') continue;
+        const dx = o.x - p.x, dy = o.y - p.y, d = Math.sqrt(dx * dx + dy * dy);
+        if (d > 4.2 || (dx * p.fx + dy * p.fy) < -0.5) continue;
+        if (this.rng.next() < 0.22 + skill * 0.38 - (o.a.def / 100) * 0.3) { o.noCtl = Math.max(o.noCtl, 0.55 + this.rng.range(0, 0.35)); o.vx *= 0.3; o.vy *= 0.3; }
+      }
+      if (kind === 'rainbow') {
+        const sp = 6 + skill * 2.5;
+        b.owner = null; b.x = p.x + nx * 0.6; b.y = p.y + ny * 0.6; b.z = 0.4;
+        b.vx = nx * sp + p.vx * 0.5; b.vy = ny * sp + p.vy * 0.5; b.vz = 5.4;
+        b.shotBy = null; b.passTarget = null; b.lastKind = 'skill'; this.touch(p, 'skill'); p.noCtl = 0.85; this.hT = 0;
+      } else if (kind === 'roulette') {
+        const side = (nx * p.fy - ny * p.fx) >= 0 ? 1 : -1; // spin to the side of the stick, ball stays glued
+        const sx = -p.fy * side, sy = p.fx * side;
+        p.vx = sx * 6.2 + p.vx * 0.3; p.vy = sy * 6.2 + p.vy * 0.3;
+      } else {
+        p.vx += nx * 2.2; p.vy += ny * 2.2; // step-over: quick burst past the defender
+      }
+      this.emit('skill', { by: p, kind, team: p.ti });
+      return true;
     }
     callPress(team) { team.pressCall = 2.5; }
     callKeeperRush(team) { team.rushCall = 1.5; }

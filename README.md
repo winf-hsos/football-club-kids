@@ -17,6 +17,7 @@ Stufe 1: spielbares Freundschaftsspiel. Stufe 2: Welt & Karriere (Ligen, Pokale,
 | Schuss (halten) / Tackling | E | . | B | B |
 | Steilpass / Pressing | R | - (Taste „/“) | Y | C |
 | Flanke (halten) / Torwart raus | F | Ö (Taste „;“) | X | D |
+| Trick (Übersteiger / Rainbow Flick / Roulette) | T | Ä (Taste „'“) | Stick-Klick | ★ |
 | Pause | Esc / P | | Start | ❚❚ |
 
 > Der computergesteuerte Torwart kommt heraus, wenn ein Stürmer allein auf das Tor zuläuft, und wirft sich dem Ballführer vor die Füße (Test: `node test/gk_rush.js`).
@@ -28,6 +29,8 @@ Stufe 1: spielbares Freundschaftsspiel. Stufe 2: Welt & Karriere (Ligen, Pokale,
 > In den Aufstellungs-Editoren (Karriere, Manager, Freundschaftsspiel, Wettbewerbe) zeigen die Spielerkreise die Gesamtstärke statt der Rückennummer; Goldrand bei sehr starken Spielern.
 
 > Realistischere Spieler in der 3D-Ansicht: runde, glatt schattierte Körper statt Klötzen, Gesicht mit Augen, Brauen, Nase, Ohren und Mund, Hände bzw. Torwarthandschuhe, Fußballschuhe mit Sohle, Trikot mit Kragen, Ärmelbündchen und Rückennummer, Socken mit Bündchen, Bärte und Frisuren; dazu eine natürlichere Lauf- und Standanimation (Becken und Schultern drehen gegeneinander, Atmen, Kopfbewegung).
+
+> Tricks mit dem Ball: Trick-Taste = Übersteiger (Gegner werden ausgetanzt, kurzer Antritt), mit Sprint = Rainbow Flick (Ball über Kopf und Gegner), Stick seitlich = Roulette (Drehung). Gegner im Weg werden oft aus dem Tritt gebracht, Tackles gegen dich sind kurz erschwert. Die CPU benutzt Tricks selbst (Dribbler öfter). Test: `node test/skills.js`.
 
 > Kopfbälle: Feldspieler köpfen hohe Bälle (Flanken, lange Bälle, Befreiungsschläge). Vor dem Tor geht der Kopfball aufs Tor, in der eigenen Hälfte wird weit geklärt, sonst wird der Ball weitergeleitet. Wer köpft, hängt von Physis und Abwehr ab; mit Richtungseingabe lenkt man den Kopfball selbst (Test: `node test/headers.js`).
 

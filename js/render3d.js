@@ -702,6 +702,22 @@
         const pump = Math.sin(t * 12 + this.seed) * 0.25;
         aL = lerp(aL, 2.7 + pump, this.celeb); aR = lerp(aR, 2.7 - pump, this.celeb); fL = lerp(fL, 0.2, this.celeb); fR = lerp(fR, 0.2, this.celeb); spL = lerp(spL, 0.5, this.celeb); spR = lerp(spR, 0.5, this.celeb);
       }
+      // skill moves (step-over, roulette, rainbow flick) override the legs / hips for their duration
+      if (p.skillT > 0 && p.skillKind) {
+        const dur = p.skillKind === 'rainbow' ? 0.7 : p.skillKind === 'roulette' ? 0.62 : 0.55, u = clamp(1 - p.skillT / dur, 0, 1);
+        if (p.skillKind === 'stepover') {
+          const s1 = Math.sin(u * Math.PI * 4);
+          bn[B.THIGH_R].rotation.set(0, 0, 0.7 + 0.5 * s1); bn[B.SHIN_R].rotation.set(0, 0, -(0.9 + 0.3 * Math.abs(s1)));
+          bn[B.THIGH_L].rotation.set(0, 0, 0.3 - 0.4 * s1); bn[B.SHIN_L].rotation.set(0, 0, -0.5);
+          hip.rotation.y += Math.sin(u * Math.PI * 4) * 0.25; aL = 0.6; aR = 0.5; fL = fR = 1.0;
+        } else if (p.skillKind === 'roulette') {
+          hip.rotation.y += u * Math.PI * 2; bn[B.THIGH_R].rotation.set(0, 0, 0.5); bn[B.SHIN_R].rotation.set(0, 0, -0.9); aL = 0.9; aR = 0.9; fL = fR = 0.9;
+        } else {
+          const q = u < 0.4 ? u / 0.4 : 1 - (u - 0.4) / 0.6; // heel flick: leg back, then up over the ball
+          bn[B.THIGH_R].rotation.set(0, 0, -1.0 * q + (u > 0.4 ? 1.1 * (1 - q) : 0)); bn[B.SHIN_R].rotation.set(0, 0, -(0.6 + 1.2 * q));
+          ch.rotation.z += -0.18 * q; aL = 1.1; aR = 1.2; fL = fR = 0.7;
+        }
+      }
       bn[B.ARM_L].rotation.set(spL * Math.cos(aL), 0, aL); bn[B.FORE_L].rotation.set(0, 0, fL);
       bn[B.ARM_R].rotation.set(-spR * Math.cos(aR), 0, aR); bn[B.FORE_R].rotation.set(0, 0, fR);
     }
