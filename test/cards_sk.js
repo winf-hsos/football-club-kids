@@ -20,7 +20,7 @@ for (let i = 0; i < 6000; i++) {
   ok(C.rollStyle(c) === (c.sk || null), 'deterministic');
 }
 console.log(JSON.stringify(cnt), JSON.stringify(tot));
-['3totw', '3tots', '3hero', '3potm', '2otw', '4toty'].forEach((k) => ok((cnt[k] || 0) > 20, 'style appears: ' + k));
+['3totw', '3tots', '3hero', '3potm', '2otw', '4toty', '3fs', '3cent', '3ice', '2rttf', '2sun', '4tott'].forEach((k) => ok((cnt[k] || 0) > 20, 'style appears: ' + k));
 const a = { o: 85, r: 3, rare: 1, sd: 5 }, b = Object.assign({}, a, { sk: 'totw' });
 ok(C.value(b) > C.value(a), 'special cards are worth more');
 console.log(errs ? 'FAIL' : 'OK'); if (errs) process.exit(1);

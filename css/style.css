@@ -649,3 +649,11 @@ details.adv.big .grid2 { margin-top: 6px; }
 @media (max-width: 700px) { .pfx-info { left: 0; width: 100%; bottom: calc(var(--gut-b, 10px) + 76px); } .pfx-name { font-size: 1.3rem; } }
 .lp-chip .lp-ovr b { font-size: 1.02em; letter-spacing: -.02em; } .lp-chip .lp-ovr.elite { box-shadow: 0 0 0 2px #f5c542, 0 2px 6px rgba(0,0,0,.45); } .lp-chip .lp-ovr.gold { box-shadow: 0 0 0 2px #d8b040, 0 2px 6px rgba(0,0,0,.45); }
 .flagimg { height: 1em; width: auto; vertical-align: -.14em; border-radius: 2px; margin: 0 .12em; }
+
+.fc.sk-rttf { --c1: #12b5a6; --c2: #053a4a; --ink: #e8fffb; --edge: #6df2e1; box-shadow: 0 0 14px rgba(60, 230, 210, .6), 0 4px 14px rgba(0, 0, 0, .5); }
+.fc.sk-sun { --c1: #ffb43a; --c2: #d4541a; --ink: #2a1200; --edge: #fff0a8; box-shadow: 0 0 14px rgba(255, 170, 60, .65), 0 4px 14px rgba(0, 0, 0, .5); }
+.fc.sk-fs { --c1: #27e0a0; --c2: #0b4a63; --ink: #ffffff; --edge: #9affd9; box-shadow: 0 0 18px rgba(60, 255, 190, .7), 0 4px 14px rgba(0, 0, 0, .5), inset 0 0 0 2px rgba(154, 255, 217, .35); }
+.fc.sk-cent { --c1: #d42b2b; --c2: #1a0507; --ink: #ffe9e9; --edge: #ff7b7b; box-shadow: 0 0 18px rgba(255, 70, 70, .7), 0 4px 14px rgba(0, 0, 0, .5), inset 0 0 0 2px rgba(255, 123, 123, .35); }
+.fc.sk-ice { --c1: #c8f0ff; --c2: #3a7fb5; --ink: #0b2a44; --edge: #ffffff; box-shadow: 0 0 18px rgba(170, 230, 255, .8), 0 4px 14px rgba(0, 0, 0, .5), inset 0 0 0 2px rgba(255, 255, 255, .55); }
+.fc.sk-tott { --c1: #16264f; --c2: #05070f; --ink: #9ed0ff; --edge: #e8f4ff; box-shadow: 0 0 22px rgba(150, 210, 255, .8), 0 4px 14px rgba(0, 0, 0, .5), inset 0 0 0 2px rgba(232, 244, 255, .5); }
+.fc.sk-rttf::before, .fc.sk-sun::before, .fc.sk-fs::before, .fc.sk-cent::before, .fc.sk-ice::before, .fc.sk-tott::before { content: ''; position: absolute; inset: 0; background: linear-gradient(115deg, transparent 32%, rgba(255, 255, 255, .32) 50%, transparent 68%); background-size: 250% 100%; animation: shine 4.4s linear infinite; pointer-events: none; z-index: 1; }

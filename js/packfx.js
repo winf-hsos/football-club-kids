@@ -13,7 +13,7 @@
   const NAMES = { bronze: 'BRONZE', silver: 'SILBER', gold: 'GOLD', prem: 'PREMIUM', legend: 'ICON' };
   // card palettes (same look as the .fc cards): c1, c2, ink, edge
   const PAL = { 0: ['#d99a63', '#8a5428', '#2b1707', '#f0c08c'], 1: ['#eef2f8', '#8c99b2', '#182033', '#ffffff'], 2: ['#ffe98a', '#cf9416', '#3a2a05', '#fff3b8'], 3: ['#7a5cff', '#151a66', '#ffffff', '#8ff0ff'], 4: ['#fff4cf', '#c9a247', '#3a2706', '#fff8dc'] };
-  const SKP = { otw: ['#14424a', '#04161b', '#7ffcf0', '#2fe0d0'], totw: ['#2c2c33', '#060608', '#f6d77e', '#d9b04a'], tots: ['#2f7bff', '#06194d', '#ffffff', '#8fd8ff'], hero: ['#ff9d42', '#5e2204', '#fff2de', '#ffd28f'], potm: ['#ff55a6', '#3b0a47', '#ffffff', '#ffb7dc'], toty: ['#0f2a8f', '#020822', '#ffe28a', '#f4cb4f'] };
+  const SKP = { otw: ['#14424a', '#04161b', '#7ffcf0', '#2fe0d0'], totw: ['#2c2c33', '#060608', '#f6d77e', '#d9b04a'], tots: ['#2f7bff', '#06194d', '#ffffff', '#8fd8ff'], hero: ['#ff9d42', '#5e2204', '#fff2de', '#ffd28f'], potm: ['#ff55a6', '#3b0a47', '#ffffff', '#ffb7dc'], rttf: ['#12b5a6', '#053a4a', '#e8fffb', '#6df2e1'], sun: ['#ffb43a', '#d4541a', '#2a1200', '#fff0a8'], fs: ['#27e0a0', '#0b4a63', '#ffffff', '#9affd9'], cent: ['#d42b2b', '#1a0507', '#ffe9e9', '#ff7b7b'], ice: ['#c8f0ff', '#3a7fb5', '#0b2a44', '#ffffff'], tott: ['#16264f', '#05070f', '#9ed0ff', '#e8f4ff'], toty: ['#0f2a8f', '#020822', '#ffe28a', '#f4cb4f'] };
   const palOf = (c) => (c.sk && SKP[c.sk]) || PAL[c.r] || PAL[0];
   const tierOf = (c) => (c.sk ? Math.max(3, c.r) : c.r); // special styles always get at least the elite show
   const lerp = (a, b, t) => a + (b - a) * t;

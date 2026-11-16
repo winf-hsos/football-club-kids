@@ -96,8 +96,8 @@
     return card;
   };
   // special card styles (like Team of the Week or Icon); rolled from the card seed so the main RNG stream stays untouched
-  Cards.SK = { 2: [['otw', 0.05]], 3: [['totw', 0.3], ['tots', 0.2], ['hero', 0.12], ['potm', 0.1]], 4: [['toty', 0.3]] };
-  Cards.SK_KEYS = ['otw', 'totw', 'tots', 'hero', 'potm', 'toty'];
+  Cards.SK = { 2: [['otw', 0.05], ['rttf', 0.04], ['sun', 0.04]], 3: [['totw', 0.22], ['tots', 0.14], ['hero', 0.1], ['potm', 0.08], ['fs', 0.07], ['cent', 0.06], ['ice', 0.05]], 4: [['toty', 0.22], ['tott', 0.12]] };
+  Cards.SK_KEYS = ['otw', 'rttf', 'sun', 'totw', 'tots', 'hero', 'potm', 'fs', 'cent', 'ice', 'toty', 'tott'];
   Cards.rollStyle = function (c) {
     const list = Cards.SK[c.r];
     if (!list) return null;
