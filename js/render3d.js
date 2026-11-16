@@ -1095,7 +1095,21 @@
         };
         return mat;
       };
-      this.uT = { value: 0 }; this.uA = { value: 0.02 };
+      this.uT = { value: 0 }; this.uA = { value: 0.02 }; this.uR = { value: 0 };
+      // hair, raised arms (when the crowd roars) and scarves: same jump shader plus a 'roar' uniform
+      const mk2 = (kind) => {
+        const mat = new THREE.MeshLambertMaterial({ color: new THREE.Color(env.stand, env.stand, env.stand) });
+        mat.onBeforeCompile = (sh) => {
+          sh.uniforms.uT = this.uT; sh.uniforms.uA = this.uA; sh.uniforms.uR = this.uR;
+          const extra = kind === 'arms' ? ' transformed.y += uR * 0.46; transformed.z += sign(position.z) * uR * 0.05;' : kind === 'scarf' ? ' transformed.y += (uR > 0.3 ? 0.0 : -4.0) + sin(uT * 6.0 + aPh * 9.0 + position.x * 6.0) * 0.06 * uR;' : '';
+          sh.vertexShader = 'attribute float aPh;\nuniform float uT;\nuniform float uA;\nuniform float uR;\n' + sh.vertexShader.replace('#include <begin_vertex>', '#include <begin_vertex>\n transformed.y += max(0.0, sin(uT * (5.0 + aPh * 0.6) + aPh * 6.2831)) * uA * (0.45 + 0.55 * fract(aPh * 7.31));' + extra);
+        };
+        return mat;
+      };
+      const hairGeo = new THREE.BoxGeometry(0.25, 0.1, 0.25); hairGeo.translate(0, 0.87, 0);
+      const armGeo = new THREE.BoxGeometry(0.1, 0.38, 0.1); const armGeoB = armGeo.clone(); armGeo.translate(0, 0.52, 0.27); armGeoB.translate(0, 0.52, -0.27);
+      const scarfGeo = new THREE.BoxGeometry(0.1, 0.05, 0.75); scarfGeo.translate(0, 1.12, 0);
+      const HAIRS = ['#1a1410', '#1a1410', '#1a1410', '#2e2018', '#2e2018', '#4a3322', '#6b4a2f', '#d9b36a', '#c0562b', '#9a9a9a', '#e8e8e8'];
       this.crowd3 = [];
       const tmp = new THREE.Matrix4(), cc = new THREE.Color();
       for (let s = 0; s < 4; s++) {
@@ -1117,9 +1131,23 @@
         bm.geometry.setAttribute('aPh', new THREE.InstancedBufferAttribute(ph, 1)); hm.geometry.setAttribute('aPh', new THREE.InstancedBufferAttribute(ph, 1));
         bm.frustumCulled = false; hm.frustumCulled = false;
         this.add(bm); this.add(hm);
-        this.crowd3[s] = [bm, hm];
+        // hair, two arms each and scarves for about every sixth fan of the home colours
+        const n = pick.length, hr = new THREE.InstancedMesh(hairGeo.clone(), mk2('hair'), n), a1 = new THREE.InstancedMesh(armGeo.clone(), mk2('arms'), n), a2 = new THREE.InstancedMesh(armGeoB.clone(), mk2('arms'), n);
+        const sc = []; pick.forEach((st, i) => { if (rnd.next() < 0.17) sc.push(i); });
+        const sf = new THREE.InstancedMesh(scarfGeo.clone(), mk2('scarf'), Math.max(1, sc.length));
+        const phS = new Float32Array(Math.max(1, sc.length));
+        pick.forEach((st, i) => {
+          tmp.makeScale(1, 0.92 + (ph[i] * 0.18), 1); tmp.setPosition(st.x, st.y, st.z);
+          hr.setMatrixAt(i, tmp); a1.setMatrixAt(i, tmp); a2.setMatrixAt(i, tmp);
+          hr.setColorAt(i, cc.set(rnd.pick(HAIRS)));
+          const skinC = cc.set(FCK.SKIN[rnd.int(0, FCK.SKIN.length - 1)]).clone(); a1.setColorAt(i, skinC); a2.setColorAt(i, skinC);
+        });
+        sc.forEach((i, k) => { const st = pick[i]; tmp.makeScale(1, 1, 1); tmp.setPosition(st.x, st.y, st.z); sf.setMatrixAt(k, tmp); sf.setColorAt(k, cc.set(rnd.pick([cA, cA, cB, '#e8edf7']))); phS[k] = ph[i]; });
+        [hr, a1, a2].forEach((o) => { o.geometry.setAttribute('aPh', new THREE.InstancedBufferAttribute(ph, 1)); o.frustumCulled = false; this.add(o); });
+        sf.geometry.setAttribute('aPh', new THREE.InstancedBufferAttribute(phS, 1)); sf.frustumCulled = false; if (sc.length) this.add(sf);
+        this.crowd3[s] = [bm, hm, hr, a1, a2, sf];
       }
-      this.track(bodyGeo); this.track(headGeo);
+      this.track(bodyGeo); this.track(headGeo); this.track(hairGeo); this.track(armGeo); this.track(armGeoB); this.track(scarfGeo);
     }
 
     buildFloods(env, tod) {
@@ -1240,7 +1268,7 @@
       this.updateModels(view, dt, opts);
       this.updateDecals(view, dt, opts);
       this.updateParticles(view, dt);
-      this.uT.value = this.t; this.uA.value = 0.012 + this.mood * 0.05 + this.roar * 0.42;
+      this.uT.value = this.t; this.uA.value = 0.012 + this.mood * 0.05 + this.roar * 0.42; this.uR.value = Math.min(1, this.roar * 1.4 + this.mood * 0.12);
       this.updateVisibility();
       this.updateLight();
       this.gl.render(this.scene, this.camera);
@@ -1316,7 +1344,7 @@
       hide[0] = inB(dN); hide[1] = inB(dE); hide[2] = inB(dS); hide[3] = inB(dW);
       for (let s = 0; s < 4; s++) {
         if (this.stands[s]) this.stands[s].visible = !hide[s];
-        if (this.crowd3[s]) { this.crowd3[s][0].visible = !hide[s]; this.crowd3[s][1].visible = !hide[s]; }
+        if (this.crowd3[s]) this.crowd3[s].forEach((o) => { o.visible = !hide[s]; });
       }
     }
 

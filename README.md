@@ -34,6 +34,8 @@ Stufe 1: spielbares Freundschaftsspiel. Stufe 2: Welt & Karriere (Ligen, Pokale,
 
 > Tricks mit dem Ball: Trick-Taste = Übersteiger (Gegner werden ausgetanzt, kurzer Antritt), mit Sprint = Rainbow Flick (Ball über Kopf und Gegner), Stick seitlich = Roulette (Drehung). Gegner im Weg werden oft aus dem Tritt gebracht, Tackles gegen dich sind kurz erschwert. Die CPU benutzt Tricks selbst (Dribbler öfter). Test: `node test/skills.js`.
 
+> Die Fans im Stadion sind lebendiger: Haare, Arme (bei Toren und Chancen reißen sie die Arme hoch) und Schals, die bei Jubel geschwenkt werden.
+
 > Kopfbälle: Feldspieler köpfen hohe Bälle (Flanken, lange Bälle, Befreiungsschläge). Vor dem Tor geht der Kopfball aufs Tor, in der eigenen Hälfte wird weit geklärt, sonst wird der Ball weitergeleitet. Wer köpft, hängt von Physis und Abwehr ab; mit Richtungseingabe lenkt man den Kopfball selbst (Test: `node test/headers.js`).
 
 > Unten rechts im Hauptmenü steht der Button „♥ Spenden“. Im Dialog wählst du einen Betrag (1/2/5/10 € oder frei), spendest über PayPal und schickst deinen Wunsch per E-Mail. Je höher die Spende, desto höher die Priorität des Wunsches. Im Hauptmenü (nie im Spiel) erscheint alle 15 Minuten eine Erinnerung mit „Später“ und „Nicht mehr anzeigen“. Das Spiel bleibt kostenlos und ohne Werbung.
