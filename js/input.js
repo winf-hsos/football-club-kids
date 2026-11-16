@@ -121,7 +121,8 @@
             const bp = (i) => !!(b[i] && (b[i].pressed || b[i].value > 0.5));
             if (bp(14)) ax = -1; if (bp(15)) ax = 1; if (bp(12)) ay = -1; if (bp(13)) ay = 1;
             dx = ax; dy = ay;
-            sprint = bp(7) || bp(5) || bp(6) || bp(4);
+            sprint = bp(7) || bp(5) || bp(6);
+            const lb = bp(4); if (lb && !s.prevL) s.swL = true; s.prevL = lb; // L = switch player
             h[0] = bp(0); h[1] = bp(1); h[2] = bp(3); h[3] = bp(2); h[4] = bp(10) || bp(11); // stick click = skill move
             const st = bp(9) || bp(8); // Start or Back pauses
             if (st && !this.padPrevStart[i]) this.pauseLatch = true;
@@ -145,8 +146,9 @@
       const s = this.slots[i];
       const out = {
         dx: s.dx, dy: s.dy, sprint: s.sprint, held: s.held.slice(),
-        pressed: s.pl.slice(), released: s.rl.slice(), pause: false,
+        pressed: s.pl.slice(), released: s.rl.slice(), pause: false, sw: !!s.swL,
       };
+      s.swL = false;
       s.pl = [false, false, false, false, false]; s.rl = [false, false, false, false, false];
       return out;
     }

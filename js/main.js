@@ -125,6 +125,8 @@
       this.com.kickoff();
       this.acc = 0; this.last = performance.now();
       this.prevVz = 0;
+      // 3D intro (street with fans, players in the tunnel, walk-out) before the whistle; any key skips
+      if (FCK.Intro && !cfg.noIntro && FCK.Intro.available() && FCK.Intro.play({ home: t0.club, away: t1.club, kits: [t0.kit, t1.kit], stadium: t0.club.stadium }, () => { this.paused = false; this.last = performance.now(); this.acc = 0; })) this.paused = true;
     }
 
     endMatch() {
@@ -206,6 +208,7 @@
         case 'extratime': A.play('whistle3'); hud.flash(T('bn.extra'), 'info', 1800); break;
         case 'penaltiesNext': A.play('whistle3'); hud.flash(T('bn.pens'), 'warn', 1800); break;
         case 'end': if (!m.ceremony) A.play('whistle3'); hud.flash(T('bn.full'), 'info', 2200); break;
+        case 'streaker': hud.flash(T('bn.streaker'), 'info', 2400); break;
         case 'ceremony': A.play('whistle3'); A.play('goal'); hud.flash(T('bn.trophy'), 'goal', 3600, e.team !== undefined ? m.teams[e.team].club.name : '', m.teams[e.team]); break;
         case 'restart': if (['corner', 'freekick', 'kickoff'].includes(e.kind) && this.m.mode !== 'shootout' && this.m.time > 2) hud.flash(T('rs.' + e.kind), 'info', 900, ((e.team && e.team.club) ? e.team : this.m.teams[e.team]).club.short); break;
         case 'curl': A.play('ooh'); break;

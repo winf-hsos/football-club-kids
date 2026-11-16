@@ -90,6 +90,9 @@
       this.stoppageAcc = 0; this.hT = 0; this.planT = 0; this.assignT = 0;
       this.shootout = null; this.winner = -1; this.result = null; this.seed = seed;
       this.gkOverride = null; this.callFor = null;
+      // a streaker in roughly one match of a thousand (a harmless fan in a dino costume, chased by two stewards)
+      { const sr = U.makeRng((seed ^ 0x5eed51) >>> 0), p = cfg.settings && cfg.settings.streaker != null ? cfg.settings.streaker : (FCK.STREAKER_P != null ? FCK.STREAKER_P : 0.001);
+        this.streak = sr.next() < p ? { at: sr.range(0.2, 0.8) * U.clamp(this.set.halfMins, 1, 10) * 60 * 2, state: 'wait', t: 0, x: 0, y: 0, vx: 0, vy: 0, side: sr.next() < 0.5 ? -1 : 1, x0: sr.range(25, 80), stew: [] } : null; }
       this.goals = []; // {team, scorer, assist, minute, og, period}
       this.rec = { n: 0, cap: 540, frames: [], head: 0 };
 
@@ -333,10 +336,12 @@
         const o = b.owner;
         if (!o.onPitch || o.state === 'slide' || o.state === 'down' || o.state === 'dive' && !o.isGK) { b.owner = null; return; }
         const sp = Math.min(1, o.spd / 8);
-        const off = 0.62 + 0.38 * sp;
+        // soft first touch: for ~0.6 s after taking the ball it stays close to the foot and settles (no popping ahead)
+        const set = U.clamp((this.clock - (b.ctlT || -9)) / 0.6, 0, 1);
+        const off = (0.62 + 0.38 * sp) * (0.55 + 0.45 * set);
         let tx = o.x + o.fx * off, ty = o.y + o.fy * off;
         if (o.isGK || o.state === 'hold') { tx = o.x + o.fx * 0.35; ty = o.y + o.fy * 0.35; }
-        const k = Math.min(1, dt * 22);
+        const k = Math.min(1, dt * (11 + 11 * set));
         b.x += (tx - b.x) * k; b.y += (ty - b.y) * k; b.z = o.isGK ? 0.9 : 0;
         b.vx = o.vx; b.vy = o.vy; b.vz = 0;
         return;
@@ -628,7 +633,7 @@
       if (prev && prev.ti === p.ti && prev !== p && b.lastKind !== 'deflect' && (b.lastKind === 'pass' || b.lastKind === 'through' || b.lastKind === 'lob')) {
         p.team.stats.passOk++; prev.st.passOk++;
       }
-      b.owner = p; b.vx = b.vy = b.vz = 0; b.z = 0;
+      b.owner = p; b.vx = b.vy = b.vz = 0; b.z = 0; b.ctlT = this.clock;
       b.shotBy = null; b.passTarget = null;
       this.touch(p, 'control');
       b.lastKind = 'control';
@@ -791,6 +796,8 @@
         const p = s.player;
         if (!p || !p.onPitch) continue;
         const team = this.teams[s.team];
+        // L on the pad: switch to the player nearest to the ball (in the stick direction) while the own player is not holding it
+        if (inp.sw && this.mode === 'play' && !(b.owner === p)) { const l = Math.sqrt(inp.dx * inp.dx + inp.dy * inp.dy); this.humanSwitch(s, l > 0.3 ? inp.dx / l : 0, l > 0.3 ? inp.dy / l : 0); continue; }
         // ----- movement -----
         const mag = Math.min(1, Math.sqrt(inp.dx * inp.dx + inp.dy * inp.dy));
         const inRestart = this.mode === 'restart' && this.restart && this.restart.taker === p;
