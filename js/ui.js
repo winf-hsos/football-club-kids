@@ -5,6 +5,22 @@
   const T = (k, v) => FCK.T(k, v);
 
   // ---------- DOM helpers ----------
+  // text with flag emoji -> text nodes + flag images (emoji flags are not drawn on Windows)
+  function textNodes(str, tag) {
+    const F = FCK.Flag;
+    if (!F || tag === 'option' || tag === 'title' || !F.RE.test(str)) { if (F) F.RE.lastIndex = 0; return null; }
+    F.RE.lastIndex = 0;
+    const frag = document.createDocumentFragment();
+    let last = 0, m;
+    while ((m = F.RE.exec(str))) {
+      if (m.index > last) frag.appendChild(document.createTextNode(str.slice(last, m.index)));
+      const code = F.fromEmoji(m[0]);
+      if (code && F.has(code)) { const img = F.img(code, 15); img.title = ''; frag.appendChild(img); } else frag.appendChild(document.createTextNode(m[0]));
+      last = m.index + m[0].length;
+    }
+    if (last < str.length) frag.appendChild(document.createTextNode(str.slice(last)));
+    return frag;
+  }
   function h(tag, props, ...kids) {
     const el = document.createElement(tag);
     if (props) {
@@ -12,7 +28,7 @@
         const v = props[k];
         if (v === undefined || v === null || v === false) continue;
         if (k === 'class') el.className = v;
-        else if (k === 'text') el.textContent = v;
+        else if (k === 'text') { const f = textNodes(String(v), tag); if (f) el.appendChild(f); else el.textContent = v; }
         else if (k === 'html') el.innerHTML = v;
         else if (k.startsWith('on')) el.addEventListener(k.slice(2).toLowerCase(), v);
         else if (k === 'style' && typeof v === 'object') { for (const sk in v) { if (sk.startsWith('--')) el.style.setProperty(sk, v[sk]); else el.style[sk] = v[sk]; } }
@@ -22,7 +38,8 @@
     const add = (c) => {
       if (c === null || c === undefined || c === false) return;
       if (Array.isArray(c)) c.forEach(add);
-      else el.appendChild(c.nodeType ? c : document.createTextNode(String(c)));
+      else if (c.nodeType) el.appendChild(c);
+      else { const f = textNodes(String(c), tag); el.appendChild(f || document.createTextNode(String(c))); }
     };
     kids.forEach(add);
     return el;
