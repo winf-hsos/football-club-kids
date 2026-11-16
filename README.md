@@ -126,4 +126,5 @@ Vereinfachungen: Die Karten-Spieler sind generiert; Preise, Chancen und Wertunge
 - **Pokal:** Der Kapitän hält ihn in beiden Händen, in echter Größe (Pokal ca. 68 cm, WM-Pokal ca. 36 cm) und streckt ihn nach oben.
 - **Ballannahme:** Der Ball springt nach dem Stoppen nicht mehr sofort weg, sondern bleibt kurz am Fuß.
 - **Controller:** **L** wechselt den Spieler (Sprint bleibt auf R / Trigger).
-- Größere Stadien (30 Reihen, bis zu 15.000 Fans).
+- Größere Stadien (40 Reihen; die Tribünen füllen sich im Verhältnis zur Vereinskapazität, bis zu 80.000 Plätzen, mit bis zu 24.000 sichtbaren Fans).
+- **Tore:** runde weiße Pfosten, feineres Netz, das bei jedem Treffer von der Einschlagstelle aus wackelt.

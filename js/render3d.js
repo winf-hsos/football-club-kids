@@ -23,7 +23,7 @@
   const PM = 7; // metres of grass drawn around the pitch lines
   const AD_OFF = 3.5; // ad boards: distance from the lines
   const SO = 8.5; // stands: distance of the first row from the lines
-  const ROWS = 30, ROW_D = 0.85, ROW_H = 0.6, ROW_H0 = 1.1;
+  const ROWS = 40, ROW_D = 0.85, ROW_H = 0.6, ROW_H0 = 1.1;
   const SC = 0.93; // player scale: the model is ~2 m tall at scale 1, so about 1.85 m on a 105 m pitch
   const BALL_R = 0.15; // slightly bigger than a real ball (0.11) so it stays visible
   const HEMI = Math.PI / 2;
@@ -356,10 +356,10 @@
     const gb = new GB(), wh = '#f4f6fa', gr = '#b8bec8', H = P.goalH, D = P.goalDepth, Hb = H * 0.8, t = 0.065;
     [0, 1].forEach((side) => {
       const gx = side === 0 ? 0 : L, s = side === 0 ? -1 : 1, bxx = gx + s * D, z0 = GY - HG, z1 = GY + HG;
-      // posts and crossbar (square section reads fine from afar)
-      gb.box(gx - t, 0, z0 - t, gx + t, H + t, z0 + t, wh);
-      gb.box(gx - t, 0, z1 - t, gx + t, H + t, z1 + t, wh);
-      gb.box(gx - t, H - t, z0 - t, gx + t, H + t, z1 + t, wh);
+      // round posts and crossbar (white, like the real thing), with a slight shine from the vertex shading
+      const rr = 0.065, Rr = (y, x, z) => ({ y, rx: rr, rz: rr, cx: x, cz: z });
+      [z0, z1].forEach((z) => gb.tube([Rr(0, gx, z), Rr(H * 0.5, gx, z), Rr(H + rr, gx, z)], 14, wh, 'top'));
+      gb.bar([gx, H, z0 - rr], [gx, H, z1 + rr], rr * 1.05, wh);
       // rear frame
       gb.box(bxx - 0.03, 0, z0 - 0.03, bxx + 0.03, Hb, z0 + 0.03, gr); gb.box(bxx - 0.03, 0, z1 - 0.03, bxx + 0.03, Hb, z1 + 0.03, gr);
       gb.box(bxx - 0.03, Hb - 0.03, z0, bxx + 0.03, Hb + 0.03, z1, gr);
@@ -382,18 +382,19 @@
   }
   function buildNets() {
     const pos = [], uv = [], H = P.goalH, D = P.goalDepth, Hb = H * 0.8, K = 1 / 0.45;
-    const tri = (a, b, c, ua, ub, uc) => { pos.push(...a, ...b, ...c); uv.push(...ua, ...ub, ...uc); };
+    // a quad split into a grid so the net can ripple (vertex shader) when the ball hits it
+    const quad = (a, b, c, d, ua, ub, uc, ud, n, m) => {
+      const P3 = (u, v) => { const l = (p, q, t) => [p[0] + (q[0] - p[0]) * t, p[1] + (q[1] - p[1]) * t, p[2] + (q[2] - p[2]) * t]; const l2 = (p, q, t) => [p[0] + (q[0] - p[0]) * t, p[1] + (q[1] - p[1]) * t]; const A = l(a, b, u), B = l(d, c, u); const uA = l2(ua, ub, u), uB = l2(ud, uc, u); return [l(A, B, v), l2(uA, uB, v)]; };
+      for (let i = 0; i < n; i++) for (let j = 0; j < m; j++) {
+        const p00 = P3(i / n, j / m), p10 = P3((i + 1) / n, j / m), p11 = P3((i + 1) / n, (j + 1) / m), p01 = P3(i / n, (j + 1) / m);
+        [[p00, p10, p11], [p00, p11, p01]].forEach((t) => t.forEach((q) => { pos.push(...q[0]); uv.push(...q[1]); }));
+      }
+    };
     [0, 1].forEach((side) => {
       const gx = side === 0 ? 0 : L, s = side === 0 ? -1 : 1, bxx = gx + s * D, z0 = GY - HG, z1 = GY + HG;
-      // back
-      tri([bxx, 0, z0], [bxx, 0, z1], [bxx, Hb, z1], [z0 * K, 0], [z1 * K, 0], [z1 * K, Hb * K]); tri([bxx, 0, z0], [bxx, Hb, z1], [bxx, Hb, z0], [z0 * K, 0], [z1 * K, Hb * K], [z0 * K, Hb * K]);
-      // top
-      tri([gx, H, z0], [gx, H, z1], [bxx, Hb, z1], [z0 * K, 0], [z1 * K, 0], [z1 * K, D * K]); tri([gx, H, z0], [bxx, Hb, z1], [bxx, Hb, z0], [z0 * K, 0], [z1 * K, D * K], [z0 * K, D * K]);
-      // sides
-      [z0, z1].forEach((z) => {
-        tri([gx, 0, z], [bxx, 0, z], [bxx, Hb, z], [0, 0], [D * K, 0], [D * K, Hb * K]);
-        tri([gx, 0, z], [bxx, Hb, z], [gx, H, z], [0, 0], [D * K, Hb * K], [0, H * K]);
-      });
+      quad([bxx, 0, z0], [bxx, 0, z1], [bxx, Hb, z1], [bxx, Hb, z0], [z0 * K, 0], [z1 * K, 0], [z1 * K, Hb * K], [z0 * K, Hb * K], 16, 6); // back
+      quad([gx, H, z0], [gx, H, z1], [bxx, Hb, z1], [bxx, Hb, z0], [z0 * K, 0], [z1 * K, 0], [z1 * K, D * K], [z0 * K, D * K], 16, 6); // top
+      [z0, z1].forEach((z) => quad([gx, 0, z], [bxx, 0, z], [bxx, Hb, z], [gx, H, z], [0, 0], [D * K, 0], [D * K, Hb * K], [0, H * K], 6, 6)); // sides
     });
     const g = new THREE.BufferGeometry();
     g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3)); g.setAttribute('uv', new THREE.Float32BufferAttribute(uv, 2));
@@ -1091,11 +1092,21 @@
         lm.renderOrder = 1; this.add(lm);
       }
       // goals, flags
-      this.add(new THREE.Mesh(buildGoalFrames(snow), new THREE.MeshLambertMaterial({ vertexColors: true })));
+      this.add(new THREE.Mesh(buildGoalFrames(snow), new THREE.MeshLambertMaterial({ vertexColors: true, emissive: 0x6a6e78 })));
       this.add(new THREE.Mesh(buildFlags(), new THREE.MeshLambertMaterial({ vertexColors: true, side: THREE.DoubleSide })));
       {
-        const net = new THREE.Mesh(buildNets(), new THREE.MeshBasicMaterial({ map: texNet(), transparent: true, opacity: 0.55, side: THREE.DoubleSide, depthWrite: false, alphaTest: 0.05 }));
-        net.renderOrder = 2; this.add(net);
+        const nm = new THREE.MeshBasicMaterial({ map: texNet(), transparent: true, opacity: 0.6, side: THREE.DoubleSide, depthWrite: false, alphaTest: 0.05 });
+        this.netU = { uHit: { value: new THREE.Vector3(0, 0, 0) }, uDir: { value: new THREE.Vector3(1, 0, 0) }, uAge: { value: 99 } };
+        nm.onBeforeCompile = (sh) => {
+          Object.assign(sh.uniforms, this.netU);
+          sh.vertexShader = 'uniform vec3 uHit;\nuniform vec3 uDir;\nuniform float uAge;\n' + sh.vertexShader.replace('#include <begin_vertex>', `#include <begin_vertex>
+            float nd = distance(transformed, uHit);
+            float amp = exp(-uAge * 1.7) * exp(-nd * nd / 5.5) * sin(uAge * 15.0 - nd * 4.0) * min(1.0, uAge * 18.0);
+            transformed += uDir * amp * 0.55;
+            transformed.y += sin(uAge * 9.0 + transformed.z * 2.0) * exp(-uAge * 1.4) * 0.05 * step(uAge, 4.0);`);
+        };
+        const net = new THREE.Mesh(buildNets(), nm);
+        net.renderOrder = 2; net.frustumCulled = false; this.add(net);
       }
       // ad boards
       {
@@ -1135,7 +1146,7 @@
       const rnd = U.makeRng(4242), slots = seatSlots();
       let total = 0; slots.forEach((s) => { total += s.length; });
       const att = (m.crowd && m.crowd.att) || 20000, cap = (m.crowd && m.crowd.cap) || att;
-      const target = clamp(att / 6, 2500, 15000) * cfg.crowd;
+      const target = clamp(att / 3.4, 3000, 24000) * cfg.crowd;
       const fill = Math.min(0.95, target / total) * (0.55 + 0.45 * clamp(att / cap, 0.3, 1));
       const cA = m.teams[0].kit.shirt, cB = m.teams[1].kit.shirt;
       const pal = [cA, cA, cA, cA, cB, '#e8edf7', '#f2c14e', '#7aa2ff', '#ff7a7a', '#2a3350'];
@@ -1484,6 +1495,18 @@
         const lt = b.lastTouch;
         if (lt && Math.hypot(lt.x - cand.x, lt.y - cand.y) < 3.2) kicker = lt;
         else { let bd = 2.4; for (let i = 0; i < ps.length; i++) { const d = Math.hypot(ps[i].x - cand.x, ps[i].y - cand.y); if (d < bd) { bd = d; kicker = ps[i]; } } }
+      }
+      // ball hits the net: ripple from the point of impact in the direction of the ball
+      if (this.netU) {
+        this.netU.uAge.value += dt;
+        const inGoal = (b.x < -0.15 || b.x > L + 0.15) && Math.abs(b.y - GY) < HG && b.z < P.goalH;
+        if (inGoal && !this.ballInNet) {
+          const sp = Math.hypot(b.vx || 0, b.vy || 0, b.vz || 0) || 1, sd = b.x < 0 ? -1 : 1;
+          this.netU.uHit.value.set(b.x, Math.max(0.2, b.z), b.y);
+          this.netU.uDir.value.set(Math.max(0.3, Math.abs((b.vx || 0) / sp)) * sd, (b.vz || 0) / sp * 0.6, (b.vy || 0) / sp);
+          this.netU.uAge.value = 0;
+        }
+        this.ballInNet = inGoal;
       }
       let nb = 0;
       const blobs = this.blobs, mt = this._mt || (this._mt = new THREE.Matrix4()), sd = this.sunDir;
