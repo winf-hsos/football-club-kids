@@ -132,3 +132,4 @@ Vereinfachungen: Die Karten-Spieler sind generiert; Preise, Chancen und Wertunge
 - **Animationen:** Torwart und Feldspieler bewegen sich flüssiger (Arme und Beine gleiten zwischen Zuständen, Torwart-Sprung mit Flugbogen, weicheres Aufstehen).
 - **Spieler:** wärmere Hauttöne, V-Ausschnitt am Trikot, Saum an den Hosen, Lippen, Nasenlöcher und Augenhöhlen im Gesicht.
 - **Torwart:** große Handschuhe mit Bündchen, breite Bereitschaftshaltung, Arme strecken sich beim Hechtsprung zum Ball.
+- **Torwart und Schüsse:** Der Torwart schätzt Schüsse ungenauer ein und hält nicht mehr jeden Ball (etwa 70 % Paraden); selbst geschossene Bälle kommen öfter aufs Tor.
