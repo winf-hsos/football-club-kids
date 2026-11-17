@@ -499,13 +499,14 @@
       if (X) sig *= (X.shotErr || 1) * (kind === 'lobshot' ? (X.lobErr || 1) : 1) * (kind === 'fk' ? (X.fkErr || 1) : 1);
       if (p.sprint) sig += 0.01;
       if (!p.ctrlHuman) sig /= Math.max(0.4, m.diff.passAcc * 0.9 + 0.1);
+      else sig *= 0.7; // human shots are aimed with the stick: keep them on target more often
       const err = m.rng.gauss() * sig;
       const ca = Math.cos(err), sa = Math.sin(err);
       const fdx = nx * ca - ny * sa, fdy = nx * sa + ny * ca;
       const speed = (11 + power * 13.5) * (0.9 + (p.a.sho / 100) * 0.2) * (X && X.shotPow || 1);
       let vz = 0.6 + power * 1.1 + m.rng.range(-0.3, 0.6);
       if (kind === 'lobshot') vz = 3.8 + power * 1.4;
-      if (power > 0.9 && !(X && X.noSky) && m.rng.chance(0.18 + press * 0.15)) vz += m.rng.range(1.5, 4.5);
+      if (power > 0.9 && !(X && X.noSky) && m.rng.chance((p.ctrlHuman ? 0.07 : 0.18) + press * 0.15)) vz += m.rng.range(1.5, 4.5);
       this.launch(p, fdx, fdy, speed, vz, 'shot');
       b.shotBy = p;
       b.offsideSet = null;
@@ -664,7 +665,7 @@
       const fromOpp = !b.lastTouch || b.lastTouch.ti !== k.ti;
       const dive = k.state === 'dive';
       const catchLimit = 10 + skill * 13 - (dive ? 3 : 0) - (b.z > 1.5 ? 2 : 0) - (this.surf.mu < 2.6 ? 1.5 : 0);
-      let pCatch = U.clamp(0.4 + skill * 0.55 - Math.max(0, sp - 11) * 0.035 + (k.abx && k.abx.gkCatch || 0), 0.05, 0.97);
+      let pCatch = U.clamp(0.3 + skill * 0.5 - Math.max(0, sp - 11) * 0.04 + (k.abx && k.abx.gkCatch || 0), 0.05, 0.97);
       if (!fromOpp) pCatch = 0.0; // back-pass: play with feet (no hand)
       if (!fromOpp) {
         // keeper controls with feet

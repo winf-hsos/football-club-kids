@@ -428,8 +428,8 @@
         if (Math.abs(yAt - GY) < HG + 1.5 && zAt < 2.9) {
           if (k.shotId !== b.touchT) {
             k.shotId = b.touchT;
-            k.reactT = (0.04 + (1 - k.a.gk / 100) * 0.3 + m.diff.react * 0.1) * (k.team.humans.length ? 0.8 : 1);
-            k.aimErr = m.rng.gauss() * (0.2 + (1 - k.a.gk / 100) * 1.3);
+            k.reactT = (0.1 + (1 - k.a.gk / 100) * 0.3 + m.diff.react * 0.1) * (k.team.humans.length ? 0.8 : 1);
+            k.aimErr = m.rng.gauss() * (0.6 + (1 - k.a.gk / 100) * 1.7); // keepers misjudge some shots
           }
           k.reactT -= dt;
           if (k.reactT <= 0) {
