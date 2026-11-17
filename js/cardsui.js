@@ -125,6 +125,7 @@
     const playBtn = UI.btn('▶ ' + T('k.play'), () => { const e = Cs.play('ladder', opp); if (e) err(e); }, 'primary xl');
     sec.appendChild(h('div', { class: 'row' }, playBtn, UI.btn('⚽ ' + T('k.friendly'), () => FCK.clubPicker({ title: T('k.friendly'), current: null, onPick: (t) => { const e = Cs.play('friendly', t); if (e) err(e); } }), 'ghost')));
     sec.appendChild(h('div', { class: 'field' }, h('span', { class: 'lbl', text: T('k.level') }), UI.chips(FCK.LEVEL_KEYS.map((k) => ({ v: k, l: T('level.' + k) })), S.level, (v) => { S.level = v; save(); }, 'scroll')));
+    sec.appendChild(UI.slider(T('k.half'), 1, 15, 1, S.half, (v) => { S.half = v; save(); }, (v) => v + ' min')); // half length right where you start the match
     sec.appendChild(h('p', { class: 'fine', text: T('k.promo.hint', { t: Cs.ROUND, p: Cs.PROMO_PTS, r: Cs.RELEG_PTS }) }));
     body.appendChild(sec);
     const grid = h('div', { class: 'grid2' });
@@ -582,7 +583,7 @@
     body.appendChild(sec);
     const set = UI.section(T('k.club.settings'));
     set.appendChild(h('div', { class: 'field' }, h('span', { class: 'lbl', text: T('k.level') }), UI.chips(FCK.LEVEL_KEYS.map((k) => ({ v: k, l: T('level.' + k) })), S.level, (v) => { S.level = v; save(); }, 'scroll')));
-    set.appendChild(UI.slider(T('k.half'), 1, 10, 1, S.half, (v) => { S.half = v; save(); }, (v) => v + ' min'));
+    set.appendChild(UI.slider(T('k.half'), 1, 15, 1, S.half, (v) => { S.half = v; save(); }, (v) => v + ' min'));
     set.appendChild(h('div', { class: 'field' }, h('span', { class: 'lbl', text: T('k.players') }), UI.chips(['p1', 'p2co', 'cpu'].map((k) => ({ v: k, l: T('k.pre.' + k) })), S.preset, (v) => { S.preset = v; save(); })));
     set.appendChild(FCK.PadNav.controlLine(() => S.preset));
     body.appendChild(set);
