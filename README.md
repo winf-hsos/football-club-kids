@@ -130,3 +130,5 @@ Vereinfachungen: Die Karten-Spieler sind generiert; Preise, Chancen und Wertunge
 - **Tore:** runde weiße Pfosten, feineres Netz, das bei jedem Treffer von der Einschlagstelle aus wackelt.
 - **Rasen:** Mähstreifen mit Lichtschimmer, einzelne Halme, ungleichmäßige Farbflecken und abgenutzte Stellen vor den Toren und an den Elfmeterpunkten.
 - **Animationen:** Torwart und Feldspieler bewegen sich flüssiger (Arme und Beine gleiten zwischen Zuständen, Torwart-Sprung mit Flugbogen, weicheres Aufstehen).
+- **Spieler:** wärmere Hauttöne, V-Ausschnitt am Trikot, Saum an den Hosen, Lippen, Nasenlöcher und Augenhöhlen im Gesicht.
+- **Torwart:** große Handschuhe mit Bündchen, breite Bereitschaftshaltung, Arme strecken sich beim Hechtsprung zum Ball.
