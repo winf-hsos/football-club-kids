@@ -982,9 +982,9 @@
       // standing tackle: poke at ball / carrier in front
       const o = b.owner;
       let target = null;
-      if (o && o.ti !== p.ti && U.dist(o, p) < 1.55) target = o;
+      if (o && o.ti !== p.ti && U.dist(o, p) < 1.85) target = o;
       if (target) {
-        const win = U.clamp(0.36 + (p.a.def - target.a.dri) / 190 + (p.ctrlHuman ? 0.05 : m.diff.aggr * 0.08) - (target.spd > 6 ? 0.08 : 0) - (target.skillT > 0 ? 0.3 : 0) + (p.abx ? p.abx.tackleWin || 0 : 0) - (target.abx ? Math.min(0.25, target.abx.shield || 0) : 0), 0.1, 0.78);
+        const win = U.clamp(0.5 + (p.a.def - target.a.dri) / 190 + (p.ctrlHuman ? 0.05 : m.diff.aggr * 0.08) - (target.spd > 6 ? 0.08 : 0) - (target.skillT > 0 ? 0.3 : 0) + (p.abx ? p.abx.tackleWin || 0 : 0) - (target.abx ? Math.min(0.25, target.abx.shield || 0) : 0), 0.1, 0.78);
         p.team.stats.tackles++; p.st.tackles++;
         const behind = (target.fx * (target.x - p.x) + target.fy * (target.y - p.y)) > 0.3 && (target.fx * p.fx + target.fy * p.fy) > 0.5;
         if (m.rng.next() < win) {
@@ -1003,12 +1003,17 @@
     dispossess(victim, by, kickSpeed) {
       const b = this.ball;
       b.owner = null;
-      let dx = by.x - victim.x + this.rng.range(-0.8, 0.8), dy = by.y - victim.y + this.rng.range(-0.8, 0.8);
-      const [nx, ny] = U.norm(dx + victim.fx * 0.8, dy + victim.fy * 0.8);
+      // the ball squirts loose in a random direction (mostly sideways / on past the victim), not straight to the tackler
+      const ang = this.rng.range(0, Math.PI * 2);
+      let dx = Math.cos(ang) + victim.fx * 0.5, dy = Math.sin(ang) + victim.fy * 0.5;
+      const ax = by.x - victim.x, ay = by.y - victim.y, al = Math.hypot(ax, ay) || 1;
+      if ((dx * ax + dy * ay) / al > 0.6) { dx -= (ax / al) * 0.9; dy -= (ay / al) * 0.9; } // never directly into the tackler's path
+      const [nx, ny] = U.norm(dx, dy);
       b.x = victim.x + victim.fx * 0.4; b.y = victim.y + victim.fy * 0.4;
-      b.vx = nx * kickSpeed; b.vy = ny * kickSpeed; b.vz = 0.4;
-      victim.noCtl = 0.5; victim.stT = 0.3;
-      this.touch(by, 'tackle'); by.noCtl = 0.12;
+      const ks = kickSpeed * 0.75;
+      b.vx = nx * ks; b.vy = ny * ks; b.vz = 0.3;
+      victim.noCtl = 0.4; victim.stT = 0.3;
+      this.touch(by, 'tackle'); by.noCtl = 0.3;
     }
 
     updateSlides() {
@@ -1026,7 +1031,7 @@
             p.slideHit = true;
             const hasBall = b.owner === q;
             const behind = (q.fx * p.fx + q.fy * p.fy) > 0.45;
-            const winP = U.clamp(0.4 + (p.a.def - q.a.dri) / 150 - (q.skillT > 0 ? 0.3 : 0) + (p.ctrlHuman ? 0.04 : 0) + (p.abx ? (p.abx.slideWin || 0) + (p.abx.tackleWin || 0) * 0.5 : 0) - (q.abx ? Math.min(0.25, (q.abx.shield || 0) + (q.abx.slideShield || 0)) : 0), 0.1, 0.85);
+            const winP = U.clamp(0.5 + (p.a.def - q.a.dri) / 150 - (q.skillT > 0 ? 0.3 : 0) + (p.ctrlHuman ? 0.04 : 0) + (p.abx ? (p.abx.slideWin || 0) + (p.abx.tackleWin || 0) * 0.5 : 0) - (q.abx ? Math.min(0.25, (q.abx.shield || 0) + (q.abx.slideShield || 0)) : 0), 0.1, 0.85);
             p.team.stats.tackles++; p.st.tackles++;
             if (hasBall && this.rng.next() < winP) {
               p.team.stats.tackleWon++; p.st.tackleWon++;
@@ -1038,7 +1043,7 @@
               // contact without winning ball -> foul (probability depends on referee)
               const sev = U.clamp(this.rng.range(0.2, 0.75) + (behind ? 0.2 : 0) + (p.spd > 7 ? 0.08 : 0), 0, 1);
               q.state = 'down'; q.stT = 0.8; q.vx *= 0.2; q.vy *= 0.2;
-              if (hasBall) { b.owner = null; b.vx = p.vx * 0.5; b.vy = p.vy * 0.5; q.noCtl = 0.6; this.touch(p, 'tackle'); }
+              if (hasBall) { b.owner = null; b.vx = p.vx * 0.25 + this.rng.range(-3, 3); b.vy = p.vy * 0.25 + this.rng.range(-3, 3); q.noCtl = 0.6; p.noCtl = Math.max(p.noCtl, 0.3); this.touch(p, 'tackle'); }
               if (this.rng.next() < (0.45 + this.ref.strict * 0.5) * (p.abx ? (p.abx.foul || 1) * (p.abx.slideFoul || 1) : 1)) this.callFoul(p, q, sev);
               else this.emit('tackle', { by: p, victim: q, ok: false, slide: true });
             }
