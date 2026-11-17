@@ -134,3 +134,4 @@ Vereinfachungen: Die Karten-Spieler sind generiert; Preise, Chancen und Wertunge
 - **Torwart:** große Handschuhe mit Bündchen, breite Bereitschaftshaltung, Arme strecken sich beim Hechtsprung zum Ball.
 - **Torwart und Schüsse:** Der Torwart schätzt Schüsse ungenauer ein und hält nicht mehr jeden Ball (etwa 70 % Paraden); selbst geschossene Bälle kommen öfter aufs Tor.
 - **Zweikämpfe:** Ball abnehmen ist leichter (größere Reichweite, bessere Chance); nach einem Tackle springt der Ball in eine zufällige Richtung und nicht mehr direkt zum Gegner.
+- **Ultimate Team:** Die Halbzeitlänge (1–15 Minuten) lässt sich jetzt direkt auf dem Startbildschirm der Liga einstellen.
