@@ -123,7 +123,16 @@
     sec.appendChild(h('div', { class: 'lg-top' }, pips, h('div', { class: 'lg-pts' }, h('b', { class: 'big', text: String(R.pts) }), h('small', { text: T('k.pts') }))));
     sec.appendChild(h('div', { class: 'lg-opp' }, UI.crestImg(opp, 48), h('div', null, h('small', { class: 'muted', text: T('k.next') }), h('b', { class: 'big', text: opp.name }), h('div', { class: 'muted', text: (W.byCc[opp.country] ? W.byCc[opp.country].flag + ' ' : '') + (opp.lname || opp.league) + ' · ' + T('k.rating') + ' ' + opp.rating }))));
     const playBtn = UI.btn('▶ ' + T('k.play'), () => { const e = Cs.play('ladder', opp); if (e) err(e); }, 'primary xl');
-    sec.appendChild(h('div', { class: 'row' }, playBtn, UI.btn('⚽ ' + T('k.friendly'), () => FCK.clubPicker({ title: T('k.friendly'), current: null, onPick: (t) => { const e = Cs.play('friendly', t); if (e) err(e); } }), 'ghost')));
+    const simBtn = UI.btn('⏩ ' + T('k.sim'), () => {
+      UI.toast(T('k.sim.run'));
+      setTimeout(() => {
+        let r; try { r = Cs.simulate('ladder', opp); } catch (e) { console.error(e); r = { err: 'xi' }; }
+        if (r.err) { err(r.err); return; }
+        const rs = r.info ? CUI.resultBox({}) : null;
+        UI.modal(T('k.sim.result'), h('div', null, h('div', { class: 'row center' }, h('b', { class: 'big', text: S.team.name + ' ' + r.score[0] + ' : ' + r.score[1] + ' ' + r.opp })), rs, h('div', { class: 'row center' }, UI.btn(T('ok'), () => { UI.closeModal(); redraw(); }, 'primary'))));
+      }, 30);
+    }, 'ghost');
+    sec.appendChild(h('div', { class: 'row' }, playBtn, simBtn, UI.btn('⚽ ' + T('k.friendly'), () => FCK.clubPicker({ title: T('k.friendly'), current: null, onPick: (t) => { const e = Cs.play('friendly', t); if (e) err(e); } }), 'ghost')));
     sec.appendChild(h('div', { class: 'field' }, h('span', { class: 'lbl', text: T('k.level') }), UI.chips(FCK.LEVEL_KEYS.map((k) => ({ v: k, l: T('level.' + k) })), S.level, (v) => { S.level = v; save(); }, 'scroll')));
     sec.appendChild(UI.slider(T('k.half'), 1, 15, 1, S.half, (v) => { S.half = v; save(); }, (v) => v + ' min')); // half length right where you start the match
     sec.appendChild(h('p', { class: 'fine', text: T('k.promo.hint', { t: Cs.ROUND, p: Cs.PROMO_PTS, r: Cs.RELEG_PTS }) }));
