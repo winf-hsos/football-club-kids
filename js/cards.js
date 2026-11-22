@@ -654,19 +654,26 @@
     return null;
   };
 
-  // simulate a match without playing it (engine runs headless); returns the result info (same as after a played match)
+  // simulate a match without playing it: a Poisson goal model from the team strengths (varied, football-like scores: 0:0, 1:0, 3:1, 4:2 ...)
+  const POS_W = { ST: 5, CF: 5, LW: 3, RW: 3, LF: 3.5, RF: 3.5, CAM: 3, LM: 2, RM: 2, CM: 1.5, CDM: 0.7, LB: 0.5, RB: 0.5, CB: 0.45, LWB: 0.7, RWB: 0.7, GK: 0.02 };
   Cards.simulate = function (kind, opp) {
     const S = Cards.ensure();
     const err = Cards.canPlay(S);
     if (err) return { err };
     opp = opp || Cards.opponent(S);
-    const cfg = Cards.buildCfg(S, kind, opp);
-    const m = new FCK.Match({ clubs: cfg.clubs, settings: cfg.settings, slots: [], squads: cfg.squads });
-    m.autoProceed = true; m.cardsCtx = cfg.cards;
-    let n = 0; const dt = 1 / 30;
-    while (m.mode !== 'over' && n++ < 30 * 60 * 90) m.update(dt);
-    const info = Cards.onResult(m);
-    return { info, score: [m.teams[0].score, m.teams[1].score], opp: opp.name };
+    const ev = Cards.teamEval(S);
+    const rng = U.makeRng((W.hash('sim' + S.seed + ':' + S.st.played + ':' + S.rank.m + ':' + opp.id) ^ 0x7a11) >>> 0);
+    const lvl = { rookie: [1.25, 0.8], amateur: [1.12, 0.9], pro: [1, 1], world: [0.9, 1.12], legend: [0.82, 1.22] }[S.level] || [1, 1];
+    const d = (ev.S - (opp.rating || 60)) * 0.045;
+    const lam = (base, dd, k) => U.clamp(base * Math.exp(dd) * k * Math.exp(rng.gauss() * 0.28), 0.15, 5.5);
+    const pois = (l) => { const L = Math.exp(-l); let k = 0, p = 1; do { k++; p *= rng.next(); } while (p > L && k < 12); return k - 1; };
+    const gf = pois(lam(1.4, d, lvl[0])), ga = pois(lam(1.25, -d, lvl[1]));
+    const ids = S.xi.filter(Boolean), wts = ids.map((id) => { const c = Cards.card(id); return c ? (POS_W[c.pos] || 1) * (0.6 + c.o / 100) : 0; });
+    const tw = wts.reduce((a, x) => a + x, 0) || 1, scorers = [];
+    for (let i = 0; i < gf; i++) { let r = rng.next() * tw, k = 0; while (k < ids.length - 1 && r > wts[k]) { r -= wts[k]; k++; } scorers.push(ids[k]); }
+    const info = Cards.applyResult(S, { kind, opp: opp.id, oppName: opp.name, xi: ids }, [gf, ga], scorers, ids);
+    Cards.save();
+    return { info, score: [gf, ga], opp: opp.name };
   };
 
   Cards.matchCoins = function (S, kind, res, gf, ga) {
