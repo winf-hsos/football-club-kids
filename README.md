@@ -136,3 +136,4 @@ Vereinfachungen: Die Karten-Spieler sind generiert; Preise, Chancen und Wertunge
 - **Zweikämpfe:** Ball abnehmen ist leichter (größere Reichweite, bessere Chance); nach einem Tackle springt der Ball in eine zufällige Richtung und nicht mehr direkt zum Gegner.
 - **Ultimate Team:** Die Halbzeitlänge (1–15 Minuten) lässt sich jetzt direkt auf dem Startbildschirm der Liga einstellen.
 - **Ultimate Team:** Spiele lassen sich auch simulieren (Knopf „Simulieren“ neben „Spielen“; Ergebnis aus den Mannschaftsstärken, abwechslungsreich von 0:0 bis 5:1); es zählt wie ein gespieltes Spiel (Punkte, Münzen, Auf-/Abstieg).
+- **Ultimate Team Packs:** neue Packs im Shop: Jumbo (12 Karten), Torwart, Abwehr, Mittelfeld, Sturm, Talente (bis 21 Jahre) und Spezial (garantiert eine Spezialkarte).

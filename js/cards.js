@@ -38,6 +38,14 @@
     gold: { price: 6000, n: 5, w: [14, 38, 42, 5.5, 0.5], min: 2 },
     prem: { price: 18000, n: 6, w: [0, 17, 60, 21, 2], min: 2 },
     legend: { price: 40000, n: 5, w: [0, 0, 48, 42, 10], min: 3 },
+    // themed packs
+    jumbo: { price: 6000, n: 12, w: [40, 42, 16, 2, 0], min: 1 },
+    gk: { price: 3800, n: 3, w: [20, 40, 32, 7, 1], min: 1, pos: ['GK'] },
+    def: { price: 4200, n: 4, w: [24, 42, 28, 5.5, 0.5], min: 1, pos: ['CB', 'CB', 'LB', 'RB', 'LWB', 'RWB'] },
+    mid: { price: 4200, n: 4, w: [24, 42, 28, 5.5, 0.5], min: 1, pos: ['CDM', 'CM', 'CM', 'CAM', 'LM', 'RM'] },
+    att: { price: 4600, n: 4, w: [24, 42, 28, 5.5, 0.5], min: 1, pos: ['ST', 'ST', 'LW', 'RW'] },
+    young: { price: 7500, n: 5, w: [15, 35, 40, 9, 1], min: 2, young: true },
+    special: { price: 25000, n: 3, w: [0, 0, 35, 55, 10], min: 3, special: true },
   };
   Cards.PACK_KEYS = Object.keys(Cards.PACKS);
 
@@ -363,11 +371,17 @@
   Cards.packCards = function (S, id, rng) {
     const P = Cards.PACKS[id];
     const out = [];
-    for (let i = 0; i < P.n; i++) out.push(Cards.gen(S, rng, { w: P.w }));
+    const base = () => { const o = { w: P.w }; if (P.pos) o.pos = P.pos[rng.int(0, P.pos.length - 1)]; if (P.young) o.ag = rng.int(17, 21); return o; };
+    for (let i = 0; i < P.n; i++) out.push(Cards.gen(S, rng, base()));
     if (!out.some((c) => c.r >= P.min)) {
       const k = rng.int(0, P.n - 1);
-      out[k] = Cards.gen(S, rng, { w: P.w, min: P.min });
-      if (out[k].r < P.min) out[k] = Cards.gen(S, rng, { r: P.min });
+      out[k] = Cards.gen(S, rng, Object.assign(base(), { min: P.min }));
+      if (out[k].r < P.min) out[k] = Cards.gen(S, rng, Object.assign(base(), { r: P.min }));
+    }
+    if (P.special && !out.some((c) => c.sk)) {
+      // special pack: at least one card with a special style (TOTW, Hero, ...)
+      const k = rng.int(0, P.n - 1);
+      for (let t = 0; t < 60; t++) { const c = Cards.gen(S, rng, Object.assign(base(), { min: P.min })); if (c.sk) { out[k] = c; break; } }
     }
     return out;
   };
