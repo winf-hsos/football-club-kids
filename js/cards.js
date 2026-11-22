@@ -654,6 +654,21 @@
     return null;
   };
 
+  // simulate a match without playing it (engine runs headless); returns the result info (same as after a played match)
+  Cards.simulate = function (kind, opp) {
+    const S = Cards.ensure();
+    const err = Cards.canPlay(S);
+    if (err) return { err };
+    opp = opp || Cards.opponent(S);
+    const cfg = Cards.buildCfg(S, kind, opp);
+    const m = new FCK.Match({ clubs: cfg.clubs, settings: cfg.settings, slots: [], squads: cfg.squads });
+    m.autoProceed = true; m.cardsCtx = cfg.cards;
+    let n = 0; const dt = 1 / 30;
+    while (m.mode !== 'over' && n++ < 30 * 60 * 90) m.update(dt);
+    const info = Cards.onResult(m);
+    return { info, score: [m.teams[0].score, m.teams[1].score], opp: opp.name };
+  };
+
   Cards.matchCoins = function (S, kind, res, gf, ga) {
     let v = res === 'W' ? 350 : res === 'D' ? 140 : 50;
     v += 25 * Math.min(6, gf) + (ga === 0 ? 60 : 0);
